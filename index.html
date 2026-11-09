@@ -1179,6 +1179,7 @@ migrate();
 
 
 var tg = (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : null;
+var isInsideTelegram = !!(tg && tg.initData && tg.initData.length > 0);
 var isTgCloud = false;
 
 function tgHaptic(type) {
@@ -1199,55 +1200,110 @@ function updateCloudUI(status, col) {
   dot.style.background = col || "var(--mut)";
 }
 
-// Telegram CloudStorage Chunked Sync
-function saveToTelegramCloud(dataStr) {
-  if (!tg || !tg.CloudStorage) return;
+// Telegram CloudStorage Robust Sync
+function saveToTelegramCloud(dataStr, cb) {
+  if (!tg || !tg.CloudStorage || !isInsideTelegram) {
+    if (cb) cb(false);
+    return;
+  }
   try {
-    var CHUNK_SIZE = 3800; // safe under 4096 limit
+    var CHUNK_SIZE = 3800;
     var totalChunks = Math.ceil(dataStr.length / CHUNK_SIZE);
-    var keys = ["lt_total"];
-    var pairs = {"lt_total": String(totalChunks)};
-    for (var i = 0; i < totalChunks; i++) {
-      var k = "lt_c" + i;
-      keys.push(k);
-      pairs[k] = dataStr.substr(i * CHUNK_SIZE, CHUNK_SIZE);
-    }
+    var tasks = [];
     
-    // Save metadata and chunks
-    for (var key in pairs) {
-      (function(k, v){
-        tg.CloudStorage.setItem(k, v, function(err, ok) {
-          if (!err && ok) {
-            updateCloudUI("سینک با تلگرام ✓", "var(--ok-fill)");
+    tasks.push({k: "lt_total", v: String(totalChunks)});
+    for (var i = 0; i < totalChunks; i++) {
+      tasks.push({k: "lt_c" + i, v: dataStr.substr(i * CHUNK_SIZE, CHUNK_SIZE)});
+    }
+    if (totalChunks <= 1) {
+      tasks.push({k: "lt_single", v: dataStr});
+    }
+
+    // Save sequentially to avoid dropping webview messages
+    var idx = 0;
+    function runNext() {
+      if (idx >= tasks.length) {
+        updateCloudUI("ابری تلگرام ✓", "var(--ok-fill)");
+        if (cb) cb(true);
+        return;
+      }
+      var t = tasks[idx++];
+      try {
+        tg.CloudStorage.setItem(t.k, t.v, function(err, ok) {
+          if (err) {
+            console.warn("CloudStorage.setItem error", t.k, err);
+            updateCloudUI("خطای سینک ابری", "var(--warn-fill)");
+            if (cb) cb(false);
+          } else {
+            runNext();
           }
         });
-      })(key, pairs[key]);
+      } catch(e) {
+        if (cb) cb(false);
+      }
     }
-  } catch(e) {}
+    runNext();
+  } catch(e) {
+    if (cb) cb(false);
+  }
 }
 
 function loadFromTelegramCloud(callback) {
-  if (!tg || !tg.CloudStorage) return callback(null);
+  if (!tg || !tg.CloudStorage || !isInsideTelegram) return callback(null);
   try {
-    tg.CloudStorage.getItem("lt_total", function(err, val) {
-      if (err || !val) return callback(null);
-      var total = parseInt(val, 10);
-      if (isNaN(total) || total < 1) return callback(null);
-      
-      var keys = [];
-      for (var i = 0; i < total; i++) keys.push("lt_c" + i);
-      
-      tg.CloudStorage.getItems(keys, function(err2, items) {
-        if (err2 || !items) return callback(null);
-        var full = "";
-        for (var i = 0; i < total; i++) {
-          full += (items["lt_c" + i] || "");
-        }
-        if (!full) return callback(null);
+    // 1. Try single key load first
+    tg.CloudStorage.getItem("lt_single", function(err, singleVal) {
+      if (!err && singleVal && singleVal.length > 20) {
         try {
-          var parsed = JSON.parse(full);
-          callback(parsed);
-        } catch(e) { callback(null); }
+          var parsed = JSON.parse(singleVal);
+          if (parsed && (parsed.events || parsed.vision || parsed.qtr)) {
+            return callback(parsed);
+          }
+        } catch(e) {}
+      }
+      
+      // 2. Fallback to chunked retrieval
+      tg.CloudStorage.getItem("lt_total", function(err2, totalVal) {
+        if (err2 || !totalVal) return callback(null);
+        var total = parseInt(totalVal, 10);
+        if (isNaN(total) || total < 1) return callback(null);
+        
+        var keys = [];
+        for (var i = 0; i < total; i++) keys.push("lt_c" + i);
+        
+        tg.CloudStorage.getItems(keys, function(err3, items) {
+          if (!err3 && items) {
+            var full = "";
+            for (var i = 0; i < total; i++) full += (items["lt_c" + i] || "");
+            if (full) {
+              try {
+                var p = JSON.parse(full);
+                if (p && (p.events || p.vision || p.qtr)) return callback(p);
+              } catch(e) {}
+            }
+          }
+          
+          // Sequential fallback if batch getItems failed
+          var seqFull = "";
+          var cur = 0;
+          function fetchNextChunk() {
+            if (cur >= total) {
+              try {
+                var pSeq = JSON.parse(seqFull);
+                return callback(pSeq);
+              } catch(e) {
+                return callback(null);
+              }
+            }
+            tg.CloudStorage.getItem("lt_c" + cur, function(err4, chunkVal) {
+              if (err4 || !chunkVal) return callback(null);
+              seqFull += chunkVal;
+              cur++;
+              fetchNextChunk();
+            });
+          }
+          fetchNextChunk();
+        });
       });
     });
   } catch(e) { callback(null); }
@@ -1922,21 +1978,27 @@ if (tg) {
   try {
     tg.ready();
     tg.expand();
-    if (tg.CloudStorage) {
+    if (isInsideTelegram && tg.CloudStorage) {
       isTgCloud = true;
-      updateCloudUI("اتصال به کلود...", "var(--warn-fill)");
+      updateCloudUI("اتصال به تلگرام...", "var(--warn-fill)");
       loadFromTelegramCloud(function(cloudData) {
-        if (cloudData && (cloudData.events || cloudData.vision)) {
+        if (cloudData && (cloudData.events || cloudData.vision || cloudData.qtr)) {
           S = cloudData;
           migrate();
           render();
           updateCloudUI("ابری تلگرام ✓", "var(--ok-fill)");
         } else {
-          updateCloudUI("ابری تلگرام (خالی)", "var(--ok-fill)");
+          updateCloudUI("ابری تلگرام (آماده)", "var(--ok-fill)");
         }
       });
+    } else {
+      updateCloudUI("مرورگر وب (محلی)", "var(--mut)");
     }
-  } catch(e) {}
+  } catch(e) {
+    updateCloudUI("مرورگر وب (محلی)", "var(--mut)");
+  }
+} else {
+  updateCloudUI("مرورگر وب (محلی)", "var(--mut)");
 }
 
 render();
