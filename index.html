@@ -1024,6 +1024,38 @@ svg g[data-id]:hover rect, svg g[data-id]:hover circle{
   </div>
 </div>
 
+<!-- IMPORT MODAL -->
+<div class="ov" id="ov-imp" role="dialog" aria-modal="true" aria-labelledby="imp-mt">
+  <div class="modal">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <b id="imp-mt" style="font-size:15.5px">بارگذاری اطلاعات برنامه</b>
+      <button type="button" class="ghost mini" id="imp-cn-x" aria-label="بستن">✕</button>
+    </div>
+    <p style="font-size:12.5px;color:var(--fg-sec);margin:6px 0 12px">می‌توانید فایل را از دستگاه انتخاب کنید یا متن آن را مستقیماً این‌جا الصاق (Paste) نمایید:</p>
+    
+    <button type="button" class="pri" id="btn-pick-file" style="width:100%;padding:10px;display:flex;align-items:center;justify-content:center;gap:8px">
+      <svg class="ic ic-sm" aria-hidden="true" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <span>انتخاب فایل پشتیبان (JSON) از دستگاه</span>
+    </button>
+
+    <div style="text-align:center;color:var(--mut);font-size:12px;margin:14px 0;position:relative">
+      <span style="background:var(--card);padding:0 8px;position:relative;z-index:1">یا الصاق مستقیم متن</span>
+      <div style="position:absolute;top:50%;left:0;right:0;border-top:1px solid var(--line);z-index:0"></div>
+    </div>
+
+    <label style="font-size:12px">متن اطلاعات (JSON)
+      <textarea id="imp-raw-text" rows="5" placeholder="متن فایل پشتیبان را اینجا Paste کنید..." style="font-family:monospace;font-size:11.5px;direction:ltr;text-align:left;line-height:1.4"></textarea>
+    </label>
+    
+    <div id="imp-err" style="color:var(--err);font-size:12px;font-weight:500" role="alert"></div>
+
+    <div class="btns">
+      <button type="button" class="pri" id="btn-apply-paste">اعمال و ذخیره در تلگرام</button>
+      <button type="button" id="imp-cn">انصراف</button>
+    </div>
+  </div>
+</div>
+
 <div class="tl-tip" id="tl-tip" role="tooltip"></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -1909,6 +1941,37 @@ function onA(e){
 }
 ['vis','qv'].forEach(function(id){$(id).addEventListener('change',onF);$(id).addEventListener('click',onA)});
 
+function applyImportedData(rawStr) {
+  try {
+    var d = JSON.parse(rawStr);
+    if (d && d.data && typeof d.data === 'string') d = JSON.parse(d.data);
+    if (d && (d.events || d.vision || d.qtr)) {
+      S = d;
+      migrate();
+      save('اطلاعات با موفقیت بارگذاری و ذخیره شد ✓');
+      render();
+      tgHaptic('success');
+      closeImpM();
+      return true;
+    } else {
+      $('imp-err').textContent = 'ساختار اطلاعات معتبر نیست یا بخش‌های لازم را ندارد.';
+      return false;
+    }
+  } catch(err) {
+    $('imp-err').textContent = 'خطا در خواندن متن JSON: ' + err.message;
+    return false;
+  }
+}
+
+function openImpM() {
+  $('imp-err').textContent = '';
+  $('imp-raw-text').value = '';
+  $('ov-imp').classList.add('on');
+}
+function closeImpM() {
+  $('ov-imp').classList.remove('on');
+}
+
 $('btn-exp').onclick=function(){
   var blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
   var a=document.createElement('a');
@@ -1918,32 +1981,37 @@ $('btn-exp').onclick=function(){
   a.click();
   showToast('فایل پشتیبان دانلود شد');
 };
+
 $('btn-imp').onclick=function(e){
+  if(e) e.preventDefault();
+  openImpM();
+};
+$('imp-cn').onclick=closeImpM;
+$('imp-cn-x').onclick=closeImpM;
+$('ov-imp').onclick=function(e){if(e.target===$('ov-imp'))closeImpM()};
+
+$('btn-pick-file').onclick=function(e){
   if(e) e.preventDefault();
   var inp = $('file-imp');
   inp.value = "";
   inp.click();
 };
+
+$('btn-apply-paste').onclick=function(){
+  var val = $('imp-raw-text').value.trim();
+  if(!val) {
+    $('imp-err').textContent = 'لطفاً ابتدا متن JSON را در کادر بالا بچسبانید.';
+    return;
+  }
+  applyImportedData(val);
+};
+
 $('file-imp').onchange=function(e){
   var f = e.target.files && e.target.files[0];
   if(!f) return;
   var r = new FileReader();
   r.onload = function(){
-    try {
-      var d = JSON.parse(r.result);
-      if (d && d.data && typeof d.data === 'string') d = JSON.parse(d.data);
-      if (d && (d.events || d.vision || d.qtr)) {
-        S = d;
-        migrate();
-        save('اطلاعات با موفقیت بارگذاری و ذخیره شد ✓');
-        render();
-        tgHaptic('success');
-      } else {
-        alert('فایل معتبر نیست یا ساختار آن مطابق برنامه نیست.');
-      }
-    } catch(err) {
-      alert('خطا در خواندن فایل: ' + err.message);
-    }
+    applyImportedData(r.result);
   };
   r.readAsText(f);
 };
