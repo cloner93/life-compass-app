@@ -916,7 +916,7 @@ svg g[data-id]:hover rect, svg g[data-id]:hover circle{
         <svg class="ic ic-sm" aria-hidden="true" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
         <span class="btn-lbl-hide-sm">بارگذاری</span>
       </button>
-      <input type="file" id="file-imp" accept=".json" style="display:none">
+      <input type="file" id="file-imp" accept=".json,application/json,text/plain" style="position:fixed;top:-1000px;left:-1000px;opacity:0;">
       <button type="button" class="mini" id="btn-thm" aria-label="تغییر پوسته تاریک و روشن">
         <svg class="ic ic-sm" aria-hidden="true" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         <span>پوسته</span>
@@ -1075,35 +1075,26 @@ var SEED_DATA = {
       {
         "name": "سلامتی (کف پایدار)",
         "floor": 1,
-        "text": "حداقل: ۳ جلسه ورزش در هفته، خواب حدود ۷ ساعت.
-دو هفته پشت هم زیر حداقل: اون هفته‌ها سلامتی از همه جلوتره.",
+        "text": "حداقل: ۳ جلسه ورزش در هفته، خواب حدود ۷ ساعت.\nدو هفته پشت هم زیر حداقل: اون هفته‌ها سلامتی از همه جلوتره.",
         "dirs": []
       },
       {
         "name": "جایگاه، حرفه و ثروت",
-        "text": "حداقل: هر فصل یه خروجی قابل نمایش در حوزه تخصصی.
-«کافی» مالی: ذخیره‌ی اضطراری؛ بعدش پول از اولویت خودکار خارج می‌شه.
-تصمیم بزرگ شغلی یا مالی: ۷۲ ساعت صبر و یادداشت مزایا/معایب.",
+        "text": "حداقل: هر فصل یه خروجی قابل نمایش در حوزه تخصصی.\n«کافی» مالی: ذخیره‌ی اضطراری؛ بعدش پول از اولویت خودکار خارج می‌شه.\nتصمیم بزرگ شغلی یا مالی: ۷۲ ساعت صبر و یادداشت مزایا/معایب.",
         "dirs": []
       },
       {
         "name": "ارتباطات اجتماعی (خانواده، دوست، شبکه)",
-        "text": "حلقه‌ی نزدیک (خانواده و دوست‌ها): هر هفته حداقل یه وعده‌ی واقعی یا تماس باکیفیت.
-دایره‌ی وسیع: ماهی ۱ جمع یا رویداد.
-حلقه‌ی نزدیک دو هفته پشت هم رد شد: تو بازبینی علامت می‌خوره.",
+        "text": "حلقه‌ی نزدیک (خانواده و دوست‌ها): هر هفته حداقل یه وعده‌ی واقعی یا تماس باکیفیت.\nدایره‌ی وسیع: ماهی ۱ جمع یا رویداد.\nحلقه‌ی نزدیک دو هفته پشت هم رد شد: تو بازبینی علامت می‌خوره.",
         "dirs": []
       },
       {
         "name": "تجربیات معنادار (تک جدید، غیرتک، سفر)",
-        "text": "حداقل: هر فصل یه تجربه‌ی جدید و مشخص.
-هر سال یه ماجراجویی یا سفر بزرگ‌تر.",
+        "text": "حداقل: هر فصل یه تجربه‌ی جدید و مشخص.\nهر سال یه ماجراجویی یا سفر بزرگ‌تر.",
         "dirs": []
       }
     ],
-    "general": "تصمیم برگشت‌پذیر: تو یه هفته بگیر و امتحان کن.
-تصمیم برگشت‌ناپذیر و سنگین: ۷۲ ساعت صبر و نوشتن مزایا/معایب.
-هر حداقلی که دو هفته پشت هم رد شد، تو بازبینی هفتگی علامت می‌خوره.
-تعهد بیشتر از ۳ تا ۶ ماه فقط برای چیزی که در آزمایش‌های کوتاه‌مدت شواهد واقعی آورده."
+    "general": "تصمیم برگشت‌پذیر: تو یه هفته بگیر و امتحان کن.\nتصمیم برگشت‌ناپذیر و سنگین: ۷۲ ساعت صبر و نوشتن مزایا/معایب.\nهر حداقلی که دو هفته پشت هم رد شد، تو بازبینی هفتگی علامت می‌خوره.\nتعهد بیشتر از ۳ تا ۶ ماه فقط برای چیزی که در آزمایش‌های کوتاه‌مدت شواهد واقعی آورده."
   },
   "qtr": null,
   "hist": []
@@ -1871,19 +1862,32 @@ $('btn-exp').onclick=function(){
   a.click();
   showToast('فایل پشتیبان دانلود شد');
 };
-$('btn-imp').onclick=function(){$('file-imp').click()};
+$('btn-imp').onclick=function(e){
+  if(e) e.preventDefault();
+  var inp = $('file-imp');
+  inp.value = "";
+  inp.click();
+};
 $('file-imp').onchange=function(e){
-  var f=e.target.files&&e.target.files[0];
-  if(!f)return;
-  var r=new FileReader();
-  r.onload=function(){
-    try{
-      var d=JSON.parse(r.result);
-      if(d && d.data && typeof d.data==='string') d=JSON.parse(d.data);
-      if(d && (d.events || d.vision)){
-        S=d;migrate();save('فایل پشتیبان با موفقیت بارگذاری شد');render();
+  var f = e.target.files && e.target.files[0];
+  if(!f) return;
+  var r = new FileReader();
+  r.onload = function(){
+    try {
+      var d = JSON.parse(r.result);
+      if (d && d.data && typeof d.data === 'string') d = JSON.parse(d.data);
+      if (d && (d.events || d.vision || d.qtr)) {
+        S = d;
+        migrate();
+        save('اطلاعات با موفقیت بارگذاری و ذخیره شد ✓');
+        render();
+        tgHaptic('success');
+      } else {
+        alert('فایل معتبر نیست یا ساختار آن مطابق برنامه نیست.');
       }
-    }catch(err){alert('فایل پشتیبان معتبر نیست.')}
+    } catch(err) {
+      alert('خطا در خواندن فایل: ' + err.message);
+    }
   };
   r.readAsText(f);
 };
