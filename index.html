@@ -1231,26 +1231,43 @@ function updateCloudUI(status, col) {
   dot.style.background = col || "var(--mut)";
 }
 
+function chunkStringByBytes(str, maxBytes) {
+  var chunks = [];
+  var cur = "";
+  var curBytes = 0;
+  for (var i = 0; i < str.length; i++) {
+    var ch = str.charAt(i);
+    var code = str.charCodeAt(i);
+    var b = (code <= 0x7f) ? 1 : ((code <= 0x7ff) ? 2 : ((code >= 0xd800 && code <= 0xdfff) ? 4 : 3));
+    if (curBytes + b > maxBytes) {
+      if (cur) chunks.push(cur);
+      cur = ch;
+      curBytes = b;
+    } else {
+      cur += ch;
+      curBytes += b;
+    }
+  }
+  if (cur) chunks.push(cur);
+  return chunks;
+}
+
 // Telegram CloudStorage Robust Sync
 function saveToTelegramCloud(dataStr, cb) {
-  if (!tg || !tg.CloudStorage) {
+  var isRealTg = tg && tg.platform && tg.platform !== "unknown";
+  if (!isRealTg || !tg.CloudStorage) {
     if (cb) cb(false);
     return;
   }
   try {
-    var CHUNK_SIZE = 3800;
-    var totalChunks = Math.ceil(dataStr.length / CHUNK_SIZE);
+    // 2500 bytes per chunk: strictly under Telegram 4096-byte limit even with UTF-8 Persian text
+    var chunks = chunkStringByBytes(dataStr, 2500);
     var tasks = [];
-    
-    tasks.push({k: "lt_total", v: String(totalChunks)});
-    for (var i = 0; i < totalChunks; i++) {
-      tasks.push({k: "lt_c" + i, v: dataStr.substr(i * CHUNK_SIZE, CHUNK_SIZE)});
-    }
-    if (totalChunks <= 1) {
-      tasks.push({k: "lt_single", v: dataStr});
+    tasks.push({k: "lt_total", v: String(chunks.length)});
+    for (var i = 0; i < chunks.length; i++) {
+      tasks.push({k: "lt_c" + i, v: chunks[i]});
     }
 
-    // Save sequentially to avoid dropping webview messages
     var idx = 0;
     function runNext() {
       if (idx >= tasks.length) {
@@ -1262,14 +1279,16 @@ function saveToTelegramCloud(dataStr, cb) {
       try {
         tg.CloudStorage.setItem(t.k, t.v, function(err, ok) {
           if (err) {
+            var msg = (typeof err === "string") ? err : (err.message || JSON.stringify(err) || "نامشخص");
             console.warn("CloudStorage.setItem error", t.k, err);
-            updateCloudUI("خطای سینک ابری", "var(--warn-fill)");
+            updateCloudUI("خطا: " + msg, "var(--warn-fill)");
             if (cb) cb(false);
           } else {
             runNext();
           }
         });
       } catch(e) {
+        updateCloudUI("خطا در ارسال ابری", "var(--warn-fill)");
         if (cb) cb(false);
       }
     }
@@ -1280,84 +1299,71 @@ function saveToTelegramCloud(dataStr, cb) {
 }
 
 function loadFromTelegramCloud(callback) {
-  if (!tg || !tg.CloudStorage) return callback(null);
+  var isRealTg = tg && tg.platform && tg.platform !== "unknown";
+  if (!isRealTg || !tg.CloudStorage) return callback(null);
   var called = false;
   function done(res) {
     if (called) return;
     called = true;
     callback(res);
   }
-  var timer = setTimeout(function() { done(null); }, 3500);
+  var timer = setTimeout(function() { done(null); }, 4000);
 
   try {
-    // 1. Try single key load first
-    tg.CloudStorage.getItem("lt_single", function(err, singleVal) {
-      if (!err && singleVal && singleVal.length > 20) {
-        try {
-          var parsed = JSON.parse(singleVal);
-          if (parsed && (parsed.events || parsed.vision || parsed.qtr)) {
-            clearTimeout(timer);
-            return done(parsed);
-          }
-        } catch(e) {}
+    tg.CloudStorage.getItem("lt_total", function(err, totalVal) {
+      if (err || !totalVal) {
+        clearTimeout(timer);
+        return done(null);
+      }
+      var total = parseInt(totalVal, 10);
+      if (isNaN(total) || total < 1) {
+        clearTimeout(timer);
+        return done(null);
       }
       
-      // 2. Fallback to chunked retrieval
-      tg.CloudStorage.getItem("lt_total", function(err2, totalVal) {
-        if (err2 || !totalVal) {
-          clearTimeout(timer);
-          return done(null);
-        }
-        var total = parseInt(totalVal, 10);
-        if (isNaN(total) || total < 1) {
-          clearTimeout(timer);
-          return done(null);
+      var keys = [];
+      for (var i = 0; i < total; i++) keys.push("lt_c" + i);
+      
+      tg.CloudStorage.getItems(keys, function(err2, items) {
+        if (!err2 && items) {
+          var full = "";
+          for (var i = 0; i < total; i++) full += (items["lt_c" + i] || "");
+          if (full) {
+            try {
+              var p = JSON.parse(full);
+              if (p && (p.events || p.vision || p.qtr)) {
+                clearTimeout(timer);
+                return done(p);
+              }
+            } catch(e) {}
+          }
         }
         
-        var keys = [];
-        for (var i = 0; i < total; i++) keys.push("lt_c" + i);
-        
-        tg.CloudStorage.getItems(keys, function(err3, items) {
-          if (!err3 && items) {
-            var full = "";
-            for (var i = 0; i < total; i++) full += (items["lt_c" + i] || "");
-            if (full) {
-              try {
-                var p = JSON.parse(full);
-                if (p && (p.events || p.vision || p.qtr)) {
-                  clearTimeout(timer);
-                  return done(p);
-                }
-              } catch(e) {}
+        // Sequential fallback
+        var seqFull = "";
+        var cur = 0;
+        function fetchNextChunk() {
+          if (cur >= total) {
+            try {
+              var pSeq = JSON.parse(seqFull);
+              clearTimeout(timer);
+              return done(pSeq);
+            } catch(e) {
+              clearTimeout(timer);
+              return done(null);
             }
           }
-          
-          // Sequential fallback if batch getItems failed
-          var seqFull = "";
-          var cur = 0;
-          function fetchNextChunk() {
-            if (cur >= total) {
-              try {
-                var pSeq = JSON.parse(seqFull);
-                clearTimeout(timer);
-                return done(pSeq);
-              } catch(e) {
-                clearTimeout(timer);
-                return done(null);
-              }
+          tg.CloudStorage.getItem("lt_c" + cur, function(err3, chunkVal) {
+            if (err3 || !chunkVal) {
+              clearTimeout(timer);
+              return done(null);
             }
-            tg.CloudStorage.getItem("lt_c" + cur, function(err4, chunkVal) {
-              if (err4 || !chunkVal) {
-                clearTimeout(timer);
-                return done(null);
-              }
-              seqFull += chunkVal;
-              cur++;
-              fetchNextChunk();
-            });
-          }
-          fetchNextChunk();
-        });
+            seqFull += chunkVal;
+            cur++;
+            fetchNextChunk();
+          });
+        }
+        fetchNextChunk();
       });
     });
   } catch(e) {
@@ -1369,7 +1375,8 @@ function loadFromTelegramCloud(callback) {
 function save(msg){
   var str = JSON.stringify(S);
   try{localStorage.setItem(KEY, str)}catch(e){}
-  if (tg && tg.CloudStorage) {
+  var isRealTg = tg && tg.platform && tg.platform !== "unknown";
+  if (isRealTg && tg.CloudStorage) {
     saveToTelegramCloud(str);
   }
   showToast(msg);
