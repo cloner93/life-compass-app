@@ -1211,7 +1211,6 @@ migrate();
 
 
 var tg = (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : null;
-var isInsideTelegram = !!(tg && tg.initData && tg.initData.length > 0);
 var isTgCloud = false;
 
 function tgHaptic(type) {
@@ -1234,7 +1233,7 @@ function updateCloudUI(status, col) {
 
 // Telegram CloudStorage Robust Sync
 function saveToTelegramCloud(dataStr, cb) {
-  if (!tg || !tg.CloudStorage || !isInsideTelegram) {
+  if (!tg || !tg.CloudStorage) {
     if (cb) cb(false);
     return;
   }
@@ -1281,7 +1280,15 @@ function saveToTelegramCloud(dataStr, cb) {
 }
 
 function loadFromTelegramCloud(callback) {
-  if (!tg || !tg.CloudStorage || !isInsideTelegram) return callback(null);
+  if (!tg || !tg.CloudStorage) return callback(null);
+  var called = false;
+  function done(res) {
+    if (called) return;
+    called = true;
+    callback(res);
+  }
+  var timer = setTimeout(function() { done(null); }, 3500);
+
   try {
     // 1. Try single key load first
     tg.CloudStorage.getItem("lt_single", function(err, singleVal) {
@@ -1289,16 +1296,23 @@ function loadFromTelegramCloud(callback) {
         try {
           var parsed = JSON.parse(singleVal);
           if (parsed && (parsed.events || parsed.vision || parsed.qtr)) {
-            return callback(parsed);
+            clearTimeout(timer);
+            return done(parsed);
           }
         } catch(e) {}
       }
       
       // 2. Fallback to chunked retrieval
       tg.CloudStorage.getItem("lt_total", function(err2, totalVal) {
-        if (err2 || !totalVal) return callback(null);
+        if (err2 || !totalVal) {
+          clearTimeout(timer);
+          return done(null);
+        }
         var total = parseInt(totalVal, 10);
-        if (isNaN(total) || total < 1) return callback(null);
+        if (isNaN(total) || total < 1) {
+          clearTimeout(timer);
+          return done(null);
+        }
         
         var keys = [];
         for (var i = 0; i < total; i++) keys.push("lt_c" + i);
@@ -1310,7 +1324,10 @@ function loadFromTelegramCloud(callback) {
             if (full) {
               try {
                 var p = JSON.parse(full);
-                if (p && (p.events || p.vision || p.qtr)) return callback(p);
+                if (p && (p.events || p.vision || p.qtr)) {
+                  clearTimeout(timer);
+                  return done(p);
+                }
               } catch(e) {}
             }
           }
@@ -1322,13 +1339,18 @@ function loadFromTelegramCloud(callback) {
             if (cur >= total) {
               try {
                 var pSeq = JSON.parse(seqFull);
-                return callback(pSeq);
+                clearTimeout(timer);
+                return done(pSeq);
               } catch(e) {
-                return callback(null);
+                clearTimeout(timer);
+                return done(null);
               }
             }
             tg.CloudStorage.getItem("lt_c" + cur, function(err4, chunkVal) {
-              if (err4 || !chunkVal) return callback(null);
+              if (err4 || !chunkVal) {
+                clearTimeout(timer);
+                return done(null);
+              }
               seqFull += chunkVal;
               cur++;
               fetchNextChunk();
@@ -1338,13 +1360,16 @@ function loadFromTelegramCloud(callback) {
         });
       });
     });
-  } catch(e) { callback(null); }
+  } catch(e) {
+    clearTimeout(timer);
+    done(null);
+  }
 }
 
 function save(msg){
   var str = JSON.stringify(S);
   try{localStorage.setItem(KEY, str)}catch(e){}
-  if (isTgCloud) {
+  if (tg && tg.CloudStorage) {
     saveToTelegramCloud(str);
   }
   showToast(msg);
@@ -2046,7 +2071,8 @@ if (tg) {
   try {
     tg.ready();
     tg.expand();
-    if (isInsideTelegram && tg.CloudStorage) {
+    var p = tg.platform || 'unknown';
+    if (tg.CloudStorage && p !== 'unknown') {
       isTgCloud = true;
       updateCloudUI("اتصال به تلگرام...", "var(--warn-fill)");
       loadFromTelegramCloud(function(cloudData) {
@@ -2056,7 +2082,14 @@ if (tg) {
           render();
           updateCloudUI("ابری تلگرام ✓", "var(--ok-fill)");
         } else {
-          updateCloudUI("ابری تلگرام (آماده)", "var(--ok-fill)");
+          // If cloud is empty but local storage has data, automatically seed cloud!
+          if (S && S.events && S.events.length > 0) {
+            saveToTelegramCloud(JSON.stringify(S), function(ok) {
+              if (ok) updateCloudUI("ابری تلگرام ✓", "var(--ok-fill)");
+            });
+          } else {
+            updateCloudUI("ابری تلگرام (آماده)", "var(--ok-fill)");
+          }
         }
       });
     } else {
