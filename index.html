@@ -1784,7 +1784,8 @@ function renderStatusStrip(){
     var a=jToDate(Q.from.y,Q.from.m,Q.from.d),b=jToDate(Q.to.y,Q.to.m,Q.to.d);
     var tot=Math.max(1,Math.round((b-a)/864e5)+1),n=Math.floor((tn-a)/864e5)+1;
     var curWk=Math.max(1,Math.min(12,Math.ceil(Math.max(1,n)/Math.max(1,tot/12))));
-    qTxt=esc(Q.name)+' · هفته '+fa(curWk);
+    var cWkObj = getCurSeasonWeek(Q);
+    qTxt = esc(Q.name) + ' · ' + cWkObj.mName + '، هفته ' + fa(cWkObj.wkInMonth);
     var sum=Q.items.reduce(function(t,i){return t+(+i.hours||0)},0),cap=+Q.cap||0;
     capTxt=fa(sum)+' از '+fa(cap)+' ساعت آزاد';
     var broken=0;
@@ -1808,17 +1809,43 @@ function renderStatusStrip(){
     '<div class="stat-card"><div class="stat-icon" style="background:'+flrBg+';color:'+flrCol+'">'+ICONS.shield+'</div><div class="stat-body"><span class="lbl">وضعیت کف‌های زندگی</span><span class="val" style="color:'+flrCol+'">'+flrTxt+'</span></div></div>';
 }
 
-// Helper to render minimal 3-month (4 dots each) visual strip without number clutter
-function renderMonthsStrip(arr, actionPrefix, activeWkIdx){
+function getCurSeasonWeek(Q) {
+  var curJ = gToJ(new Date());
+  var s = (Q && Q.s) ? Q.s : (Math.ceil(curJ.m / 3));
+  var mInSeason = curJ.m - ((s - 1) * 3);
+  mInSeason = Math.max(1, Math.min(3, mInSeason));
+  var wkInMonth = Math.min(4, Math.max(1, Math.floor((curJ.d - 1) / 7) + 1));
+  var dotIdx = (mInSeason - 1) * 4 + (wkInMonth - 1);
+  return {
+    dotIdx: dotIdx,
+    mInSeason: mInSeason,
+    wkInMonth: wkInMonth,
+    mName: MN[((s - 1) * 3) + mInSeason - 1] || ('ماه ' + fa(mInSeason))
+  };
+}
+
+function formatWeekLabel(wIdx, qSeason, isCurrent) {
+  var s = qSeason || 1;
+  var mIdx = Math.floor(wIdx / 4);
+  var wInM = (wIdx % 4) + 1;
+  var monthName = MN[((s - 1) * 3) + mIdx] || ('ماه ' + fa(mIdx + 1));
+  return monthName + ' · هفته ' + fa(wInM) + (isCurrent ? ' (جاری)' : '');
+}
+
+// Helper to render minimal 3-month (4 dots each) visual strip with Persian month names
+function renderMonthsStrip(arr, actionPrefix, activeWkIdx, qSeason){
+  var s = qSeason || 1;
   var h='<div class="months-strip">';
   for(var m=0;m<3;m++){
     var mOk=0;
     for(var k=0;k<4;k++){if(arr[m*4+k]===1)mOk++;}
-    h+='<div class="m-group"><div class="m-lbl"><span>ماه '+fa(m+1)+'</span><span>'+fa(mOk)+'/۴</span></div><div class="m-dots">';
+    var mName = MN[((s - 1) * 3) + m] || ('ماه ' + fa(m + 1));
+    h+='<div class="m-group"><div class="m-lbl"><span>'+esc(mName)+'</span><span>'+fa(mOk)+'/۴</span></div><div class="m-dots">';
     for(var w=0;w<4;w++){
       var idx=m*4+w,st=arr[idx]||0;
       var stTxt=st===1?'رعایت شد':(st===2?'مرزی':(st===3?'رد شد':'ثبت نشده'));
-      h+='<button type="button" class="seg-dot s-'+st+(idx===activeWkIdx?' is-sel':'')+'" data-a="'+actionPrefix+'" data-k="'+idx+'" title="هفته '+fa(idx+1)+': '+stTxt+'" aria-label="هفته '+fa(idx+1)+'"></button>';
+      var wkTitle = mName + ' · هفته ' + fa(w + 1) + ': ' + stTxt;
+      h+='<button type="button" class="seg-dot s-'+st+(idx===activeWkIdx?' is-sel':'')+'" data-a="'+actionPrefix+'" data-k="'+idx+'" title="'+esc(wkTitle)+'" aria-label="'+esc(wkTitle)+'"></button>';
     }
     h+='</div></div>';
   }
@@ -1948,26 +1975,29 @@ function renderQuarter(){
   h+='<span class="n">هر کارت هفته مستقل دارد · روی مستطیل‌های هر ماه یا دکمه‌ها کلیک کنید</span></div>';
 
   h+='<div class="floor-grid">';
+  var curSeasonInfo = getCurSeasonWeek(Q);
   S.vision.items.forEach(function(vi,idx){
     var fw=(Q.floorWeeks&&Q.floorWeeks[idx])||[0,0,0,0,0,0,0,0,0,0,0,0];
-    if(selFloorWk[idx]==null) selFloorWk[idx]=curWk-1;
+    if(selFloorWk[idx]==null) selFloorWk[idx]=curSeasonInfo.dotIdx;
     var fWk=selFloorWk[idx];
     var curSt=fw[fWk]||0;
     var firstLine=(vi.text||'').split('\n')[0];
     var ps=PILLAR_STYLES[idx%4];
+    var isCurrentWk = (fWk === curSeasonInfo.dotIdx);
+    var fWkLabel = formatWeekLabel(fWk, Q.s, isCurrentWk);
 
     h+='<div class="floor-card">';
     h+='<div class="floor-head"><div class="floor-name"><span style="color:'+ps.col+'">'+ps.ic+'</span><span>'+esc(vi.name)+'</span></div>';
     h+='<span class="pillar-badge" style="background:'+ps.bg+';color:'+ps.col+';border-color:'+ps.bdr+'">'+(vi.floor?'کف غیرقابل‌مذاکره':'ستون '+fa(idx))+'</span></div>';
     h+='<div class="floor-desc">'+esc(firstLine)+'</div>';
     h+='<div class="floor-controls">';
-    h+='<div class="wk-selector"><button type="button" data-a="fwknav" data-k="'+idx+'_-1" title="هفته قبل">‹</button><span class="wk-cur-lbl">هفته '+fa(fWk+1)+((fWk+1)===curWk?' (جاری)':'')+'</span><button type="button" data-a="fwknav" data-k="'+idx+'_1" title="هفته بعد">›</button></div>';
-    h+='<div class="st-group" role="group" aria-label="وضعیت هفته '+fa(fWk+1)+'">';
+    h+='<div class="wk-selector"><button type="button" data-a="fwknav" data-k="'+idx+'_-1" title="هفته قبل">‹</button><span class="wk-cur-lbl">'+esc(fWkLabel)+'</span><button type="button" data-a="fwknav" data-k="'+idx+'_1" title="هفته بعد">›</button></div>';
+    h+='<div class="st-group" role="group" aria-label="وضعیت '+esc(fWkLabel)+'">';
     h+='<button type="button" class="st-btn'+(curSt===1?' on-ok':'')+'" data-a="fset" data-k="'+idx+'_'+fWk+'_1" title="رعایت شد">'+ICONS.check+' <span>رعایت شد</span></button>';
     h+='<button type="button" class="st-btn'+(curSt===2?' on-half':'')+'" data-a="fset" data-k="'+idx+'_'+fWk+'_2" title="مرزی">'+ICONS.half+' <span>مرزی</span></button>';
     h+='<button type="button" class="st-btn'+(curSt===3?' on-miss':'')+'" data-a="fset" data-k="'+idx+'_'+fWk+'_3" title="رد شد">'+ICONS.x+' <span>رد شد</span></button>';
     h+='</div></div>';
-    h+=renderMonthsStrip(fw, 'fdot_'+idx, fWk);
+    h+=renderMonthsStrip(fw, 'fdot_'+idx, fWk, Q.s);
     h+='</div>';
   });
   h+='</div></div>';
@@ -1978,9 +2008,11 @@ function renderQuarter(){
   Q.items.forEach(function(it,i){
     var k='o'+i,ed=ED[k];
     var wArr=it.weeks||[0,0,0,0,0,0,0,0,0,0,0,0];
-    if(selOutWk[i]==null) selOutWk[i]=curWk-1;
+    if(selOutWk[i]==null) selOutWk[i]=curSeasonInfo.dotIdx;
     var oWk=selOutWk[i];
     var curSt=wArr[oWk]||0;
+    var isCurrentOutWk = (oWk === curSeasonInfo.dotIdx);
+    var oWkLabel = formatWeekLabel(oWk, Q.s, isCurrentOutWk);
 
     h+='<div class="cd"><div class="cd-head"><div style="display:flex;align-items:center;gap:8px;flex:1;min-width:200px"><span class="pillar-badge" style="background:var(--pri);color:var(--pri-fg);border-color:var(--pri)">نتیجه '+fa(i+1)+'</span>';
     if(!ed){
@@ -2016,7 +2048,7 @@ function renderQuarter(){
     h+='<div class="out-rhythm-bar">';
     h+='<div class="out-rhythm-top">';
     h+='<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">';
-    h+='<div class="wk-selector"><button type="button" data-a="owknav" data-k="'+i+'_-1" title="هفته قبل">‹</button><span class="wk-cur-lbl">هفته '+fa(oWk+1)+((oWk+1)===curWk?' (جاری)':'')+'</span><button type="button" data-a="owknav" data-k="'+i+'_1" title="هفته بعد">›</button></div>';
+    h+='<div class="wk-selector"><button type="button" data-a="owknav" data-k="'+i+'_-1" title="هفته قبل">‹</button><span class="wk-cur-lbl">'+esc(oWkLabel)+'</span><button type="button" data-a="owknav" data-k="'+i+'_1" title="هفته بعد">›</button></div>';
     h+='<div class="st-group">';
     h+='<button type="button" class="st-btn'+(curSt===1?' on-ok':'')+'" data-a="oset" data-k="'+i+'_'+oWk+'_1">'+ICONS.check+' <span>انجام شد</span></button>';
     h+='<button type="button" class="st-btn'+(curSt===2?' on-half':'')+'" data-a="oset" data-k="'+i+'_'+oWk+'_2">'+ICONS.half+' <span>نصفه</span></button>';
@@ -2024,7 +2056,7 @@ function renderQuarter(){
     h+='</div></div>';
     h+='<div style="display:flex;align-items:center;gap:8px;flex:1;min-width:180px;justify-content:flex-end"><span class="n" style="white-space:nowrap">پیشرفت: <b style="color:var(--fg)">'+fa(it.pct)+'٪</b></span><input type="range" class="f" style="width:120px;margin:0" data-k="'+k+'" data-f="pct" data-n="1" data-re="1" min="0" max="100" step="5" value="'+it.pct+'"></div>';
     h+='</div>';
-    h+=renderMonthsStrip(wArr, 'odot_'+i, oWk);
+    h+=renderMonthsStrip(wArr, 'odot_'+i, oWk, Q.s);
     h+='</div></div>';
   });
 
