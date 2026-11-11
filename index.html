@@ -1708,8 +1708,8 @@ svg g[data-id]:hover rect, svg g[data-id]:hover circle{
 
     <div class="ai-quick" id="ai-quick">
       <button type="button" class="flt-btn" data-aiq="می‌خواهم یک مورد یا عادت جدید به برنامه این فصل اضافه کنم؛ سوال‌های لازم را از من بپرس">افزودن مورد به فصل</button>
+      <button type="button" class="flt-btn" data-aiq="می‌خواهم حداقل‌ها، فرضیه‌ها یا مسیرهای بخش ویژن را مدیریت یا ویرایش کنم؛ اول سوال‌های لازم را از من بپرس">مدیریت ویژن و حداقل‌ها</button>
       <button type="button" class="flt-btn" data-aiq="بر اساس ویژن و ظرفیت من، برنامه این فصل سه‌ماهه را طراحی یا بهبود بده">طراحی برنامه فصل</button>
-      <button type="button" class="flt-btn" data-aiq="می‌خواهم یک ایده جدید را به فرضیه کاوش و آزمایش ارزان در ویژن تبدیل کنم">ساخت فرضیه کاوش</button>
       <button type="button" class="flt-btn" data-aiq="عملکرد و ریتم این فصل را تحلیل کن و برای بازبینی پایان فصل کمکم کن">بازبینی پایان فصل</button>
       <button type="button" class="flt-btn" data-aiq="تراز ظرفیت هفتگی و وضعیت کف‌های پایدار من در این فصل را بررسی کن">تحلیل ظرفیت و کف‌ها</button>
     </div>
@@ -3009,7 +3009,10 @@ function buildAiSystemPrompt() {
     '2. تغییر تایم‌لاین رویدادها (events) یا حذف تاریخچه (hist) در حیطه مجاز تو نیست؛ رویدادهای تایم‌لاین فقط برای شناخت پس‌زمینه زندگی کاربر ارائه شده‌اند.',
     '3. قاعده مهم مصاحبه پیش از ثبت (بسیار مهم): اگر کاربر فقط یک خواسته کلی گفت (مثلاً «می‌خواهم زبان بخوانم» یا «می‌خواهم یک مورد به فصل اضافه کنم») و هنوز جزئیات کلیدی را نگفته و صراحتاً نخواسته «خودت بدون پرسش پر کنی»، حتماً پیش از ساختن patch، ابتدا patch را null بگذار و با یک چک‌لیست کوتاه و شماره‌گذاری‌شده فقط موارد نامشخص را از او بپرس (کنار هر سوال هم ۱ یا ۲ گزینه پیشنهادی کوتاه بنویس تا راحت و سریع جواب بدهد):',
     '   - برای افزودن نتیجه به فصل: (الف) آیا در حد «کاوش و آزمایش ارزان» است یا «تعهد و ساختن»؟ (ب) چند ساعت در هفته وقت می‌گذارد و با توجه به quarterCapacitySummary چقدر با ظرفیت آزاد فعلی سازگار است؟ (پ) در پایان ۹۰ روز چه خروجی ملموسی معیار موفقیت است؟ (ت) ریتم هفتگی پیشنهادی‌اش چیست؟ (ث) اگر الان ۴ نتیجه ثبت شده است کدام یک جایگزین شود، و اگر هنوز فصلی شروع نشده (qtr: null) آیا همین فصل جاری را با چه تمرکز اصلی و سقف ساعتی شروع کنیم؟',
-    '   - برای ساخت فرضیه کاوش در ویژن: به کدام ستون مرتبط است، چرایی فرضیه چیست و معیار ادامه یا توقف بعد از ۹۰ روز چیست؟',
+    '   - برای مدیریت بخش ویژن (حداقل‌های ستون‌ها، قوانین عمومی، فرضیه‌ها و مسیرها): ابتدا بر اساس نوع درخواست سوال بپرس:',
+    '     * اگر بحث تغییر/افزودن/حذف «حداقل‌ها یا قوانین ستون» است: بپرس مربوط به کدام ستون یا قوانین عمومی است، دقیقاً کدام خط تغییر کند یا اضافه شود، و چه حداقل واقع‌بینانه‌ای در هفته‌های شلوغ هم قابل حفظ است؟ (در updatePillars هنگام ویرایش text حتماً سایر خطوط فعلی کاربر را حفظ کن مگر اینکه خودش حذف آن‌ها را خواسته باشد).',
+    '     * اگر بحث افزودن «فرضیه یا مسیر جدید» است: بپرس زیرمجموعه کدام ستون باشد، چرایی فرضیه چیست (hyp)، معیار ادامه یا توقف پس از تست ۹۰ روزه چیست (crit)، و وضعیت فعلی چه باشد (active یا paused)؟',
+    '     * اگر بحث مدیریت/تغییر وضعیت/حذف «مسیرها و فرضیه‌های موجود» است: فهرست کوتاه مسیرهای فعلی را نشان بده و بپرس کدام مورد تغییر کند، وضعیتش به «متوقف» (paused) یا «کنار گذاشته شد» (dropped) برود یا از لیست حذف شود (removeDirs)؟',
     '   - برای بازبینی پایان فصل: اول داده‌های ۱۲ هفته ثبت‌شده در qtr را خلاصه کن و درباره سه محور بازبینی (چه جواب داد، چه جواب نداد، تصمیم فصل بعد) از او بپرس.',
     '4. به محض اینکه کاربر به سوال‌ها پاسخ داد (یا از ابتدا اطلاعات کافی داد، یا خودش گفت «خودت پیشنهاد بده و بساز»)، در کنار توضیح فارسی در فیلد reply، بسته تغییر کامل و دقیق را در فیلد patch بگذار تا کاربر با یک کلیک پیش‌نمایش و اعمال کند.',
     '5. مجموع نتایج یک فصل (qtr.items) حداکثر ۴ مورد (و ترجیحاً ۱ تا ۳ مورد) است. برای pillar دقیقاً یکی از نام‌های فعلی ستون‌ها در vision.items را بنویس.',
@@ -3020,9 +3023,10 @@ function buildAiSystemPrompt() {
     '  "patch": null | {',
     '    "vision": {',
     '      "general": "متن کامل قوانین عمومی تصمیم‌گیری (اختیاری)",',
-    '      "updatePillars": [{ "index": 0, "name": "عنوان ستون (اختیاری)", "text": "متن کامل قوانین ستون با خط جدید (اختیاری)" }],',
-    '      "addDirs": [{ "pillarIndex": 1, "title": "عنوان فرضیه", "hyp": "فرضیه...", "crit": "معیار تصمیم...", "status": "active" }],',
-    '      "updateDirs": [{ "pillarIndex": 1, "dirIndex": 0, "title": "...", "hyp": "...", "crit": "...", "status": "active|paused|dropped" }]',
+    '      "updatePillars": [{ "index": 0, "name": "عنوان ستون (اختیاری)", "text": "متن کامل قوانین و حداقل‌های ستون با خط جدید (اختیاری)" }],',
+    '      "addDirs": [{ "pillarIndex": 1, "title": "عنوان فرضیه یا مسیر", "hyp": "فرضیه...", "crit": "معیار تصمیم...", "status": "active" }],',
+    '      "updateDirs": [{ "pillarIndex": 1, "dirIndex": 0, "title": "...", "hyp": "...", "crit": "...", "status": "active|paused|dropped" }],',
+    '      "removeDirs": [{ "pillarIndex": 1, "dirIndex": 0 }]',
     '    },',
     '    "quarter": {',
     '      "startNew": { "y": 1405, "s": 3 },',
@@ -3075,18 +3079,31 @@ function summarizeAiPatch(patch) {
     if (Array.isArray(v.updatePillars)) {
       v.updatePillars.forEach(function(p) {
         var curName = (S.vision.items[p.index] && S.vision.items[p.index].name) || ('ستون ' + fa(p.index));
-        lines.push('ویرایش ستون «' + (p.name || curName) + '»');
+        var parts = [];
+        if (typeof p.name === 'string' && p.name.trim() && p.name.trim() !== curName) parts.push('عنوان');
+        if (typeof p.text === 'string') parts.push('حداقل‌ها و قوانین');
+        lines.push('به‌روزرسانی ستون «' + (p.name || curName) + '»' + (parts.length ? ' (' + parts.join(' و ') + ')' : ''));
       });
     }
     if (Array.isArray(v.addDirs)) {
       v.addDirs.forEach(function(d) {
         var pName = (S.vision.items[d.pillarIndex] && S.vision.items[d.pillarIndex].name) || 'ویژن';
-        lines.push('افزودن فرضیه کاوش «' + (d.title || 'بدون عنوان') + '» به ' + pName);
+        lines.push('افزودن فرضیه/مسیر «' + (d.title || 'بدون عنوان') + '» به ' + pName);
       });
     }
     if (Array.isArray(v.updateDirs)) {
       v.updateDirs.forEach(function(d) {
-        lines.push('ویرایش فرضیه «' + (d.title || ('شماره ' + fa((d.dirIndex || 0) + 1))) + '»');
+        var curDir = S.vision.items[d.pillarIndex] && S.vision.items[d.pillarIndex].dirs && S.vision.items[d.pillarIndex].dirs[d.dirIndex];
+        var dTitle = d.title || (curDir && curDir.title) || ('شماره ' + fa((d.dirIndex || 0) + 1));
+        var stInfo = d.status ? (' ← وضعیت: ' + stLbl(d.status)) : '';
+        lines.push('ویرایش مسیر/فرضیه «' + dTitle + '»' + stInfo);
+      });
+    }
+    if (Array.isArray(v.removeDirs)) {
+      v.removeDirs.forEach(function(d) {
+        var curDir = S.vision.items[d.pillarIndex] && S.vision.items[d.pillarIndex].dirs && S.vision.items[d.pillarIndex].dirs[d.dirIndex];
+        var dTitle = (curDir && curDir.title) || ('شماره ' + fa((d.dirIndex || 0) + 1));
+        lines.push('حذف مسیر/فرضیه «' + dTitle + '»');
       });
     }
   }
@@ -3161,6 +3178,16 @@ function applyAiPatch(patch) {
           if (typeof d.crit === 'string') target.crit = d.crit;
           if (d.status === 'active' || d.status === 'paused' || d.status === 'dropped') target.status = d.status;
         }
+      });
+    }
+    if (Array.isArray(v.removeDirs)) {
+      var sortedRem = v.removeDirs.slice().sort(function(a, b) {
+        return (parseInt(b.dirIndex, 10) || 0) - (parseInt(a.dirIndex, 10) || 0);
+      });
+      sortedRem.forEach(function(d) {
+        var pi = parseInt(d.pillarIndex, 10), di = parseInt(d.dirIndex, 10);
+        var arr = S.vision.items[pi] && S.vision.items[pi].dirs;
+        if (arr && !isNaN(di) && di >= 0 && di < arr.length) arr.splice(di, 1);
       });
     }
   }
