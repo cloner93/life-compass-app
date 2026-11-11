@@ -1244,6 +1244,212 @@ svg g[data-id]:hover rect, svg g[data-id]:hover circle{
   }
 }
 .toast.on{opacity:1;transform:translateY(0)}
+
+/* AI Assistant Modal & Chat UI */
+.ai-btn{
+  background:var(--md-sys-color-primary-container);
+  color:var(--md-sys-color-on-primary-container);
+  border-color:transparent;
+}
+.ai-btn:hover{
+  background:var(--pri);
+  color:var(--pri-fg);
+}
+.ai-modal{
+  max-width:680px;
+  height:min(86vh,720px);
+  max-height:90vh;
+  padding:0;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  gap:0;
+}
+@media (max-width:540px){
+  .ai-modal{
+    max-width:100%;
+    height:90vh;
+    max-height:92vh;
+    padding:0;
+  }
+}
+.ai-head{
+  padding:14px 18px 12px;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  flex-shrink:0;
+  background:var(--card);
+}
+@media (max-width:540px){
+  .ai-head{padding:8px 14px 10px}
+}
+.ai-head-title{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-width:0;
+}
+.ai-head-title b{font-size:15px;white-space:nowrap}
+.ai-cfg-panel{
+  padding:14px 18px;
+  background:var(--card-alt);
+  border-bottom:1px solid var(--line);
+  display:none;
+  gap:10px;
+  flex-shrink:0;
+  max-height:52vh;
+  overflow-y:auto;
+}
+.ai-cfg-panel.on{display:grid}
+.ai-cfg-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));
+  gap:10px;
+}
+.ai-cfg-panel label{
+  font-size:12px;
+  color:var(--fg-sec);
+  display:grid;
+  gap:4px;
+  font-weight:600;
+}
+.ai-cfg-panel input,.ai-cfg-panel select{
+  font-size:12.5px;
+  padding:7px 10px;
+  width:100%;
+}
+.ai-chat{
+  flex:1;
+  overflow-y:auto;
+  padding:14px 18px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  background:var(--bg);
+}
+.ai-empty{
+  margin:auto 0;
+  text-align:center;
+  padding:18px 10px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+  color:var(--fg-sec);
+}
+.ai-empty-ic{
+  width:46px;height:46px;
+  border-radius:var(--r-lg);
+  background:var(--md-sys-color-primary-container);
+  color:var(--md-sys-color-on-primary-container);
+  display:flex;align-items:center;justify-content:center;
+}
+.ai-msg{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  max-width:88%;
+}
+.ai-msg.user{align-self:flex-start}
+.ai-msg.bot{align-self:flex-end;max-width:94%}
+.ai-bubble{
+  padding:10px 14px;
+  border-radius:var(--r-lg);
+  font-size:13px;
+  line-height:1.7;
+  white-space:pre-wrap;
+  word-break:break-word;
+  border:1px solid var(--line);
+}
+.ai-msg.user .ai-bubble{
+  background:var(--md-sys-color-primary-container);
+  color:var(--md-sys-color-on-primary-container);
+  border-color:transparent;
+  border-start-start-radius:var(--r-xs);
+}
+.ai-msg.bot .ai-bubble{
+  background:var(--card);
+  color:var(--fg);
+  border-start-end-radius:var(--r-xs);
+  box-shadow:var(--shadow-sm);
+}
+.ai-msg.err .ai-bubble{
+  background:var(--err-bg);
+  color:var(--err);
+  border-color:var(--err-bdr);
+}
+.ai-patch{
+  background:var(--card);
+  border:1.5px solid var(--pri);
+  border-radius:var(--r-lg);
+  padding:12px 14px;
+  display:grid;
+  gap:8px;
+  box-shadow:var(--shadow-sm);
+}
+.ai-patch-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  font-size:12.5px;
+  font-weight:700;
+  color:var(--pri);
+}
+.ai-patch-list{
+  margin:0;
+  padding-inline-start:18px;
+  font-size:12.5px;
+  color:var(--fg);
+  display:grid;
+  gap:4px;
+}
+.ai-patch-list li{line-height:1.55}
+.ai-patch-act{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:2px;
+}
+.ai-quick{
+  display:flex;
+  gap:6px;
+  padding:8px 16px 0;
+  overflow-x:auto;
+  scrollbar-width:none;
+  background:var(--card);
+  border-top:1px solid var(--line);
+  flex-shrink:0;
+}
+.ai-quick::-webkit-scrollbar{display:none}
+.ai-foot{
+  padding:10px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+  background:var(--card);
+  display:flex;
+  gap:8px;
+  align-items:flex-end;
+  flex-shrink:0;
+}
+.ai-foot textarea{
+  flex:1;
+  resize:none;
+  min-height:40px;
+  max-height:110px;
+  padding:8px 12px;
+  font-size:13px;
+  border-radius:var(--r-lg);
+  line-height:1.5;
+}
+.ai-typing{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  font-size:12.5px;
+  color:var(--fg-sec);
+}
 </style>
 </head>
 <body>
@@ -1264,6 +1470,10 @@ svg g[data-id]:hover rect, svg g[data-id]:hover circle{
         <span id="cloud-dot" style="width:8px;height:8px;border-radius:50%;background:var(--mut)"></span>
         <span id="cloud-status">حافظه محلی</span>
       </div>
+      <button type="button" class="mini ai-btn" id="btn-ai" title="دستیار هوش مصنوعی (Gemini)">
+        <svg class="ic ic-sm" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l1.9 4.6L18.5 9.5l-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9z"/><path d="M19 15l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z"/></svg>
+        <span>دستیار هوشمند</span>
+      </button>
       <button type="button" class="mini" id="btn-exp" title="دانلود فایل پشتیبان (JSON)">
         <svg class="ic ic-sm" aria-hidden="true" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         <span class="btn-lbl-hide-sm">پشتیبان</span>
@@ -1441,6 +1651,71 @@ svg g[data-id]:hover rect, svg g[data-id]:hover circle{
     <div class="btns">
       <button type="button" class="pri" id="btn-apply-paste">اعمال و ذخیره در تلگرام</button>
       <button type="button" id="imp-cn">انصراف</button>
+    </div>
+  </div>
+</div>
+
+<!-- AI ASSISTANT MODAL -->
+<div class="ov" id="ov-ai" role="dialog" aria-modal="true" aria-labelledby="ai-mt">
+  <div class="modal ai-modal">
+    <div class="ai-head">
+      <div style="display:flex;flex-direction:column;gap:2px;min-width:0;flex:1">
+        <div class="m3-drag-handle" aria-hidden="true" style="margin-bottom:2px"></div>
+        <div class="ai-head-title">
+          <svg class="ic" style="color:var(--pri)" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l1.9 4.6L18.5 9.5l-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9z"/><path d="M19 15l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z"/></svg>
+          <b id="ai-mt">دستیار برنامه‌ریزی</b>
+          <span class="chip" id="ai-model-chip" style="font-size:11px;padding:2px 8px">Gemini</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:4px;align-items:center;flex-shrink:0">
+        <button type="button" class="ghost mini" id="ai-btn-reset" title="شروع گفتگوی جدید">گفتگوی جدید</button>
+        <button type="button" class="mini" id="ai-btn-cfg" title="تنظیمات اتصال Gemini">تنظیمات</button>
+        <button type="button" class="ghost mini" id="ai-cn-x" aria-label="بستن">✕</button>
+      </div>
+    </div>
+
+    <div class="ai-cfg-panel" id="ai-cfg-panel">
+      <div class="ai-cfg-grid">
+        <label>کلید API رسمی Gemini (اگر پروکسی کلید دارد می‌تواند خالی بماند)
+          <input id="ai-key" type="password" placeholder="AIza..." dir="ltr" style="text-align:left">
+        </label>
+        <label>مدل Gemini
+          <select id="ai-model-sel">
+            <option value="gemini-2.5-flash">gemini-2.5-flash (سریع و اقتصادی)</option>
+            <option value="gemini-2.5-pro">gemini-2.5-pro (تحلیل عمیق‌تر)</option>
+            <option value="gemini-2.0-flash">gemini-2.0-flash</option>
+            <option value="__custom__">نام مدل دلخواه...</option>
+          </select>
+        </label>
+      </div>
+      <label id="ai-custom-model-wrap" style="display:none">نام مدل دلخواه
+        <input id="ai-custom-model" type="text" placeholder="مثلاً: gemini-2.5-flash-lite" dir="ltr" style="text-align:left">
+      </label>
+      <label>آدرس درگاه یا پروکسی (اختیاری؛ پیش‌فرض آدرس رسمی گوگل)
+        <input id="ai-base-url" type="url" placeholder="https://generativelanguage.googleapis.com" dir="ltr" style="text-align:left">
+      </label>
+      <div class="n" style="font-size:11.5px;line-height:1.6">
+        کلید و تنظیمات جدا از فایل پشتیبان ذخیره می‌شوند و در خروجی JSON قرار نمی‌گیرند. در صورت محدودیت شبکه می‌توانید آدرس پروکسی کلودفلر یا درگاه شخصی خود را وارد کنید.
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <button type="button" class="pri mini" id="ai-cfg-save">ذخیره تنظیمات</button>
+        <button type="button" class="mini" id="ai-cfg-close">بستن پنل</button>
+        <span id="ai-cfg-msg" class="n" style="font-size:11.5px"></span>
+      </div>
+    </div>
+
+    <div class="ai-chat" id="ai-chat"></div>
+
+    <div class="ai-quick" id="ai-quick">
+      <button type="button" class="flt-btn" data-aiq="بر اساس ویژن و ظرفیت من، برنامه این فصل سه‌ماهه را طراحی یا بهبود بده">طراحی برنامه فصل</button>
+      <button type="button" class="flt-btn" data-aiq="می‌خواهم یک ایده جدید را به فرضیه کاوش و آزمایش ارزان در ویژن تبدیل کنم">ساخت فرضیه کاوش</button>
+      <button type="button" class="flt-btn" data-aiq="عملکرد و ریتم این فصل را تحلیل کن و برای بازبینی پایان فصل کمکم کن">بازبینی پایان فصل</button>
+      <button type="button" class="flt-btn" data-aiq="تراز ظرفیت هفتگی و وضعیت کف‌های پایدار من در این فصل را بررسی کن">تحلیل ظرفیت و کف‌ها</button>
+    </div>
+
+    <div class="ai-foot">
+      <textarea id="ai-inp" rows="1" placeholder="مثلاً: این فصل می‌خواهم ۶ ساعت در هفته روی محصول جدیدم تست بگیرم..."></textarea>
+      <button type="button" class="pri mini" id="ai-send" style="height:40px;padding:0 16px">ارسال</button>
     </div>
   </div>
 </div>
@@ -2542,6 +2817,7 @@ if (tg) {
           }
         }
       });
+      loadAiCfgFromTgCloud();
     } else {
       updateCloudUI("مرورگر وب (محلی)", "var(--mut)");
     }
@@ -2551,6 +2827,625 @@ if (tg) {
 } else {
   updateCloudUI("مرورگر وب (محلی)", "var(--mut)");
 }
+
+// ==========================================================================
+// IN-APP GEMINI AI ASSISTANT (Flexible Direct / Custom Proxy + Safe Patch)
+// ==========================================================================
+var AI_CFG_KEY = 'lifeTimeline.ai';
+var aiCfg = { apiKey: '', baseUrl: '', model: 'gemini-2.5-flash' };
+var aiMessages = [];
+var aiBusy = false;
+
+function loadAiCfg() {
+  try {
+    var raw = localStorage.getItem(AI_CFG_KEY);
+    if (raw) {
+      var p = JSON.parse(raw);
+      if (p && typeof p === 'object') {
+        aiCfg.apiKey = p.apiKey || '';
+        aiCfg.baseUrl = p.baseUrl || '';
+        aiCfg.model = p.model || 'gemini-2.5-flash';
+      }
+    }
+  } catch(e) {}
+}
+loadAiCfg();
+
+function saveAiCfg(nextCfg) {
+  aiCfg = {
+    apiKey: (nextCfg.apiKey || '').trim(),
+    baseUrl: (nextCfg.baseUrl || '').trim().replace(/\/+$/, ''),
+    model: (nextCfg.model || 'gemini-2.5-flash').trim() || 'gemini-2.5-flash'
+  };
+  var str = JSON.stringify(aiCfg);
+  try { localStorage.setItem(AI_CFG_KEY, str); } catch(e) {}
+  if (isTgCloud && tg && tg.CloudStorage) {
+    try { tg.CloudStorage.setItem('lt_ai_cfg', str, function(){}); } catch(e) {}
+  }
+  syncAiCfgUI();
+}
+
+function loadAiCfgFromTgCloud() {
+  if (!isTgCloud || !tg || !tg.CloudStorage) return;
+  try {
+    tg.CloudStorage.getItem('lt_ai_cfg', function(err, val) {
+      if (!err && val) {
+        try {
+          var p = JSON.parse(val);
+          if (p && typeof p === 'object') {
+            aiCfg.apiKey = p.apiKey || aiCfg.apiKey || '';
+            aiCfg.baseUrl = p.baseUrl || aiCfg.baseUrl || '';
+            aiCfg.model = p.model || aiCfg.model || 'gemini-2.5-flash';
+            try { localStorage.setItem(AI_CFG_KEY, JSON.stringify(aiCfg)); } catch(e) {}
+            syncAiCfgUI();
+          }
+        } catch(e) {}
+      } else if (aiCfg.apiKey || aiCfg.baseUrl) {
+        try { tg.CloudStorage.setItem('lt_ai_cfg', JSON.stringify(aiCfg), function(){}); } catch(e) {}
+      }
+    });
+  } catch(e) {}
+}
+
+function syncAiCfgUI() {
+  var chip = $('ai-model-chip');
+  if (chip) chip.textContent = aiCfg.model || 'gemini-2.5-flash';
+  if ($('ai-key')) $('ai-key').value = aiCfg.apiKey || '';
+  if ($('ai-base-url')) $('ai-base-url').value = aiCfg.baseUrl || '';
+  var sel = $('ai-model-sel'), custWrap = $('ai-custom-model-wrap'), custInp = $('ai-custom-model');
+  if (sel && custWrap && custInp) {
+    var known = ['gemini-2.5-flash', 'gemini-2.5-pro', 'gemini-2.0-flash'];
+    if (known.indexOf(aiCfg.model) !== -1) {
+      sel.value = aiCfg.model;
+      custWrap.style.display = 'none';
+    } else {
+      sel.value = '__custom__';
+      custWrap.style.display = '';
+      custInp.value = aiCfg.model || '';
+    }
+  }
+}
+
+function resolvePillarName(name) {
+  var items = (S.vision && S.vision.items) || [];
+  if (!items.length) return name || '';
+  if (!name) return items[1] ? items[1].name : items[0].name;
+  for (var i = 0; i < items.length; i++) {
+    if (items[i].name === name) return items[i].name;
+  }
+  var low = String(name).toLowerCase();
+  for (var j = 0; j < items.length; j++) {
+    if (items[j].name.toLowerCase().indexOf(low) !== -1 || low.indexOf(items[j].name.toLowerCase()) !== -1) {
+      return items[j].name;
+    }
+  }
+  return items[1] ? items[1].name : items[0].name;
+}
+
+function initQuarterObj(y, s) {
+  var curJ = gToJ(qToday());
+  var yy = parseInt(y, 10) || curJ.y;
+  var ss = parseInt(s, 10) || Math.ceil(curJ.m / 3);
+  if (ss < 1 || ss > 4) ss = Math.ceil(curJ.m / 3);
+  var r = sRange(yy, ss);
+  if (!r) r = sRange(curJ.y, Math.ceil(curJ.m / 3));
+  var tn = qToday();
+  var f = (tn >= r.a && tn <= r.b) ? tn : r.a;
+  return {
+    y: yy,
+    s: ss,
+    name: SN[ss - 1] + ' ' + fa(yy),
+    from: gToJ(f),
+    to: gToJ(r.b),
+    theme: '',
+    cap: 5,
+    drop: '',
+    floorWeeks: {"0":[0,0,0,0,0,0,0,0,0,0,0,0],"1":[0,0,0,0,0,0,0,0,0,0,0,0],"2":[0,0,0,0,0,0,0,0,0,0,0,0],"3":[0,0,0,0,0,0,0,0,0,0,0,0]},
+    items: [],
+    review: { a: '', b: '', c: '' }
+  };
+}
+
+function buildAiContextSnapshot() {
+  var curJ = gToJ(new Date());
+  var curSeasonInfo = getCurSeasonWeek(S.qtr);
+  var suggestedSeason = Math.ceil(curJ.m / 3), suggestedYear = curJ.y;
+  if (!S.qtr && (S.hist || []).some(function(q){ return q.title === SN[suggestedSeason - 1] + ' ' + fa(suggestedYear); })) {
+    suggestedSeason++;
+    if (suggestedSeason > 4) { suggestedSeason = 1; suggestedYear++; }
+  }
+  var visionSnap = (S.vision && S.vision.items || []).map(function(v, idx) {
+    return {
+      index: idx,
+      name: v.name,
+      floor: !!v.floor,
+      text: v.text,
+      dirs: (v.dirs || []).map(function(d, di) {
+        return { dirIndex: di, title: d.title, hyp: d.hyp, crit: d.crit, status: d.status || 'active' };
+      })
+    };
+  });
+  var histSnap = (S.hist || []).slice(-6).map(function(h) {
+    return { title: h.title, note: h.note || '' };
+  });
+  var eventsSnap = (S.events || []).slice().sort(function(a, b){ return b.age - a.age; }).slice(0, 12).map(function(e) {
+    return { cat: CATS[e.cat] ? CATS[e.cat].n : e.cat, title: e.title, ongoing: !!e.ongoing, note: e.note || '' };
+  });
+  return {
+    todayJalali: curJ,
+    todayText: fmtJ(curJ),
+    currentSeasonWeek: curSeasonInfo,
+    suggestedNextSeason: { y: suggestedYear, s: suggestedSeason, name: SN[suggestedSeason - 1] + ' ' + fa(suggestedYear) },
+    userAge: Math.round((S.cur || 0) * 10) / 10,
+    vision: { items: visionSnap, general: (S.vision && S.vision.general) || '' },
+    qtr: S.qtr,
+    recentHistory: histSnap,
+    timelineReadOnlyContext: eventsSnap
+  };
+}
+
+function buildAiSystemPrompt() {
+  var snap = buildAiContextSnapshot();
+  return [
+    'تو دستیار هوشمند برنامه‌ریزی چابک زندگی «قطب‌نما» هستی و به فارسی روان، شفاف، دلسوز و عملی با کاربر گفتگو می‌کنی.',
+    'فلسفه این برنامه مبتنی بر پذیرش عدم قطعیت (ضد قوی سیاه) است: ۴ ستون پایدار زندگی (کف‌های غیرقابل‌مذاکره) + چرخه‌های سه‌ماهه (۹۰ روزه) با ۱ تا ۳ نتیجه مشخص، تفکیک گام‌ها به «کاوش و آزمایش ارزان» (exp) در برابر «تعهد و ساختن» (build)، رعایت تراز ظرفیت هفتگی (مجموع ساعت نتایج <= cap)، داشتن قانون حذف در بحران (drop)، و اولویت‌دادن به ستون‌هایی که دو هفته پیاپی رد شده‌اند (مقدار 3 در floorWeeks).',
+    '',
+    'وضعیت فعلی داده‌های کاربر (JSON):',
+    JSON.stringify(snap),
+    '',
+    'وظیفه تو:',
+    '1. به کاربر در طراحی، اصلاح و شفاف‌سازی «برنامه فصل سه‌ماهه»، «ستون‌های ویژن و فرضیه‌های کاوش» و «بازبینی پایان فصل» کمک کن.',
+    '2. تغییر تایم‌لاین رویدادها (events) یا حذف تاریخچه (hist) در حیطه مجاز تو نیست؛ رویدادهای تایم‌لاین فقط برای شناخت پس‌زمینه زندگی کاربر ارائه شده‌اند.',
+    '3. اگر هنوز اطلاعات کلیدی برای ثبت دقیق کم است (مثلاً ظرفیت ساعت آزاد یا هدف اصلی کاربر روشن نیست)، ابتدا ۱ تا ۳ سوال کوتاه و دقیق بپرس و patch را null بگذار.',
+    '4. هر وقت کاربر خواست تغییراتی ثبت شود یا جمع‌بندی روشنی به دست آمد، در کنار توضیح فارسی در فیلد reply، بسته تغییر دقیق را در فیلد patch بگذار تا کاربر با یک کلیک پیش‌نمایش و اعمال کند.',
+    '5. مجموع نتایج یک فصل (qtr.items) حداکثر ۴ مورد (و ترجیحاً ۱ تا ۳ مورد) است. برای pillar دقیقاً یکی از نام‌های فعلی ستون‌ها در vision.items را بنویس.',
+    '',
+    'خروجی تو باید حتماً یک JSON معتبر دقیقاً با ساختار زیر باشد (بدون هیچ متن اضافه بیرون از JSON):',
+    '{',
+    '  "reply": "متن پاسخ و راهنمایی فارسی برای کاربر",',
+    '  "patch": null | {',
+    '    "vision": {',
+    '      "general": "متن کامل قوانین عمومی تصمیم‌گیری (اختیاری)",',
+    '      "updatePillars": [{ "index": 0, "name": "عنوان ستون (اختیاری)", "text": "متن کامل قوانین ستون با خط جدید (اختیاری)" }],',
+    '      "addDirs": [{ "pillarIndex": 1, "title": "عنوان فرضیه", "hyp": "فرضیه...", "crit": "معیار تصمیم...", "status": "active" }],',
+    '      "updateDirs": [{ "pillarIndex": 1, "dirIndex": 0, "title": "...", "hyp": "...", "crit": "...", "status": "active|paused|dropped" }]',
+    '    },',
+    '    "quarter": {',
+    '      "startNew": { "y": 1405, "s": 3 },',
+    '      "framework": { "theme": "تمرکز اصلی فصل", "cap": 6, "drop": "قانون حذف در بحران" },',
+    '      "addOutcomes": [{ "title": "عنوان نتیجه ملموس", "pillar": "نام دقیق ستون", "dir": "نام فرضیه مرتبط یا خالی", "mode": "exp|build", "hours": 2, "done": "معیار پایان", "rhythm": "ریتم هفتگی" }],',
+    '      "updateOutcomes": [{ "index": 0, "title": "...", "pillar": "...", "dir": "...", "mode": "exp|build", "hours": 2, "done": "...", "rhythm": "...", "pct": 0 }],',
+    '      "removeOutcomeIndices": [0],',
+    '      "review": { "a": "چه چیزهایی جواب داد", "b": "چه چیزهایی جواب نداد", "c": "تصمیم برای فصل بعد" }',
+    '    }',
+    '  }',
+    '}'
+  ].join('\n');
+}
+
+function parseGeminiPayload(rawText) {
+  var txt = String(rawText || '').trim();
+  if (!txt) throw new Error('پاسخ خالی از مدل دریافت شد.');
+  var parsed = null;
+  try {
+    parsed = JSON.parse(txt);
+  } catch(e1) {
+    var m = txt.match(/```(?:json)?\s*([\s\S]*?)```/i);
+    if (m && m[1]) {
+      try { parsed = JSON.parse(m[1].trim()); } catch(e2) {}
+    }
+    if (!parsed) {
+      var sIdx = txt.indexOf('{'), eIdx = txt.lastIndexOf('}');
+      if (sIdx !== -1 && eIdx > sIdx) {
+        try { parsed = JSON.parse(txt.slice(sIdx, eIdx + 1)); } catch(e3) {}
+      }
+    }
+  }
+  if (!parsed || typeof parsed !== 'object') {
+    return { reply: txt, patch: null };
+  }
+  var patch = (parsed.patch && typeof parsed.patch === 'object') ? parsed.patch : null;
+  if (patch && !patch.vision && !patch.quarter) patch = null;
+  return {
+    reply: String(parsed.reply || parsed.message || txt),
+    patch: patch
+  };
+}
+
+function summarizeAiPatch(patch) {
+  var lines = [];
+  if (!patch) return lines;
+  var v = patch.vision;
+  if (v) {
+    if (typeof v.general === 'string') lines.push('به‌روزرسانی قوانین عمومی تصمیم‌گیری در ویژن');
+    if (Array.isArray(v.updatePillars)) {
+      v.updatePillars.forEach(function(p) {
+        var curName = (S.vision.items[p.index] && S.vision.items[p.index].name) || ('ستون ' + fa(p.index));
+        lines.push('ویرایش ستون «' + (p.name || curName) + '»');
+      });
+    }
+    if (Array.isArray(v.addDirs)) {
+      v.addDirs.forEach(function(d) {
+        var pName = (S.vision.items[d.pillarIndex] && S.vision.items[d.pillarIndex].name) || 'ویژن';
+        lines.push('افزودن فرضیه کاوش «' + (d.title || 'بدون عنوان') + '» به ' + pName);
+      });
+    }
+    if (Array.isArray(v.updateDirs)) {
+      v.updateDirs.forEach(function(d) {
+        lines.push('ویرایش فرضیه «' + (d.title || ('شماره ' + fa((d.dirIndex || 0) + 1))) + '»');
+      });
+    }
+  }
+  var q = patch.quarter;
+  if (q) {
+    if (q.startNew) {
+      var snIdx = Math.max(1, Math.min(4, parseInt(q.startNew.s, 10) || 1)) - 1;
+      lines.push('شروع چرخه فصل جدید: ' + SN[snIdx] + ' ' + fa(q.startNew.y || gToJ(new Date()).y));
+    }
+    if (q.framework) {
+      var fwParts = [];
+      if (q.framework.theme != null) fwParts.push('تمرکز اصلی');
+      if (q.framework.cap != null) fwParts.push('ظرفیت (' + fa(q.framework.cap) + ' ساعت)');
+      if (q.framework.drop != null) fwParts.push('قانون حذف');
+      if (fwParts.length) lines.push('تنظیم چارچوب فصل: ' + fwParts.join('، '));
+    }
+    if (Array.isArray(q.addOutcomes)) {
+      q.addOutcomes.forEach(function(o) {
+        lines.push('افزودن نتیجه فصل: «' + (o.title || 'بدون عنوان') + '» (' + (o.mode === 'build' ? 'ساختن' : 'کاوش') + ' · ' + fa(o.hours || 0) + ' ساعت)');
+      });
+    }
+    if (Array.isArray(q.updateOutcomes)) {
+      q.updateOutcomes.forEach(function(o) {
+        lines.push('ویرایش نتیجه شماره ' + fa((o.index || 0) + 1) + (o.title ? ': «' + o.title + '»' : ''));
+      });
+    }
+    if (Array.isArray(q.removeOutcomeIndices) && q.removeOutcomeIndices.length) {
+      lines.push('حذف ' + fa(q.removeOutcomeIndices.length) + ' نتیجه از فصل جاری');
+    }
+    if (q.review) {
+      lines.push('ثبت یا تکمیل متن بازبینی پایان فصل');
+    }
+  }
+  return lines;
+}
+
+function applyAiPatch(patch) {
+  if (!patch || typeof patch !== 'object') return false;
+  var v = patch.vision;
+  if (v && typeof v === 'object') {
+    if (typeof v.general === 'string') S.vision.general = v.general;
+    if (Array.isArray(v.updatePillars)) {
+      v.updatePillars.forEach(function(p) {
+        var idx = parseInt(p.index, 10);
+        if (!isNaN(idx) && S.vision.items[idx]) {
+          if (typeof p.name === 'string' && p.name.trim()) S.vision.items[idx].name = p.name.trim();
+          if (typeof p.text === 'string') S.vision.items[idx].text = p.text;
+        }
+      });
+    }
+    if (Array.isArray(v.addDirs)) {
+      v.addDirs.forEach(function(d) {
+        var idx = parseInt(d.pillarIndex, 10);
+        if (isNaN(idx) || !S.vision.items[idx]) idx = 1;
+        if (!S.vision.items[idx]) idx = 0;
+        var ds = S.vision.items[idx].dirs = S.vision.items[idx].dirs || [];
+        ds.push({
+          title: String(d.title || '').trim(),
+          hyp: String(d.hyp || ''),
+          crit: String(d.crit || ''),
+          status: (d.status === 'paused' || d.status === 'dropped') ? d.status : 'active'
+        });
+      });
+    }
+    if (Array.isArray(v.updateDirs)) {
+      v.updateDirs.forEach(function(d) {
+        var pi = parseInt(d.pillarIndex, 10), di = parseInt(d.dirIndex, 10);
+        var target = S.vision.items[pi] && S.vision.items[pi].dirs && S.vision.items[pi].dirs[di];
+        if (target) {
+          if (typeof d.title === 'string') target.title = d.title;
+          if (typeof d.hyp === 'string') target.hyp = d.hyp;
+          if (typeof d.crit === 'string') target.crit = d.crit;
+          if (d.status === 'active' || d.status === 'paused' || d.status === 'dropped') target.status = d.status;
+        }
+      });
+    }
+  }
+
+  var q = patch.quarter;
+  if (q && typeof q === 'object') {
+    if (q.startNew && !S.qtr) {
+      S.qtr = initQuarterObj(q.startNew.y, q.startNew.s);
+    } else if (!S.qtr && (q.framework || (Array.isArray(q.addOutcomes) && q.addOutcomes.length) || q.review)) {
+      var curJ = gToJ(new Date());
+      S.qtr = initQuarterObj(curJ.y, Math.ceil(curJ.m / 3));
+    }
+    if (S.qtr) {
+      if (q.framework && typeof q.framework === 'object') {
+        if (typeof q.framework.theme === 'string') S.qtr.theme = q.framework.theme;
+        if (q.framework.cap != null && !isNaN(parseFloat(q.framework.cap))) S.qtr.cap = Math.max(0, parseFloat(q.framework.cap));
+        if (typeof q.framework.drop === 'string') S.qtr.drop = q.framework.drop;
+      }
+      if (Array.isArray(q.removeOutcomeIndices) && q.removeOutcomeIndices.length) {
+        var delSet = q.removeOutcomeIndices.slice().sort(function(a, b){ return b - a; });
+        delSet.forEach(function(idx) {
+          var i = parseInt(idx, 10);
+          if (!isNaN(i) && i >= 0 && i < S.qtr.items.length) S.qtr.items.splice(i, 1);
+        });
+      }
+      if (Array.isArray(q.updateOutcomes)) {
+        q.updateOutcomes.forEach(function(o) {
+          var i = parseInt(o.index, 10);
+          var it = S.qtr.items[i];
+          if (it) {
+            if (typeof o.title === 'string') it.title = o.title;
+            if (typeof o.pillar === 'string') it.pillar = resolvePillarName(o.pillar);
+            if (typeof o.dir === 'string') it.dir = o.dir;
+            if (o.mode === 'build' || o.mode === 'exp') it.mode = o.mode;
+            if (o.hours != null && !isNaN(parseFloat(o.hours))) it.hours = Math.max(0, parseFloat(o.hours));
+            if (typeof o.done === 'string') it.done = o.done;
+            if (typeof o.rhythm === 'string') it.rhythm = o.rhythm;
+            if (o.pct != null && !isNaN(parseFloat(o.pct))) it.pct = Math.max(0, Math.min(100, parseFloat(o.pct)));
+          }
+        });
+      }
+      if (Array.isArray(q.addOutcomes) && q.addOutcomes.length) {
+        if (S.qtr.items.length === 1 && !S.qtr.items[0].title && !S.qtr.items[0].done && !S.qtr.items[0].rhythm) {
+          S.qtr.items = [];
+        }
+        q.addOutcomes.forEach(function(o) {
+          if (S.qtr.items.length < 4) {
+            S.qtr.items.push({
+              pillar: resolvePillarName(o.pillar),
+              dir: String(o.dir || ''),
+              mode: o.mode === 'build' ? 'build' : 'exp',
+              title: String(o.title || ''),
+              done: String(o.done || ''),
+              rhythm: String(o.rhythm || ''),
+              hours: !isNaN(parseFloat(o.hours)) ? Math.max(0, parseFloat(o.hours)) : 1,
+              pct: 0,
+              weeks: [0,0,0,0,0,0,0,0,0,0,0,0]
+            });
+          }
+        });
+      }
+      if (q.review && typeof q.review === 'object') {
+        S.qtr.review = S.qtr.review || { a: '', b: '', c: '' };
+        if (typeof q.review.a === 'string') S.qtr.review.a = q.review.a;
+        if (typeof q.review.b === 'string') S.qtr.review.b = q.review.b;
+        if (typeof q.review.c === 'string') S.qtr.review.c = q.review.c;
+      }
+    }
+  }
+  ED = {};
+  migrate();
+  save('تغییرات دستیار در برنامه ثبت شد ✓');
+  render();
+  tgHaptic('success');
+  return true;
+}
+
+function renderAiChat() {
+  var box = $('ai-chat');
+  if (!box) return;
+  if (!aiMessages.length) {
+    var hasConn = !!(aiCfg.apiKey || aiCfg.baseUrl);
+    box.innerHTML =
+      '<div class="ai-empty">' +
+        '<div class="ai-empty-ic"><svg class="ic ic-lg" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l1.9 4.6L18.5 9.5l-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9z"/></svg></div>' +
+        '<b style="font-size:14.5px;color:var(--fg)">دستیار طراحی فصل و ویژن</b>' +
+        '<p class="n" style="max-width:420px;margin:0">من به وضعیت فعلی ویژن، فرضیه‌های کاوش، برنامه فصل، ریتم ۱۲ هفته و تاریخچه فصل‌های قبلی شما دسترسی دارم و می‌توانم با تایید خودتان تغییرات را مستقیم ثبت کنم.</p>' +
+        (!hasConn ? '<div class="chip" style="background:var(--warn-bg);color:var(--warn);border-color:var(--warn-bdr)">برای شروع، از دکمه «تنظیمات» بالا کلید Gemini یا آدرس پروکسی را وارد کنید.</div>' : '') +
+      '</div>';
+    return;
+  }
+
+  box.innerHTML = aiMessages.map(function(m, idx) {
+    if (m.role === 'user') {
+      return '<div class="ai-msg user"><div class="ai-bubble">' + esc(m.text) + '</div></div>';
+    }
+    if (m.role === 'err') {
+      return '<div class="ai-msg err"><div class="ai-bubble">' + esc(m.text) + '</div></div>';
+    }
+    var patchHtml = '';
+    if (m.patch) {
+      var items = summarizeAiPatch(m.patch);
+      if (items.length) {
+        patchHtml += '<div class="ai-patch">';
+        patchHtml += '<div class="ai-patch-head"><span>پیشنهاد تغییر در برنامه</span>';
+        if (m.patchStatus === 'applied') patchHtml += '<span class="chip" style="background:var(--ok-bg);color:var(--ok);border-color:var(--ok-bdr)">اعمال شد ✓</span>';
+        else if (m.patchStatus === 'dismissed') patchHtml += '<span class="chip">نادیده گرفته شد</span>';
+        patchHtml += '</div>';
+        patchHtml += '<ul class="ai-patch-list">' + items.map(function(it){ return '<li>' + esc(it) + '</li>'; }).join('') + '</ul>';
+        if (!m.patchStatus || m.patchStatus === 'pending') {
+          patchHtml += '<div class="ai-patch-act">' +
+            '<button type="button" class="pri mini" data-ai-apply="' + idx + '">اعمال تغییرات در برنامه</button>' +
+            '<button type="button" class="mini" data-ai-dismiss="' + idx + '">نادیده گرفتن</button>' +
+          '</div>';
+        }
+        patchHtml += '</div>';
+      }
+    }
+    return '<div class="ai-msg bot"><div class="ai-bubble">' + esc(m.text) + '</div>' + patchHtml + '</div>';
+  }).join('');
+
+  if (aiBusy) {
+    box.innerHTML += '<div class="ai-msg bot"><div class="ai-bubble ai-typing">در حال فکر کردن و بررسی قطب‌نما...</div></div>';
+  }
+  box.scrollTop = box.scrollHeight;
+}
+
+async function sendAiPrompt(userText) {
+  var txt = String(userText || '').trim();
+  if (!txt || aiBusy) return;
+
+  if (!aiCfg.apiKey && !aiCfg.baseUrl) {
+    $('ai-cfg-panel').classList.add('on');
+    $('ai-cfg-msg').textContent = 'ابتدا کلید Gemini یا آدرس پروکسی را وارد و ذخیره کنید.';
+    return;
+  }
+
+  aiMessages.push({ role: 'user', text: txt, apiText: txt });
+  $('ai-inp').value = '';
+  $('ai-inp').style.height = 'auto';
+  aiBusy = true;
+  $('ai-send').disabled = true;
+  renderAiChat();
+
+  try {
+    var base = (aiCfg.baseUrl || '').trim().replace(/\/+$/, '') || 'https://generativelanguage.googleapis.com';
+    var model = encodeURIComponent(aiCfg.model || 'gemini-2.5-flash');
+    var endpoint = /\/v1beta$/i.test(base)
+      ? (base + '/models/' + model + ':generateContent')
+      : (base + '/v1beta/models/' + model + ':generateContent');
+
+    var contents = aiMessages
+      .filter(function(m){ return m.role === 'user' || m.role === 'bot'; })
+      .slice(-14)
+      .map(function(m) {
+        return {
+          role: m.role === 'user' ? 'user' : 'model',
+          parts: [{ text: m.apiText || m.text }]
+        };
+      });
+
+    var headers = { 'Content-Type': 'application/json' };
+    if (aiCfg.apiKey) headers['x-goog-api-key'] = aiCfg.apiKey;
+
+    var res = await fetch(endpoint, {
+      method: 'POST',
+      headers: headers,
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: buildAiSystemPrompt() }] },
+        contents: contents,
+        generationConfig: {
+          temperature: 0.4,
+          responseMimeType: 'application/json'
+        }
+      })
+    });
+
+    var data = null;
+    try { data = await res.json(); } catch(e) {}
+
+    if (!res.ok) {
+      var errMsg = (data && data.error && data.error.message) ? data.error.message : ('خطای HTTP ' + res.status);
+      throw new Error(errMsg);
+    }
+
+    var candText = data && data.candidates && data.candidates[0] && data.candidates[0].content &&
+      data.candidates[0].content.parts && data.candidates[0].content.parts.map(function(p){ return p.text || ''; }).join('');
+
+    if (!candText) {
+      var blockReason = data && data.promptFeedback && data.promptFeedback.blockReason;
+      throw new Error(blockReason ? ('پاسخ مسدود شد: ' + blockReason) : 'مدل پاسخی برنگرداند.');
+    }
+
+    var parsed = parseGeminiPayload(candText);
+    aiMessages.push({
+      role: 'bot',
+      text: parsed.reply,
+      patch: parsed.patch,
+      patchStatus: parsed.patch ? 'pending' : null,
+      apiText: JSON.stringify({ reply: parsed.reply, patch: parsed.patch || null })
+    });
+  } catch(err) {
+    var msg = (err && err.message) ? err.message : 'خطا در برقراری ارتباط با Gemini';
+    if (/failed to fetch|networkerror|load failed/i.test(msg)) {
+      msg = 'ارتباط با سرویس برقرار نشد. اگر در ایران هستید، اتصال مستقیم به گوگل ممکن است نیاز به فیلترشکن یا آدرس پروکسی در بخش تنظیمات داشته باشد.';
+    }
+    aiMessages.push({ role: 'err', text: msg });
+  } finally {
+    aiBusy = false;
+    $('ai-send').disabled = false;
+    renderAiChat();
+  }
+}
+
+function openAiM() {
+  syncAiCfgUI();
+  $('ai-cfg-msg').textContent = '';
+  if (!aiCfg.apiKey && !aiCfg.baseUrl) {
+    $('ai-cfg-panel').classList.add('on');
+  }
+  $('ov-ai').classList.add('on');
+  renderAiChat();
+  setTimeout(function(){ if ($('ai-inp')) $('ai-inp').focus(); }, 60);
+}
+function closeAiM() {
+  $('ov-ai').classList.remove('on');
+}
+
+$('btn-ai').onclick = openAiM;
+$('ai-cn-x').onclick = closeAiM;
+$('ov-ai').onclick = function(e){ if (e.target === $('ov-ai')) closeAiM(); };
+document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && $('ov-ai').classList.contains('on')) closeAiM(); });
+
+$('ai-btn-cfg').onclick = function() {
+  $('ai-cfg-panel').classList.toggle('on');
+  $('ai-cfg-msg').textContent = '';
+};
+$('ai-cfg-close').onclick = function() {
+  $('ai-cfg-panel').classList.remove('on');
+};
+$('ai-model-sel').onchange = function() {
+  $('ai-custom-model-wrap').style.display = ($('ai-model-sel').value === '__custom__') ? '' : 'none';
+};
+$('ai-cfg-save').onclick = function() {
+  var selVal = $('ai-model-sel').value;
+  var mdl = selVal === '__custom__' ? ($('ai-custom-model').value.trim() || 'gemini-2.5-flash') : selVal;
+  saveAiCfg({
+    apiKey: $('ai-key').value,
+    baseUrl: $('ai-base-url').value,
+    model: mdl
+  });
+  $('ai-cfg-msg').textContent = 'تنظیمات ذخیره شد ✓';
+  $('ai-cfg-panel').classList.remove('on');
+  renderAiChat();
+  showToast('تنظیمات دستیار ذخیره شد');
+};
+$('ai-btn-reset').onclick = function() {
+  aiMessages = [];
+  renderAiChat();
+};
+$('ai-send').onclick = function() {
+  sendAiPrompt($('ai-inp').value);
+};
+$('ai-inp').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendAiPrompt($('ai-inp').value);
+  }
+});
+$('ai-inp').addEventListener('input', function() {
+  this.style.height = 'auto';
+  this.style.height = Math.min(110, this.scrollHeight) + 'px';
+});
+$('ai-quick').onclick = function(e) {
+  var b = e.target.closest('[data-aiq]');
+  if (b && !aiBusy) sendAiPrompt(b.getAttribute('data-aiq'));
+};
+$('ai-chat').onclick = function(e) {
+  var appBtn = e.target.closest('[data-ai-apply]');
+  if (appBtn) {
+    var idx = parseInt(appBtn.getAttribute('data-ai-apply'), 10);
+    var m = aiMessages[idx];
+    if (m && m.patch && m.patchStatus === 'pending') {
+      applyAiPatch(m.patch);
+      m.patchStatus = 'applied';
+      renderAiChat();
+    }
+    return;
+  }
+  var disBtn = e.target.closest('[data-ai-dismiss]');
+  if (disBtn) {
+    var idx2 = parseInt(disBtn.getAttribute('data-ai-dismiss'), 10);
+    var m2 = aiMessages[idx2];
+    if (m2 && m2.patch && m2.patchStatus === 'pending') {
+      m2.patchStatus = 'dismissed';
+      renderAiChat();
+    }
+  }
+};
 
 ['v','q','t'].forEach(function(k){
   var mb=$('btn-nav-'+k);
