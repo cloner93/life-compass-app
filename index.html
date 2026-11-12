@@ -1619,6 +1619,179 @@ svg g[data-id]:hover rect, svg g[data-id]:hover circle{
   .ai-cfg-panel{max-height:40dvh}
   .ai-foot{padding:6px 12px}
 }
+
+/* ==========================================================================
+   UNIFIED RESPONSIVE SETTINGS MODAL
+   ========================================================================== */
+body.hide-guides .guide-bar{display:none!important}
+.set-modal{
+  max-width:580px;
+  width:100%;
+  max-height:90vh;
+  max-height:90dvh;
+  padding:0;
+  display:flex;
+  flex-direction:column;
+  gap:0;
+  overflow:hidden;
+}
+.set-head{
+  padding:14px 18px 12px;
+  border-bottom:1px solid var(--line);
+  background:var(--card);
+  flex-shrink:0;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.set-head-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.set-tabs{
+  display:flex;
+  gap:6px;
+  overflow-x:auto;
+  scrollbar-width:none;
+  padding-bottom:2px;
+}
+.set-tabs::-webkit-scrollbar{display:none}
+.set-tab{
+  flex:1 0 auto;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  padding:7px 12px;
+  border-radius:var(--r-full);
+  border:1px solid var(--line);
+  background:var(--card-alt);
+  color:var(--fg-sec);
+  font-size:12.5px;
+  font-weight:700;
+  cursor:pointer;
+  white-space:nowrap;
+  transition:all .15s var(--ease-m3);
+}
+.set-tab:hover{border-color:var(--line-strong);color:var(--fg)}
+.set-tab.on{
+  background:var(--md-sys-color-primary-container);
+  color:var(--md-sys-color-on-primary-container);
+  border-color:var(--pri);
+}
+.set-body{
+  flex:1 1 auto;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  padding:16px 18px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  background:var(--bg);
+}
+.set-pane{display:none;flex-direction:column;gap:12px}
+.set-pane.on{display:flex}
+.set-card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--r-lg);
+  padding:14px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.set-card h4{margin:0;font-size:13.5px;font-weight:800;color:var(--fg);display:flex;align-items:center;gap:6px}
+.theme-seg{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:6px;
+  background:var(--card-alt);
+  padding:4px;
+  border-radius:var(--r-md);
+  border:1px solid var(--line);
+}
+.theme-seg button{
+  padding:8px 6px;
+  border-radius:var(--r-sm);
+  border:1px solid transparent;
+  background:transparent;
+  color:var(--fg-sec);
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+  transition:all .15s;
+}
+.theme-seg button.on{
+  background:var(--card);
+  color:var(--pri);
+  border-color:var(--pri);
+  box-shadow:var(--shadow-sm);
+}
+.set-toggle{
+  display:flex!important;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:10px 12px;
+  background:var(--card-alt);
+  border:1px solid var(--line);
+  border-radius:var(--r-md);
+  cursor:pointer;
+}
+.set-toggle span{font-size:12.5px;font-weight:600;color:var(--fg);line-height:1.45}
+.set-toggle input{width:18px;height:18px;accent-color:var(--pri);flex-shrink:0}
+.set-stat-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:8px;
+}
+.set-stat{
+  background:var(--card-alt);
+  border:1px solid var(--line);
+  border-radius:var(--r-md);
+  padding:8px 10px;
+  font-size:12px;
+  color:var(--fg-sec);
+}
+.set-stat b{display:block;font-size:15px;color:var(--fg);margin-top:2px}
+.set-danger{
+  background:var(--err-bg);
+  border:1px solid var(--err-bdr);
+  border-radius:var(--r-lg);
+  padding:12px 14px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.set-foot{
+  padding:12px 18px calc(12px + env(safe-area-inset-bottom, 0px));
+  border-top:1px solid var(--line);
+  background:var(--card);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  flex-shrink:0;
+}
+@media (max-width:600px){
+  #ov-set{padding:0;align-items:flex-end}
+  .set-modal{
+    max-width:100%;
+    height:90vh;
+    height:90dvh;
+    max-height:94dvh;
+    border-radius:var(--r-xxl) var(--r-xxl) 0 0;
+    padding:0;
+  }
+  .set-head{padding:10px 14px}
+  .set-body{padding:12px 14px}
+  .set-foot{padding:10px 14px calc(14px + env(safe-area-inset-bottom, 0px))}
+  .set-tabs{gap:5px}
+  .set-tab{padding:6px 10px;font-size:12px;flex:0 0 auto}
+  .theme-seg{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
@@ -1643,19 +1816,11 @@ svg g[data-id]:hover rect, svg g[data-id]:hover circle{
         <svg class="ic ic-sm" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l1.9 4.6L18.5 9.5l-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9z"/><path d="M19 15l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z"/></svg>
         <span>دستیار هوشمند</span>
       </button>
-      <button type="button" class="mini" id="btn-exp" title="دانلود فایل پشتیبان (JSON)">
-        <svg class="ic ic-sm" aria-hidden="true" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        <span class="btn-lbl-hide-sm">پشتیبان</span>
-      </button>
-      <button type="button" class="mini" id="btn-imp" title="بارگذاری فایل پشتیبان (JSON)">
-        <svg class="ic ic-sm" aria-hidden="true" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-        <span class="btn-lbl-hide-sm">بارگذاری</span>
+      <button type="button" class="mini" id="btn-set" title="تنظیمات برنامه، تاریخ تولد، پوسته، دستیار و پشتیبان">
+        <svg class="ic ic-sm" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span class="btn-lbl-hide-sm">تنظیمات</span>
       </button>
       <input type="file" id="file-imp" accept=".json,application/json,text/plain" style="display:none">
-      <button type="button" class="mini" id="btn-thm" aria-label="تغییر پوسته تاریک و روشن">
-        <svg class="ic ic-sm" aria-hidden="true" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-        <span>پوسته</span>
-      </button>
     </div>
   </div>
   <div class="status-strip" id="status-strip"></div>
@@ -1831,6 +1996,130 @@ svg g[data-id]:hover rect, svg g[data-id]:hover circle{
     <div class="btns">
       <button type="button" class="pri" id="btn-apply-paste">اعمال و ذخیره در تلگرام</button>
       <button type="button" id="imp-cn">انصراف</button>
+    </div>
+  </div>
+</div>
+
+<!-- UNIFIED SETTINGS MODAL -->
+<div class="ov" id="ov-set" role="dialog" aria-modal="true" aria-labelledby="set-mt">
+  <div class="modal set-modal">
+    <div class="set-head">
+      <div class="m3-drag-handle" aria-hidden="true" style="margin:0 auto"></div>
+      <div class="set-head-top">
+        <div style="display:flex;align-items:center;gap:8px">
+          <svg class="ic" style="color:var(--pri)" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <b id="set-mt" style="font-size:15.5px">تنظیمات یکپارچه قطب‌نما</b>
+        </div>
+        <button type="button" class="ghost mini" id="set-cn-x" aria-label="بستن">✕</button>
+      </div>
+      <div class="set-tabs" id="set-tabs" role="tablist">
+        <button type="button" class="set-tab on" data-settab="profile" role="tab">پروفایل و تاریخ</button>
+        <button type="button" class="set-tab" data-settab="appearance" role="tab">ظاهر و نمایش</button>
+        <button type="button" class="set-tab" data-settab="ai" role="tab">دستیار هوشمند</button>
+        <button type="button" class="set-tab" data-settab="data" role="tab">پشتیبان و داده‌ها</button>
+      </div>
+    </div>
+
+    <div class="set-body">
+      <!-- PANE 1: PROFILE & DATES -->
+      <div class="set-pane on" id="set-pane-profile">
+        <div class="set-card">
+          <h4>تاریخ تولد و زمان‌سنج زندگی</h4>
+          <p class="n" style="margin:0;font-size:12px">سن فعلی شما در نوار بالا و جایگاه رویدادهای تایم‌لاین بر اساس این تاریخ محاسبه می‌شود.</p>
+          <div class="d3">
+            <label>سال (شمسی)<input type="number" id="set-by" min="1300" max="1410" placeholder="مثلاً ۱۳۷۶"></label>
+            <label>ماه<select id="set-bm"></select></label>
+            <label>روز<input type="number" id="set-bd" min="1" max="31" placeholder="۱ تا ۳۱"></label>
+          </div>
+          <div class="chip" id="set-age-preview" style="align-self:flex-start">سن محاسبه‌شده: —</div>
+        </div>
+        <div class="set-card">
+          <h4>مشخصات فردی و فصل‌ها</h4>
+          <div class="grid-2" style="margin-top:0">
+            <label>نام یا لقب (اختیاری برای لحن دستیار)
+              <input type="text" id="set-uname" placeholder="مثلاً: میلاد">
+            </label>
+            <label>ظرفیت هفتگی پیش‌فرض فصل جدید (ساعت)
+              <input type="number" id="set-def-cap" min="1" max="80" step="0.5" value="5">
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANE 2: APPEARANCE -->
+      <div class="set-pane" id="set-pane-appearance">
+        <div class="set-card">
+          <h4>پوسته و رنگ محیط</h4>
+          <div class="theme-seg" id="set-theme-seg">
+            <button type="button" data-thm="auto">خودکار (سیستم/تلگرام)</button>
+            <button type="button" data-thm="light">روشن</button>
+            <button type="button" data-thm="dark">تاریک</button>
+          </div>
+        </div>
+        <div class="set-card">
+          <h4>ساده‌سازی صفحه اصلی</h4>
+          <label class="set-toggle">
+            <span>نمایش کادرهای راهنما در تب‌ها</span>
+            <input type="checkbox" id="set-show-guides" checked>
+          </label>
+        </div>
+      </div>
+
+      <!-- PANE 3: AI AGENT -->
+      <div class="set-pane" id="set-pane-ai">
+        <div class="set-card">
+          <h4>اتصال و مدل دستیار</h4>
+          <div class="grid-2" style="margin-top:0">
+            <label>کلید API جمینای
+              <input id="set-ai-key" type="password" placeholder="AIza..." dir="ltr" style="text-align:left">
+            </label>
+            <label>مدل انتخابی
+              <select id="set-ai-model-sel">
+                <option value="gemini-2.5-flash">gemini-2.5-flash (سریع و اقتصادی)</option>
+                <option value="gemini-2.5-pro">gemini-2.5-pro (تحلیل عمیق‌تر)</option>
+                <option value="gemini-2.0-flash">gemini-2.0-flash</option>
+                <option value="__custom__">نام مدل دلخواه...</option>
+              </select>
+            </label>
+          </div>
+          <label id="set-ai-custom-wrap" style="display:none">نام مدل دلخواه
+            <input id="set-ai-custom-model" type="text" placeholder="مثلاً: gemini-2.5-flash-lite" dir="ltr" style="text-align:left">
+          </label>
+          <label>نشانی سرور یا پروکسی (اختیاری)
+            <input id="set-ai-base-url" type="url" placeholder="https://my-gemini-proxy.workers.dev" dir="ltr" style="text-align:left">
+          </label>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button type="button" class="ai-btn mini" id="set-open-bridge">باز کردن پل دستیار بیرونی (بدون کلید)</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANE 4: DATA & BACKUP -->
+      <div class="set-pane" id="set-pane-data">
+        <div class="set-card">
+          <h4>وضعیت ذخیره‌سازی و آمار</h4>
+          <div class="set-stat-grid">
+            <div class="set-stat">محل ذخیره<b id="set-cloud-lbl">—</b></div>
+            <div class="set-stat">رویداد تایم‌لاین<b id="set-cnt-ev">۰</b></div>
+            <div class="set-stat">فصل‌های بایگانی<b id="set-cnt-hist">۰</b></div>
+            <div class="set-stat">نتایج فصل جاری<b id="set-cnt-out">۰</b></div>
+          </div>
+          <div class="grid-2" style="margin-top:4px">
+            <button type="button" class="pri" id="set-btn-exp">دانلود فایل پشتیبان</button>
+            <button type="button" id="set-btn-imp">بارگذاری پشتیبان / بسته تغییر</button>
+          </div>
+        </div>
+        <div class="set-danger">
+          <b style="font-size:13px;color:var(--err)">بازنشانی داده‌های برنامه</b>
+          <span class="n" style="font-size:12px">رویدادها، فصل جاری، تصمیم‌ها و تاریخچه را پاک می‌کند و برنامه را به الگوی خام اولیه برمی‌گرداند (تنظیمات کلید دستیار و پوسته حفظ می‌شوند).</span>
+          <button type="button" class="del mini" id="set-btn-reset-data" style="align-self:flex-start">بازنشانی داده‌ها به حالت اولیه</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="set-foot">
+      <button type="button" class="pri" id="set-save">ذخیره و اعمال تنظیمات</button>
+      <button type="button" id="set-cn">بستن</button>
     </div>
   </div>
 </div>
@@ -2016,14 +2305,32 @@ function x(a){return PAD+a*PX}
 function endOf(ev){return ev.ongoing?S.cur:ev.end}
 
 var JF=new Intl.DateTimeFormat('en-US-u-ca-persian-nu-latn',{timeZone:'UTC',year:'numeric',month:'numeric',day:'numeric'});
-function bd(k){return Date.UTC(1997+k,5,24,12)}
-function ageAt(n){var t=n.getTime(),y=n.getUTCFullYear()-1997;if(bd(y)>t)y--;return y+(t-bd(y))/(bd(y+1)-bd(y))}
+var DEFAULT_BIRTH={y:1376,m:4,d:3};
+function getBirthGDate(){
+  var b=(typeof S!=='undefined'&&S&&S.birth&&S.birth.y)?S.birth:DEFAULT_BIRTH;
+  var dt=jToDate(parseInt(b.y,10)||1376,parseInt(b.m,10)||1,parseInt(b.d,10)||1);
+  return dt||new Date(Date.UTC(1997,5,24,12));
+}
+function bd(k){var b0=getBirthGDate();return Date.UTC(b0.getUTCFullYear()+k,b0.getUTCMonth(),b0.getUTCDate(),12)}
+function ageAt(n){var b0=getBirthGDate(),t=n.getTime(),y=n.getUTCFullYear()-b0.getUTCFullYear();if(bd(y)>t)y--;return y+(t-bd(y))/(bd(y+1)-bd(y))}
 function calcAge(){var t=new Date();return ageAt(new Date(Date.UTC(t.getFullYear(),t.getMonth(),t.getDate(),12)))}
 function gToJ(dt){var o={};JF.formatToParts(dt).forEach(function(p){if(p.type==='year'||p.type==='month'||p.type==='day')o[p.type[0]]=parseInt(p.value,10)});return o}
 function jToDate(y,m,d){var t=Date.UTC(y+621,2,21,12)+((m-1)*30.44+d-1)*864e5;for(var i=0;i<14;i++){var dt=new Date(Math.round(t)),j=gToJ(dt);if(j.y===y&&j.m===m&&j.d===d)return new Date(Date.UTC(dt.getUTCFullYear(),dt.getUTCMonth(),dt.getUTCDate(),12));var df=(y-j.y)*365.25+(m-j.m)*30.44+(d-j.d);t+=(Math.abs(df)<1?(df>0?1:-1):Math.round(df))*864e5}return null}
 function fmtJ(j){return j?[j.d?fa(j.d):'',j.m?MN[j.m-1]:'',fa(j.y)].filter(Boolean).join(' '):''}
 function jToAge(j,isEnd){var dt=jToDate(j.y,j.m||(isEnd?12:1),j.d||(isEnd?29:1));return dt?ageAt(dt):null}
 function ageToJ(a){var j=gToJ(new Date(bd(0)+a*365.2425*864e5));return{y:j.y,m:j.m,d:0}}
+function recalcTimelineAges(){
+  (S.events||[]).forEach(function(ev){
+    if(ev.sd&&ev.sd.y){
+      var na=jToAge(ev.sd,false);
+      if(na!=null) ev.age=Math.max(0,na);
+    }
+    if(!ev.ongoing&&ev.ed&&ev.ed.y){
+      var ne=jToAge(ev.ed,true);
+      if(ne!=null) ev.end=ne;
+    }
+  });
+}
 
 function stLbl(x){return{active:'در حال کاوش',paused:'متوقف (فعلاً نه)',dropped:'کنار گذاشته شد'}[x]||'در حال کاوش'}
 function modeLbl(m){return m==='build'?(ICONS.hammer+' <span>تعهد و ساختن</span>'):(ICONS.flask+' <span>کاوش و تست ارزان</span>')}
@@ -2712,7 +3019,7 @@ function closeM(){$('ov').classList.remove('on')}
 $('sv').onclick=function(){
   var t=$('ft').value.trim(),sj=getJ('s'),ej=$('fo').checked?null:getJ('e'),a=sj?jToAge(sj,false):null,e=ej?jToAge(ej,true):null,er=$('err');
   if(!t){$('ft').focus();return}
-  if(a==null||a<0||a>S.cur+1){er.textContent='تاریخ شروع باید بین تاریخ تولد (۱۳۷۶) تا زمان حال باشد.';return}
+  if(a==null||a<0||a>S.cur+1){er.textContent='تاریخ شروع باید بین تاریخ تولد ('+fa((S.birth&&S.birth.y)||1376)+') تا زمان حال باشد.';return}
   if(ej&&(e==null||e<=a)){er.textContent='تاریخ پایان باید بعد از تاریخ شروع باشد.';return}
   var ev={id:editId||('e'+Date.now()),cat:$('fc').value,title:t,age:a,sd:sj,ed:ej,status:'',ongoing:$('fo').checked,end:e,note:$('fn').value.trim()};
   if(editId)S.events=S.events.map(function(o){return o.id===editId?ev:o});else S.events.push(ev);
@@ -3074,7 +3381,7 @@ $('imp-raw-text').addEventListener('input', function() {
   updateImpPreview(this.value);
 });
 
-$('btn-exp').onclick=function(){
+function downloadBackup(){
   var blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
   var a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
@@ -3082,12 +3389,8 @@ $('btn-exp').onclick=function(){
   a.download='life-plan-'+j.y+'-'+j.m+'-'+j.d+'.json';
   a.click();
   showToast('فایل پشتیبان دانلود شد');
-};
+}
 
-$('btn-imp').onclick=function(e){
-  if(e) e.preventDefault();
-  openImpM();
-};
 $('imp-cn').onclick=closeImpM;
 $('imp-cn-x').onclick=closeImpM;
 $('ov-imp').onclick=function(e){if(e.target===$('ov-imp'))closeImpM()};
@@ -3130,18 +3433,243 @@ function syncTelegramTheme(){
   }
 }
 
-$('btn-thm').onclick=function(){
-  var cur=document.documentElement.getAttribute('data-theme');
-  var isDark = cur==='dark' || (!cur && window.matchMedia('(prefers-color-scheme:dark)').matches);
-  var next=isDark?'light':'dark';
-  document.documentElement.setAttribute('data-theme',next);
-  try{localStorage.setItem('lifeTimeline.theme',next)}catch(e){}
+var PREFS_KEY = 'lifeTimeline.prefs';
+var appPrefs = { theme: 'auto', showGuides: true, showAiBar: true, defaultCap: 5, userName: '' };
+
+function loadAppPrefs(){
+  try{
+    var raw = localStorage.getItem(PREFS_KEY);
+    if(raw){
+      var p = JSON.parse(raw);
+      if(p && typeof p === 'object'){
+        appPrefs.theme = (p.theme === 'light' || p.theme === 'dark') ? p.theme : 'auto';
+        appPrefs.showGuides = (p.showGuides !== false);
+        appPrefs.showAiBar = (p.showAiBar !== false);
+        appPrefs.defaultCap = parseFloat(p.defaultCap) > 0 ? parseFloat(p.defaultCap) : 5;
+        appPrefs.userName = String(p.userName || '');
+      }
+    } else {
+      var legacyTh = localStorage.getItem('lifeTimeline.theme');
+      if(legacyTh === 'light' || legacyTh === 'dark') appPrefs.theme = legacyTh;
+    }
+  }catch(e){}
+}
+loadAppPrefs();
+
+function applyAppPrefs(){
+  if(appPrefs.theme === 'light' || appPrefs.theme === 'dark'){
+    document.documentElement.setAttribute('data-theme', appPrefs.theme);
+  } else {
+    document.documentElement.removeAttribute('data-theme');
+  }
+  if(document.body && document.body.classList){
+    document.body.classList.toggle('hide-guides', appPrefs.showGuides === false);
+    document.body.classList.toggle('hide-aibar', appPrefs.showAiBar === false);
+  }
   syncTelegramTheme();
+  var seg = $('set-theme-seg');
+  if(seg){
+    var btns = seg.querySelectorAll ? seg.querySelectorAll('button') : [];
+    for(var i = 0; i < btns.length; i++){
+      btns[i].classList.toggle('on', btns[i].getAttribute('data-thm') === appPrefs.theme);
+    }
+  }
+}
+applyAppPrefs();
+
+function saveAppPrefs(next){
+  appPrefs = {
+    theme: (next.theme === 'light' || next.theme === 'dark') ? next.theme : 'auto',
+    showGuides: (next.showGuides !== false),
+    showAiBar: (next.showAiBar !== false),
+    defaultCap: parseFloat(next.defaultCap) > 0 ? parseFloat(next.defaultCap) : 5,
+    userName: String(next.userName || '').trim()
+  };
+  var str = JSON.stringify(appPrefs);
+  try{
+    localStorage.setItem(PREFS_KEY, str);
+    if(appPrefs.theme === 'auto') localStorage.removeItem('lifeTimeline.theme');
+    else localStorage.setItem('lifeTimeline.theme', appPrefs.theme);
+  }catch(e){}
+  if(isTgCloud && tg && tg.CloudStorage){
+    try{ tg.CloudStorage.setItem('lt_prefs', str, function(){}); }catch(e){}
+  }
+  applyAppPrefs();
+}
+
+function loadPrefsFromTgCloud(){
+  if(!isTgCloud || !tg || !tg.CloudStorage) return;
+  try{
+    tg.CloudStorage.getItem('lt_prefs', function(err, val){
+      if(!err && val){
+        try{
+          var p = JSON.parse(val);
+          if(p && typeof p === 'object'){
+            appPrefs.theme = (p.theme === 'light' || p.theme === 'dark') ? p.theme : 'auto';
+            appPrefs.showGuides = (p.showGuides !== false);
+            appPrefs.showAiBar = (p.showAiBar !== false);
+            appPrefs.defaultCap = parseFloat(p.defaultCap) > 0 ? parseFloat(p.defaultCap) : 5;
+            appPrefs.userName = String(p.userName || '');
+            try{ localStorage.setItem(PREFS_KEY, JSON.stringify(appPrefs)); }catch(e){}
+            applyAppPrefs();
+          }
+        }catch(e){}
+      } else if(appPrefs.userName || appPrefs.theme !== 'auto' || appPrefs.defaultCap !== 5){
+        try{ tg.CloudStorage.setItem('lt_prefs', JSON.stringify(appPrefs), function(){}); }catch(e){}
+      }
+    });
+  }catch(e){}
+}
+
+if($('set-bm')){
+  $('set-bm').innerHTML = MN.map(function(n, i){ return '<option value="' + (i + 1) + '">' + n + '</option>'; }).join('');
+}
+
+function updateAgePreview(){
+  var pv = $('set-age-preview');
+  if(!pv) return;
+  var by = parseInt($('set-by').value, 10), bm = parseInt($('set-bm').value, 10), bdVal = parseInt($('set-bd').value, 10);
+  if(!by || by < 1300 || by > 1410){
+    pv.textContent = 'سن محاسبه‌شده: نامعتبر';
+    return;
+  }
+  var dt = jToDate(by, bm || 1, bdVal || 1);
+  if(!dt){
+    pv.textContent = 'تاریخ شمسی معتبر نیست';
+    return;
+  }
+  var tn = new Date();
+  var nowUtc = new Date(Date.UTC(tn.getFullYear(), tn.getMonth(), tn.getDate(), 12));
+  var yDiff = nowUtc.getUTCFullYear() - dt.getUTCFullYear();
+  var bdThisYear = Date.UTC(dt.getUTCFullYear() + yDiff, dt.getUTCMonth(), dt.getUTCDate(), 12);
+  if(bdThisYear > nowUtc.getTime()) yDiff--;
+  var bdPrev = Date.UTC(dt.getUTCFullYear() + yDiff, dt.getUTCMonth(), dt.getUTCDate(), 12);
+  var bdNext = Date.UTC(dt.getUTCFullYear() + yDiff + 1, dt.getUTCMonth(), dt.getUTCDate(), 12);
+  var exactAge = yDiff + (nowUtc.getTime() - bdPrev) / (bdNext - bdPrev);
+  pv.textContent = 'سن محاسبه‌شده فعلی: ' + fa(Math.round(exactAge * 10) / 10) + ' سال';
+}
+
+function switchSetTab(name){
+  var tabsBox = $('set-tabs');
+  if(tabsBox && tabsBox.querySelectorAll){
+    var tbs = tabsBox.querySelectorAll('[data-settab]');
+    for(var i = 0; i < tbs.length; i++){
+      tbs[i].classList.toggle('on', tbs[i].getAttribute('data-settab') === name);
+    }
+  }
+  ['profile', 'appearance', 'ai', 'data'].forEach(function(k){
+    var pane = $('set-pane-' + k);
+    if(pane) pane.classList.toggle('on', k === name);
+  });
+}
+
+function syncSettingsUI(){
+  var b = (S.birth && S.birth.y) ? S.birth : DEFAULT_BIRTH;
+  if($('set-by')) $('set-by').value = b.y;
+  if($('set-bm')) $('set-bm').value = b.m || 1;
+  if($('set-bd')) $('set-bd').value = b.d || 1;
+  if($('set-uname')) $('set-uname').value = appPrefs.userName || '';
+  if($('set-def-cap')) $('set-def-cap').value = appPrefs.defaultCap || 5;
+  if($('set-show-guides')) $('set-show-guides').checked = (appPrefs.showGuides !== false);
+  applyAppPrefs();
+  updateAgePreview();
+  if(typeof syncAiCfgUI === 'function') syncAiCfgUI();
+  if($('set-cloud-lbl')) $('set-cloud-lbl').textContent = isTgCloud ? 'ابری تلگرام' : 'مرورگر (محلی)';
+  if($('set-cnt-ev')) $('set-cnt-ev').textContent = fa((S.events || []).length);
+  if($('set-cnt-hist')) $('set-cnt-hist').textContent = fa((S.hist || []).length);
+  if($('set-cnt-out')) $('set-cnt-out').textContent = fa(S.qtr && S.qtr.items ? S.qtr.items.length : 0);
+  if($('set-btn-reset-data')) $('set-btn-reset-data').textContent = 'بازنشانی داده‌ها به حالت اولیه';
+}
+
+function openSetM(initialTab){
+  syncSettingsUI();
+  switchSetTab(initialTab || 'profile');
+  $('ov-set').classList.add('on');
+}
+function closeSetM(){ $('ov-set').classList.remove('on'); }
+
+if($('btn-set')) $('btn-set').onclick = function(){ openSetM('profile'); };
+if($('set-cn')) $('set-cn').onclick = closeSetM;
+if($('set-cn-x')) $('set-cn-x').onclick = closeSetM;
+if($('ov-set')) $('ov-set').onclick = function(e){ if(e.target === $('ov-set')) closeSetM(); };
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape' && $('ov-set') && $('ov-set').classList.contains('on')) closeSetM();
+});
+if($('set-tabs')) $('set-tabs').onclick = function(e){
+  var b = e.target.closest('[data-settab]');
+  if(b) switchSetTab(b.getAttribute('data-settab'));
 };
-try{
-  var th=localStorage.getItem('lifeTimeline.theme');
-  if(th)document.documentElement.setAttribute('data-theme',th);
-}catch(e){}
+['set-by', 'set-bm', 'set-bd'].forEach(function(id){
+  if($(id)) $(id).addEventListener('input', updateAgePreview);
+  if($(id)) $(id).addEventListener('change', updateAgePreview);
+});
+if($('set-theme-seg')) $('set-theme-seg').onclick = function(e){
+  var b = e.target.closest('[data-thm]');
+  if(!b) return;
+  var th = b.getAttribute('data-thm');
+  saveAppPrefs({
+    theme: th,
+    showGuides: appPrefs.showGuides,
+    showAiBar: appPrefs.showAiBar,
+    defaultCap: appPrefs.defaultCap,
+    userName: appPrefs.userName
+  });
+};
+if($('set-ai-model-sel')) $('set-ai-model-sel').onchange = function(){
+  if($('set-ai-custom-wrap')) $('set-ai-custom-wrap').style.display = (this.value === '__custom__') ? '' : 'none';
+};
+if($('set-open-bridge')) $('set-open-bridge').onclick = function(){
+  closeSetM();
+  openAiM();
+  if($('ai-bridge-panel')) $('ai-bridge-panel').classList.add('on');
+};
+if($('set-btn-exp')) $('set-btn-exp').onclick = downloadBackup;
+if($('set-btn-imp')) $('set-btn-imp').onclick = function(){ closeSetM(); openImpM(); };
+if($('set-btn-reset-data')) $('set-btn-reset-data').onclick = function(){
+  if(this.textContent !== 'مطمئنید؟ برای بازنشانی دوباره بزنید'){
+    this.textContent = 'مطمئنید؟ برای بازنشانی دوباره بزنید';
+    return;
+  }
+  S = JSON.parse(JSON.stringify(SEED_DATA));
+  migrate();
+  ED = {};
+  selWk = null;
+  save('داده‌ها به حالت اولیه بازنشانی شدند');
+  render();
+  closeSetM();
+};
+if($('set-save')) $('set-save').onclick = function(){
+  var by = parseInt($('set-by').value, 10), bm = parseInt($('set-bm').value, 10) || 1, bdVal = parseInt($('set-bd').value, 10) || 1;
+  if(by && by >= 1300 && by <= 1410){
+    var dt = jToDate(by, bm, bdVal);
+    if(!dt){
+      switchSetTab('profile');
+      showToast('تاریخ تولد شمسی نامعتبر است');
+      return;
+    }
+    S.birth = { y: by, m: bm, d: bdVal };
+    recalcTimelineAges();
+    S.cur = calcAge();
+  }
+  saveAppPrefs({
+    theme: appPrefs.theme,
+    showGuides: $('set-show-guides') ? $('set-show-guides').checked : true,
+    defaultCap: $('set-def-cap') ? (parseFloat($('set-def-cap').value) || 5) : 5,
+    userName: $('set-uname') ? $('set-uname').value : ''
+  });
+  var selMdl = $('set-ai-model-sel') ? $('set-ai-model-sel').value : aiCfg.model;
+  var mdl = selMdl === '__custom__' ? ($('set-ai-custom-model').value.trim() || 'gemini-2.5-flash') : selMdl;
+  if(typeof saveAiCfg === 'function'){
+    saveAiCfg({
+      apiKey: $('set-ai-key') ? $('set-ai-key').value : aiCfg.apiKey,
+      baseUrl: $('set-ai-base-url') ? $('set-ai-base-url').value : aiCfg.baseUrl,
+      model: mdl
+    });
+  }
+  save('تنظیمات ذخیره و اعمال شد ✓');
+  render();
+  closeSetM();
+};
 
 function tab(t){
   ['v','q','t'].forEach(function(k){
@@ -3198,6 +3726,7 @@ if (tg) {
         }
       });
       loadAiCfgFromTgCloud();
+      if(typeof loadPrefsFromTgCloud==='function') loadPrefsFromTgCloud();
     } else {
       updateCloudUI("مرورگر وب (محلی)", "var(--mut)");
     }
@@ -3289,9 +3818,9 @@ function syncAiCfgUI() {
   if (chip) chip.textContent = aiCfg.model || 'gemini-2.5-flash';
   if ($('ai-key')) $('ai-key').value = aiCfg.apiKey || '';
   if ($('ai-base-url')) $('ai-base-url').value = aiCfg.baseUrl || '';
+  var known = ['gemini-2.5-flash', 'gemini-2.5-pro', 'gemini-2.0-flash'];
   var sel = $('ai-model-sel'), custWrap = $('ai-custom-model-wrap'), custInp = $('ai-custom-model');
   if (sel && custWrap && custInp) {
-    var known = ['gemini-2.5-flash', 'gemini-2.5-pro', 'gemini-2.0-flash'];
     if (known.indexOf(aiCfg.model) !== -1) {
       sel.value = aiCfg.model;
       custWrap.style.display = 'none';
@@ -3299,6 +3828,19 @@ function syncAiCfgUI() {
       sel.value = '__custom__';
       custWrap.style.display = '';
       custInp.value = aiCfg.model || '';
+    }
+  }
+  if ($('set-ai-key')) $('set-ai-key').value = aiCfg.apiKey || '';
+  if ($('set-ai-base-url')) $('set-ai-base-url').value = aiCfg.baseUrl || '';
+  var sSel = $('set-ai-model-sel'), sWrap = $('set-ai-custom-wrap'), sInp = $('set-ai-custom-model');
+  if (sSel && sWrap && sInp) {
+    if (known.indexOf(aiCfg.model) !== -1) {
+      sSel.value = aiCfg.model;
+      sWrap.style.display = 'none';
+    } else {
+      sSel.value = '__custom__';
+      sWrap.style.display = '';
+      sInp.value = aiCfg.model || '';
     }
   }
 }
@@ -3335,7 +3877,7 @@ function initQuarterObj(y, s) {
     from: gToJ(f),
     to: gToJ(r.b),
     theme: '',
-    cap: 5,
+    cap: (typeof appPrefs !== 'undefined' && parseFloat(appPrefs.defaultCap)) ? Math.max(1, parseFloat(appPrefs.defaultCap)) : 5,
     drop: '',
     floorWeeks: {"0":[0,0,0,0,0,0,0,0,0,0,0,0],"1":[0,0,0,0,0,0,0,0,0,0,0,0],"2":[0,0,0,0,0,0,0,0,0,0,0,0],"3":[0,0,0,0,0,0,0,0,0,0,0,0]},
     items: [],
@@ -3376,6 +3918,8 @@ function buildAiContextSnapshot() {
   return {
     todayJalali: curJ,
     todayText: fmtJ(curJ),
+    userName: (typeof appPrefs !== 'undefined' && appPrefs.userName) ? appPrefs.userName : '',
+    birthJalali: (S.birth && S.birth.y) ? S.birth : DEFAULT_BIRTH,
     currentSeasonWeek: curSeasonInfo,
     selectedWeekIndex: activeWk,
     selectedWeekLabel: activeWkLabel,
