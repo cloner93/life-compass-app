@@ -1483,6 +1483,26 @@ svg g[data-id]:hover rect, svg g[data-id]:hover circle{
   font-size:12.5px;
   color:var(--fg-sec);
 }
+.ai-sugs{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:2px;
+}
+.ai-sug-chip{
+  font-size:11.5px;
+  padding:5px 11px;
+  border-radius:var(--r-full);
+  background:var(--card);
+  color:var(--pri);
+  border:1px solid var(--pri);
+  cursor:pointer;
+  transition:background .15s,color .15s;
+}
+.ai-sug-chip:hover{
+  background:var(--md-sys-color-primary-container);
+  color:var(--md-sys-color-on-primary-container);
+}
 </style>
 </head>
 <body>
@@ -1549,10 +1569,14 @@ svg g[data-id]:hover rect, svg g[data-id]:hover circle{
 <!-- TAB 1: VISION -->
 <section id="tab-v" role="tabpanel">
   <div class="guide-bar">
-    <div style="display:flex;align-items:center;gap:8px">
+    <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:220px">
       <svg class="ic" style="color:var(--pri)" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
       <span><b>فلسفه قطب‌نما:</b> در دنیای پر از «قوی سیاه»، این ۴ ستون پایدار جایگزین برنامه‌های خشک بلندمدت هستند تا بدون تعهد نابالغانه، مسیر حرکت روشن بماند.</span>
     </div>
+    <button type="button" class="mini ai-btn" id="btn-ai-vis">
+      <svg class="ic ic-sm" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l1.9 4.6L18.5 9.5l-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9z"/><path d="M19 15l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z"/></svg>
+      <span>بازنگری ویژن با دستیار</span>
+    </button>
   </div>
   <div id="vis"></div>
 </section>
@@ -1709,8 +1733,31 @@ svg g[data-id]:hover rect, svg g[data-id]:hover circle{
       </div>
       <div style="display:flex;gap:4px;align-items:center;flex-shrink:0">
         <button type="button" class="ghost mini" id="ai-btn-reset" title="شروع گفتگوی جدید">گفتگوی جدید</button>
+        <button type="button" class="mini" id="ai-btn-bridge" title="کپی وضعیت یا الصاق بسته تغییر بدون نیاز به کلید API">پل دستیار بیرونی</button>
         <button type="button" class="mini" id="ai-btn-cfg" title="تنظیمات اتصال Gemini">تنظیمات</button>
         <button type="button" class="ghost mini" id="ai-cn-x" aria-label="بستن">✕</button>
+      </div>
+    </div>
+
+    <div class="ai-cfg-panel" id="ai-bridge-panel">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+        <b style="font-size:13px;color:var(--fg)">پل ارتباطی با دستیار بیرونی (بدون نیاز به کلید API)</b>
+        <button type="button" class="ghost mini" id="ai-bridge-close">بستن پنل</button>
+      </div>
+      <div class="n" style="font-size:11.5px;line-height:1.6">
+        می‌توانید وضعیت کامل برنامه و دستورالعمل ساخت بسته تغییر را با یک کلیک کپی کنید، در هر چت‌بات دلخواه بفرستید و پاسخ JSON را همین‌جا اعمال کنید:
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button type="button" class="ai-btn mini" id="ai-copy-full-prompt">کپی پرامپت کامل + وضعیت برنامه (پیشنهادی)</button>
+        <button type="button" class="mini" id="ai-copy-snap">فقط کپی JSON وضعیت فعلی</button>
+      </div>
+      <label style="font-size:12px">الصاق مستقیم بسته تغییر (patch) دریافتی از دستیار بیرونی
+        <textarea id="ai-bridge-inp" rows="3" placeholder='{"patch": {"quarter": ...}}' dir="ltr" style="font-family:monospace;font-size:11.5px;text-align:left;line-height:1.4"></textarea>
+      </label>
+      <div id="ai-bridge-preview" class="ai-patch" style="display:none"></div>
+      <div id="ai-bridge-err" style="color:var(--err);font-size:11.5px;font-weight:600"></div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button type="button" class="pri mini" id="ai-bridge-apply">اعمال بسته تغییر در برنامه</button>
       </div>
     </div>
 
@@ -1747,6 +1794,7 @@ svg g[data-id]:hover rect, svg g[data-id]:hover circle{
     <div class="ai-chat" id="ai-chat"></div>
 
     <div class="ai-quick" id="ai-quick">
+      <button type="button" class="flt-btn" data-aiq="می‌خواهم وضعیت این هفته کف‌های ۴ ستون و نتایج فصل را با یک پیام ثبت کنم؛ از من بپرس این هفته چطور گذشت">ثبت گزارش این هفته</button>
       <button type="button" class="flt-btn" data-aiq="می‌خواهم یک مورد یا عادت جدید به برنامه این فصل اضافه کنم؛ سوال‌های لازم را از من بپرس">افزودن مورد به فصل</button>
       <button type="button" class="flt-btn" data-aiq="می‌خواهم حداقل‌ها، فرضیه‌ها یا مسیرهای بخش ویژن را مدیریت یا ویرایش کنم؛ اول سوال‌های لازم را از من بپرس">مدیریت ویژن و حداقل‌ها</button>
       <button type="button" class="flt-btn" data-aiq="بر اساس ویژن و ظرفیت من، برنامه این فصل سه‌ماهه را طراحی یا بهبود بده">طراحی برنامه فصل</button>
@@ -1785,7 +1833,8 @@ var ICONS = {
   flag: '<svg class="ic ic-sm" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>',
   repeat: '<svg class="ic ic-sm" aria-hidden="true" viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>',
   archive: '<svg class="ic ic-sm" aria-hidden="true" viewBox="0 0 24 24"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>',
-  plus: '<svg class="ic ic-sm" aria-hidden="true" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>'
+  plus: '<svg class="ic ic-sm" aria-hidden="true" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
+  sparkles: '<svg class="ic ic-sm" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l1.9 4.6L18.5 9.5l-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9z"/><path d="M19 15l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z"/></svg>'
 };
 
 var KEY='lifeTimeline.v2',LEGACY_KEY='lifeTimeline.v1',PX=28,PAD=40,W=0,ROWH=30,HEAD=28;
@@ -2249,7 +2298,7 @@ function renderQuarter(){
   if(!Q){
     var c=gToJ(tn),y=c.y,s=Math.ceil(c.m/3);
     if((S.hist||[]).some(function(q){return q.title===SN[s-1]+' '+fa(y)})){s++;if(s>4){s=1;y++}}
-    $('qv').innerHTML='<div class="cd"><div class="cd-head"><h3 class="cd-title">'+ICONS.target+' <span>شروع چرخه سه‌ماهه جدید (۹۰ روزه)</span></h3></div><p class="n">افق سه‌ماهه به اندازه کافی کوتاه است که انگیزه و شفافیت حفظ شود و به اندازه کافی بلند است که بدون تعهد نابالغانه، شواهد واقعی جمع کنید.</p><div class="d3" style="max-width:300px;margin:12px 0;grid-template-columns:1.5fr 1fr"><select id="qs">'+SN.map(function(n,i){return '<option value="'+(i+1)+'"'+(i+1===s?' selected':'')+'>'+n+'</option>'}).join('')+'</select><input id="qy" type="number" value="'+y+'"></div><div class="n" style="margin:8px 0">فصل‌ها شمسی هستند. اگر وسط فصل باشید، برنامه از امروز تا پایان فصل تنظیم می‌شود.</div><button type="button" class="pri" data-a="start">شروع فصل جدید</button><div id="qerr" class="warn n"></div></div>'+histHtml();
+    $('qv').innerHTML='<div class="cd"><div class="cd-head"><h3 class="cd-title">'+ICONS.target+' <span>شروع چرخه سه‌ماهه جدید (۹۰ روزه)</span></h3></div><p class="n">افق سه‌ماهه به اندازه کافی کوتاه است که انگیزه و شفافیت حفظ شود و به اندازه کافی بلند است که بدون تعهد نابالغانه، شواهد واقعی جمع کنید.</p><div class="d3" style="max-width:300px;margin:12px 0;grid-template-columns:1.5fr 1fr"><select id="qs">'+SN.map(function(n,i){return '<option value="'+(i+1)+'"'+(i+1===s?' selected':'')+'>'+n+'</option>'}).join('')+'</select><input id="qy" type="number" value="'+y+'"></div><div class="n" style="margin:8px 0">فصل‌ها شمسی هستند. اگر وسط فصل باشید، برنامه از امروز تا پایان فصل تنظیم می‌شود.</div><div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="pri" data-a="start">شروع فصل جدید</button>'+btn('aiask','می‌خواهم فصل سه‌ماهه جدیدم را بر اساس ویژن و ظرفیت آزادم طراحی و شروع کنم؛ سوال‌های لازم را از من بپرس',ICONS.sparkles+' <span>طراحی و شروع فصل با دستیار</span>','ai-btn')+'</div><div id="qerr" class="warn n"></div></div>'+histHtml();
     return;
   }
 
@@ -2312,6 +2361,7 @@ function renderQuarter(){
   h+='<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">';
   h+='<div class="wk-selector" style="background:var(--card)"><button type="button" data-a="wknav" data-k="-1" title="هفته قبل">‹</button><span class="wk-cur-lbl">'+esc(activeWkLabel)+'</span><button type="button" data-a="wknav" data-k="1" title="هفته بعد">›</button></div>';
   if(!isCurrentWk) h+='<button type="button" class="mini" data-a="wkcur" style="background:var(--card)">بازگشت به هفته جاری</button>';
+  h+=btn('aiask','می‌خواهم وضعیت «'+activeWkLabel+'» (کف‌های ۴ ستون و نتایج فصل) را با یک پیام ثبت کنم؛ از من بپرس این هفته چطور گذشت',ICONS.sparkles+' <span>ثبت گزارش هفته با دستیار</span>','mini ai-btn');
   h+='</div></div>';
 
   // COMPACT WEEKLY FLOOR TRACKER
@@ -2340,7 +2390,7 @@ function renderQuarter(){
   h+='</div></div>';
 
   // Quarterly Outcomes (1 to 3 items, Compact with Collapsible Details)
-  h+='<div style="display:flex;justify-content:space-between;align-items:center;margin:16px 0 10px;flex-wrap:wrap;gap:8px"><div><b style="font-size:15.5px">نتایج و آزمایش‌های این فصل (۱ تا ۳ خروجی مشخص)</b></div>'+(Q.items.length<4?btn('addo','',ICONS.plus+' <span>افزودن نتیجه</span>','pri mini'):'')+'</div>';
+  h+='<div style="display:flex;justify-content:space-between;align-items:center;margin:16px 0 10px;flex-wrap:wrap;gap:8px"><div><b style="font-size:15.5px">نتایج و آزمایش‌های این فصل (۱ تا ۳ خروجی مشخص)</b></div><div style="display:flex;gap:6px;flex-wrap:wrap">'+btn('aiask','می‌خواهم یک خروجی یا آزمایش جدید به این فصل اضافه کنم؛ سوال‌های لازم را از من بپرس',ICONS.sparkles+' <span>طراحی با دستیار</span>','mini ai-btn')+(Q.items.length<4?btn('addo','',ICONS.plus+' <span>افزودن نتیجه</span>','pri mini'):'')+'</div></div>';
 
   Q.items.forEach(function(it,i){
     var k='o'+i,ed=ED[k];
@@ -2397,7 +2447,7 @@ function renderQuarter(){
   var rvOpen=(ED.rv || n>tot || hasRv)?' open':'';
   h+='<details class="cd" style="margin-top:14px"'+rvOpen+'><summary style="cursor:pointer;font-weight:700;font-size:14.5px;display:flex;align-items:center;justify-content:space-between;gap:8px"><span style="display:inline-flex;align-items:center;gap:8px">'+ICONS.archive+' <span>بازبینی پایان فصل و بایگانی (ویژه پایان ۹۰ روز)</span></span><span class="chip" style="font-size:11px">'+(hasRv?'ثبت‌شده':'جمع‌شده')+'</span></summary>';
   h+='<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--line)">';
-  h+='<div style="display:flex;justify-content:flex-end;margin-bottom:8px">'+(ED.rv?'<div style="display:flex;gap:6px">'+btn('ok','rv',ICONS.check+' <span>ذخیره</span>','pri mini')+btn('cned','rv','بستن','mini')+'</div>':btn('ed','rv',ICONS.edit+' <span>ثبت یا ویرایش بازبینی</span>','mini'))+'</div>';
+  h+='<div style="display:flex;justify-content:flex-end;gap:6px;flex-wrap:wrap;margin-bottom:8px">'+btn('aiask','عملکرد ۱۲ هفته این فصل را تحلیل کن و برای نوشتن ۳ محور بازبینی پایان فصل کمکم کن',ICONS.sparkles+' <span>نگارش بازبینی با دستیار</span>','mini ai-btn')+(ED.rv?'<div style="display:flex;gap:6px">'+btn('ok','rv',ICONS.check+' <span>ذخیره</span>','pri mini')+btn('cned','rv','بستن','mini')+'</div>':btn('ed','rv',ICONS.edit+' <span>ثبت یا ویرایش بازبینی</span>','mini'))+'</div>';
   if(ED.rv){
     h+='<div class="edit-panel">';
     [['a','۱. چه چیزهایی و کدام ریتم‌ها در عمل جواب دادند؟'],['b','۲. چه چیزهایی جواب ندادند یا با عدم قطعیت برخورد کردند؟'],['c','۳. تصمیم برای فصل بعد (کدام فرضیه تبدیل به تعهد شود، کدام تغییر کند، و کدام کنار گذاشته شود؟)']].forEach(function(r){
@@ -2629,6 +2679,10 @@ function onA(e){
   var a=b.dataset.a,k=b.dataset.k||'',V=S.vision,Q=S.qtr,m;
   if(a==='ed')ED[k]=1;
   else if(a==='ok' || a==='cned')delete ED[k];
+  else if(a==='aiask'){
+    openAiM(k);
+    return;
+  }
   else if(a==='wknav'){
     var curDot = getCurSeasonWeek(Q).dotIdx;
     var wCur = selWk!=null ? selWk : curDot;
@@ -2979,7 +3033,18 @@ function tab(t){
     var mb=$('btn-nav-'+k);if(mb){mb.className='m3-nav-item'+(k===t?' on':'');mb.setAttribute('aria-selected',k===t?'true':'false');}
   });
   var fab=$('fab-add');
-  if(fab){fab.style.display=t==='t'?'flex':'none';}
+  if(fab){
+    fab.style.display='flex';
+    if(t==='t'){
+      fab.dataset.mode='ev';
+      fab.setAttribute('aria-label','ثبت رویداد جدید');
+      fab.innerHTML='<svg class="ic ic-lg" aria-hidden="true" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+    }else{
+      fab.dataset.mode='ai';
+      fab.setAttribute('aria-label','دستیار هوشمند');
+      fab.innerHTML='<svg class="ic ic-lg" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l1.9 4.6L18.5 9.5l-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9z"/><path d="M19 15l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z"/></svg>';
+    }
+  }
   try{localStorage.setItem('lifeTimeline.tab',t)}catch(e){}
   if(t==='t'){
     var w=$('tl').parentNode;
@@ -3030,9 +3095,26 @@ if (tg) {
 // IN-APP GEMINI AI ASSISTANT (Flexible Direct / Custom Proxy + Safe Patch)
 // ==========================================================================
 var AI_CFG_KEY = 'lifeTimeline.ai';
+var AI_CHAT_KEY = 'lifeTimeline.aiChat';
 var aiCfg = { apiKey: '', baseUrl: '', model: 'gemini-2.5-flash' };
 var aiMessages = [];
 var aiBusy = false;
+
+function loadAiChat() {
+  try {
+    var raw = localStorage.getItem(AI_CHAT_KEY);
+    if (raw) {
+      var arr = JSON.parse(raw);
+      if (Array.isArray(arr)) aiMessages = arr.slice(-24);
+    }
+  } catch(e) {}
+}
+function saveAiChat() {
+  try {
+    localStorage.setItem(AI_CHAT_KEY, JSON.stringify(aiMessages.slice(-24)));
+  } catch(e) {}
+}
+loadAiChat();
 
 function loadAiCfg() {
   try {
@@ -3147,6 +3229,8 @@ function initQuarterObj(y, s) {
 function buildAiContextSnapshot() {
   var curJ = gToJ(new Date());
   var curSeasonInfo = getCurSeasonWeek(S.qtr);
+  var activeWk = selWk != null ? Math.max(0, Math.min(11, selWk)) : curSeasonInfo.dotIdx;
+  var activeWkLabel = formatWeekLabel(activeWk, S.qtr ? S.qtr.s : Math.ceil(curJ.m / 3), activeWk === curSeasonInfo.dotIdx);
   var suggestedSeason = Math.ceil(curJ.m / 3), suggestedYear = curJ.y;
   if (!S.qtr && (S.hist || []).some(function(q){ return q.title === SN[suggestedSeason - 1] + ' ' + fa(suggestedYear); })) {
     suggestedSeason++;
@@ -3176,6 +3260,8 @@ function buildAiContextSnapshot() {
     todayJalali: curJ,
     todayText: fmtJ(curJ),
     currentSeasonWeek: curSeasonInfo,
+    selectedWeekIndex: activeWk,
+    selectedWeekLabel: activeWkLabel,
     suggestedNextSeason: { y: suggestedYear, s: suggestedSeason, name: SN[suggestedSeason - 1] + ' ' + fa(suggestedYear) },
     userAge: Math.round((S.cur || 0) * 10) / 10,
     vision: { items: visionSnap, general: (S.vision && S.vision.general) || '' },
@@ -3202,9 +3288,10 @@ function buildAiSystemPrompt() {
     JSON.stringify(snap),
     '',
     'وظیفه و شیوه مصاحبه تو:',
-    '1. به کاربر در طراحی، اصلاح و شفاف‌سازی «برنامه فصل سه‌ماهه»، «ستون‌های ویژن و فرضیه‌های کاوش» و «بازبینی پایان فصل» کمک کن.',
+    '1. به کاربر در طراحی، اصلاح و شفاف‌سازی «برنامه فصل سه‌ماهه»، «ثبت گزارش هفتگی کف‌ها و نتایج»، «ستون‌های ویژن و فرضیه‌های کاوش» و «بازبینی پایان فصل» کمک کن.',
     '2. تغییر تایم‌لاین رویدادها (events) یا حذف تاریخچه (hist) در حیطه مجاز تو نیست؛ رویدادهای تایم‌لاین فقط برای شناخت پس‌زمینه زندگی کاربر ارائه شده‌اند.',
-    '3. قاعده مهم مصاحبه پیش از ثبت (بسیار مهم): اگر کاربر فقط یک خواسته کلی گفت (مثلاً «می‌خواهم زبان بخوانم» یا «می‌خواهم یک مورد به فصل اضافه کنم») و هنوز جزئیات کلیدی را نگفته و صراحتاً نخواسته «خودت بدون پرسش پر کنی»، حتماً پیش از ساختن patch، ابتدا patch را null بگذار و با یک چک‌لیست کوتاه و شماره‌گذاری‌شده فقط موارد نامشخص را از او بپرس (کنار هر سوال هم ۱ یا ۲ گزینه پیشنهادی کوتاه بنویس تا راحت و سریع جواب بدهد):',
+    '3. قاعده مهم مصاحبه پیش از ثبت (بسیار مهم): اگر کاربر فقط یک خواسته کلی گفت (مثلاً «می‌خواهم زبان بخوانم» یا «می‌خواهم یک مورد به فصل اضافه کنم») و هنوز جزئیات کلیدی را نگفته و صراحتاً نخواسته «خودت بدون پرسش پر کنی»، حتماً پیش از ساختن patch، ابتدا patch را null بگذار و با یک چک‌لیست کوتاه و شماره‌گذاری‌شده فقط موارد نامشخص را از او بپرس (و در آرایه suggestions هم ۲ تا ۴ گزینه پاسخ کوتاه و قابل کلیک قرار بده تا با یک ضربه جواب بدهد):',
+    '   - برای ثبت گزارش هفتگی (Check-in هفتگی کف‌ها و نتایج): اگر کاربر خواست گزارش هفته را ثبت کند یا در یک جمله گفت این هفته چطور گذشت، وضعیت ۴ ستون ویژن (floorUpdates با کدهای: 1=رعایت شد، 2=مرزی، 3=رد شد، 0=ثبت‌نشده) و وضعیت نتایج فصل (outcomeWeekUpdates با کدهای: 1=انجام شد، 2=نصفه، 3=نشد، 0=ثبت‌نشده) را برای هفته انتخابی (selectedWeekIndex) تنظیم کن.',
     '   - برای افزودن نتیجه به فصل: (الف) آیا در حد «کاوش و آزمایش ارزان» است یا «تعهد و ساختن»؟ (ب) چند ساعت در هفته وقت می‌گذارد و با توجه به quarterCapacitySummary چقدر با ظرفیت آزاد فعلی سازگار است؟ (پ) در پایان ۹۰ روز چه خروجی ملموسی معیار موفقیت است؟ (ت) ریتم هفتگی پیشنهادی‌اش چیست؟ (ث) اگر الان ۴ نتیجه ثبت شده است کدام یک جایگزین شود، و اگر هنوز فصلی شروع نشده (qtr: null) آیا همین فصل جاری را با چه تمرکز اصلی و سقف ساعتی شروع کنیم؟',
     '   - برای مدیریت بخش ویژن (حداقل‌های ستون‌ها، قوانین عمومی، فرضیه‌ها و مسیرها): ابتدا بر اساس نوع درخواست سوال بپرس:',
     '     * اگر بحث تغییر/افزودن/حذف «حداقل‌ها یا قوانین ستون» است: بپرس مربوط به کدام ستون یا قوانین عمومی است، دقیقاً کدام خط تغییر کند یا اضافه شود، و چه حداقل واقع‌بینانه‌ای در هفته‌های شلوغ هم قابل حفظ است؟ (در updatePillars هنگام ویرایش text حتماً سایر خطوط فعلی کاربر را حفظ کن مگر اینکه خودش حذف آن‌ها را خواسته باشد).',
@@ -3217,6 +3304,7 @@ function buildAiSystemPrompt() {
     'خروجی تو باید حتماً یک JSON معتبر دقیقاً با ساختار زیر باشد (بدون هیچ متن اضافه بیرون از JSON):',
     '{',
     '  "reply": "متن پاسخ و راهنمایی فارسی برای کاربر",',
+    '  "suggestions": ["پاسخ سریع یا گام بعدی پیشنهادی ۱", "پاسخ سریع ۲"],',
     '  "patch": null | {',
     '    "vision": {',
     '      "general": "متن کامل قوانین عمومی تصمیم‌گیری (اختیاری)",',
@@ -3231,6 +3319,8 @@ function buildAiSystemPrompt() {
     '      "addOutcomes": [{ "title": "عنوان نتیجه ملموس", "pillar": "نام دقیق ستون", "dir": "نام فرضیه مرتبط یا خالی", "mode": "exp|build", "hours": 2, "done": "معیار پایان", "rhythm": "ریتم هفتگی" }],',
     '      "updateOutcomes": [{ "index": 0, "title": "...", "pillar": "...", "dir": "...", "mode": "exp|build", "hours": 2, "done": "...", "rhythm": "...", "pct": 0 }],',
     '      "removeOutcomeIndices": [0],',
+    '      "floorUpdates": [{ "pillarIndex": 0, "weekIndex": 6, "status": 1 }],',
+    '      "outcomeWeekUpdates": [{ "outcomeIndex": 0, "weekIndex": 6, "status": 1 }],',
     '      "review": { "a": "چه چیزهایی جواب داد", "b": "چه چیزهایی جواب نداد", "c": "تصمیم برای فصل بعد" }',
     '    }',
     '  }',
@@ -3257,12 +3347,16 @@ function parseGeminiPayload(rawText) {
     }
   }
   if (!parsed || typeof parsed !== 'object') {
-    return { reply: txt, patch: null };
+    return { reply: txt, suggestions: [], patch: null };
   }
   var patch = (parsed.patch && typeof parsed.patch === 'object') ? parsed.patch : null;
   if (patch && !patch.vision && !patch.quarter) patch = null;
+  var sugs = Array.isArray(parsed.suggestions)
+    ? parsed.suggestions.map(function(s){ return String(s || '').trim(); }).filter(Boolean).slice(0, 4)
+    : [];
   return {
     reply: String(parsed.reply || parsed.message || txt),
+    suggestions: sugs,
     patch: patch
   };
 }
@@ -3330,6 +3424,24 @@ function summarizeAiPatch(patch) {
     if (Array.isArray(q.removeOutcomeIndices) && q.removeOutcomeIndices.length) {
       lines.push('حذف ' + fa(q.removeOutcomeIndices.length) + ' نتیجه از فصل جاری');
     }
+    if (Array.isArray(q.floorUpdates) && q.floorUpdates.length) {
+      var flrStNames = ['ثبت‌نشده', 'رعایت شد', 'مرزی', 'رد شد'];
+      q.floorUpdates.forEach(function(fu) {
+        var pIdx = parseInt(fu.pillarIndex, 10) || 0;
+        var pName = (S.vision.items[pIdx] && S.vision.items[pIdx].name) || ('ستون ' + fa(pIdx + 1));
+        var stCode = Math.max(0, Math.min(3, parseInt(fu.status, 10) || 0));
+        lines.push('ثبت وضعیت هفتگی کف «' + pName + '»: ' + flrStNames[stCode]);
+      });
+    }
+    if (Array.isArray(q.outcomeWeekUpdates) && q.outcomeWeekUpdates.length) {
+      var outStNames = ['ثبت‌نشده', 'انجام شد', 'نصفه', 'نشد'];
+      q.outcomeWeekUpdates.forEach(function(ou) {
+        var oIdx = parseInt(ou.outcomeIndex, 10) || 0;
+        var oTitle = (S.qtr && S.qtr.items && S.qtr.items[oIdx] && S.qtr.items[oIdx].title) || ('نتیجه ' + fa(oIdx + 1));
+        var stCode2 = Math.max(0, Math.min(3, parseInt(ou.status, 10) || 0));
+        lines.push('ثبت وضعیت هفتگی «' + oTitle + '»: ' + outStNames[stCode2]);
+      });
+    }
     if (q.review) {
       lines.push('ثبت یا تکمیل متن بازبینی پایان فصل');
     }
@@ -3393,7 +3505,7 @@ function applyAiPatch(patch) {
   if (q && typeof q === 'object') {
     if (q.startNew && !S.qtr) {
       S.qtr = initQuarterObj(q.startNew.y, q.startNew.s);
-    } else if (!S.qtr && (q.framework || (Array.isArray(q.addOutcomes) && q.addOutcomes.length) || q.review)) {
+    } else if (!S.qtr && (q.framework || (Array.isArray(q.addOutcomes) && q.addOutcomes.length) || (Array.isArray(q.floorUpdates) && q.floorUpdates.length) || (Array.isArray(q.outcomeWeekUpdates) && q.outcomeWeekUpdates.length) || q.review)) {
       var curJ = gToJ(new Date());
       S.qtr = initQuarterObj(curJ.y, Math.ceil(curJ.m / 3));
     }
@@ -3446,6 +3558,39 @@ function applyAiPatch(patch) {
           }
         });
       }
+      var defaultWk = selWk != null ? Math.max(0, Math.min(11, selWk)) : getCurSeasonWeek(S.qtr).dotIdx;
+      if (Array.isArray(q.floorUpdates) && q.floorUpdates.length) {
+        if (!S.qtr.floorWeeks) S.qtr.floorWeeks = {};
+        q.floorUpdates.forEach(function(fu) {
+          var pIdx = parseInt(fu.pillarIndex, 10);
+          if (isNaN(pIdx) || pIdx < 0 || pIdx > 3) return;
+          var wIdx = fu.weekIndex != null && !isNaN(parseInt(fu.weekIndex, 10)) ? Math.max(0, Math.min(11, parseInt(fu.weekIndex, 10))) : defaultWk;
+          var stVal = Math.max(0, Math.min(3, parseInt(fu.status, 10) || 0));
+          if (!S.qtr.floorWeeks[pIdx] || S.qtr.floorWeeks[pIdx].length !== 12) {
+            S.qtr.floorWeeks[pIdx] = [0,0,0,0,0,0,0,0,0,0,0,0];
+          }
+          S.qtr.floorWeeks[pIdx][wIdx] = stVal;
+          selWk = wIdx;
+        });
+      }
+      if (Array.isArray(q.outcomeWeekUpdates) && q.outcomeWeekUpdates.length) {
+        q.outcomeWeekUpdates.forEach(function(ou) {
+          var oIdx = parseInt(ou.outcomeIndex, 10);
+          var itm = S.qtr.items && S.qtr.items[oIdx];
+          if (!itm) return;
+          var wIdx2 = ou.weekIndex != null && !isNaN(parseInt(ou.weekIndex, 10)) ? Math.max(0, Math.min(11, parseInt(ou.weekIndex, 10))) : defaultWk;
+          var stVal2 = Math.max(0, Math.min(3, parseInt(ou.status, 10) || 0));
+          if (!itm.weeks || itm.weeks.length !== 12) itm.weeks = [0,0,0,0,0,0,0,0,0,0,0,0];
+          itm.weeks[wIdx2] = stVal2;
+          selWk = wIdx2;
+          if (ou.pct != null && !isNaN(parseFloat(ou.pct))) {
+            itm.pct = Math.max(0, Math.min(100, parseFloat(ou.pct)));
+          } else {
+            var sc = itm.weeks.reduce(function(acc, v){ return acc + (v === 1 ? 1 : (v === 2 ? 0.5 : 0)); }, 0);
+            itm.pct = Math.min(100, Math.round((sc / 12) * 100 / 5) * 5);
+          }
+        });
+      }
       if (q.review && typeof q.review === 'object') {
         S.qtr.review = S.qtr.review || { a: '', b: '', c: '' };
         if (typeof q.review.a === 'string') S.qtr.review.a = q.review.a;
@@ -3470,9 +3615,14 @@ function renderAiChat() {
     box.innerHTML =
       '<div class="ai-empty">' +
         '<div class="ai-empty-ic"><svg class="ic ic-lg" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l1.9 4.6L18.5 9.5l-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9z"/></svg></div>' +
-        '<b style="font-size:14.5px;color:var(--fg)">دستیار طراحی فصل و ویژن</b>' +
-        '<p class="n" style="max-width:420px;margin:0">من به وضعیت فعلی ویژن، فرضیه‌های کاوش، برنامه فصل، ریتم ۱۲ هفته و تاریخچه فصل‌های قبلی شما دسترسی دارم و می‌توانم با تایید خودتان تغییرات را مستقیم ثبت کنم.</p>' +
-        (!hasConn ? '<div class="chip" style="background:var(--warn-bg);color:var(--warn);border-color:var(--warn-bdr)">برای شروع، از دکمه «تنظیمات» بالا کلید Gemini یا آدرس پروکسی را وارد کنید.</div>' : '') +
+        '<b style="font-size:14.5px;color:var(--fg)">دستیار طراحی فصل، گزارش هفتگی و ویژن</b>' +
+        '<p class="n" style="max-width:420px;margin:0">می‌توانید با یک جمله وضعیت این هفته را ثبت کنید، خروجی سه‌ماهه جدید طراحی کنید یا فرضیه‌های ویژن را به‌روز کنید.</p>' +
+        (!hasConn
+          ? '<div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:4px">' +
+              '<button type="button" class="ai-btn mini" data-ai-open-bridge="1">پل دستیار بیرونی (بدون کلید API)</button>' +
+              '<button type="button" class="mini" data-ai-open-cfg="1">تنظیم کلید مستقیم Gemini</button>' +
+            '</div>'
+          : '') +
       '</div>';
     return;
   }
@@ -3503,7 +3653,13 @@ function renderAiChat() {
         patchHtml += '</div>';
       }
     }
-    return '<div class="ai-msg bot"><div class="ai-bubble">' + esc(m.text) + '</div>' + patchHtml + '</div>';
+    var sugHtml = '';
+    if (Array.isArray(m.suggestions) && m.suggestions.length && idx === aiMessages.length - 1) {
+      sugHtml = '<div class="ai-sugs">' + m.suggestions.map(function(s) {
+        return '<button type="button" class="ai-sug-chip" data-ai-sug="' + esc(s) + '">' + esc(s) + '</button>';
+      }).join('') + '</div>';
+    }
+    return '<div class="ai-msg bot"><div class="ai-bubble">' + esc(m.text) + '</div>' + patchHtml + sugHtml + '</div>';
   }).join('');
 
   if (aiBusy) {
@@ -3517,12 +3673,14 @@ async function sendAiPrompt(userText) {
   if (!txt || aiBusy) return;
 
   if (!aiCfg.apiKey && !aiCfg.baseUrl) {
-    $('ai-cfg-panel').classList.add('on');
-    $('ai-cfg-msg').textContent = 'ابتدا کلید Gemini یا آدرس پروکسی را وارد و ذخیره کنید.';
+    $('ai-inp').value = txt;
+    $('ai-bridge-panel').classList.add('on');
+    showToast('کلید API تنظیم نشده؛ از «پل دستیار بیرونی» یا «تنظیمات» استفاده کنید');
     return;
   }
 
   aiMessages.push({ role: 'user', text: txt, apiText: txt });
+  saveAiChat();
   $('ai-inp').value = '';
   $('ai-inp').style.height = 'auto';
   aiBusy = true;
@@ -3582,16 +3740,19 @@ async function sendAiPrompt(userText) {
     aiMessages.push({
       role: 'bot',
       text: parsed.reply,
+      suggestions: parsed.suggestions || [],
       patch: parsed.patch,
       patchStatus: parsed.patch ? 'pending' : null,
-      apiText: JSON.stringify({ reply: parsed.reply, patch: parsed.patch || null })
+      apiText: JSON.stringify({ reply: parsed.reply, suggestions: parsed.suggestions || [], patch: parsed.patch || null })
     });
+    saveAiChat();
   } catch(err) {
     var msg = (err && err.message) ? err.message : 'خطا در برقراری ارتباط با Gemini';
     if (/failed to fetch|networkerror|load failed/i.test(msg)) {
-      msg = 'ارتباط با سرویس برقرار نشد. اگر در ایران هستید، اتصال مستقیم به گوگل ممکن است نیاز به فیلترشکن یا آدرس پروکسی در بخش تنظیمات داشته باشد.';
+      msg = 'ارتباط با سرویس برقرار نشد. می‌توانید از دکمه «پل دستیار بیرونی» در بالای همین پنجره بدون نیاز به کلید یا پروکسی استفاده کنید.';
     }
     aiMessages.push({ role: 'err', text: msg });
+    saveAiChat();
   } finally {
     aiBusy = false;
     $('ai-send').disabled = false;
@@ -3599,26 +3760,120 @@ async function sendAiPrompt(userText) {
   }
 }
 
-function openAiM() {
+function updateBridgePreview(rawStr) {
+  var prev = $('ai-bridge-preview'), errEl = $('ai-bridge-err');
+  if (!prev || !errEl) return;
+  errEl.textContent = '';
+  var txt = String(rawStr || '').trim();
+  if (!txt) {
+    prev.style.display = 'none';
+    prev.innerHTML = '';
+    return;
+  }
+  try {
+    var d = extractJsonObject(txt);
+    var patch = detectPatchObject(d);
+    if (patch) {
+      var lines = summarizeAiPatch(patch);
+      if (lines.length) {
+        prev.innerHTML = '<div class="ai-patch-head"><span>پیش‌نمایش تغییرات آماده اعمال</span></div>' +
+          '<ul class="ai-patch-list">' + lines.map(function(it){ return '<li>' + esc(it) + '</li>'; }).join('') + '</ul>';
+        prev.style.display = 'grid';
+        return;
+      }
+    }
+  } catch(e) {}
+  prev.style.display = 'none';
+  prev.innerHTML = '';
+}
+
+function openAiM(prefillPrompt) {
   syncAiCfgUI();
   $('ai-cfg-msg').textContent = '';
-  if (!aiCfg.apiKey && !aiCfg.baseUrl) {
-    $('ai-cfg-panel').classList.add('on');
-  }
   $('ov-ai').classList.add('on');
   renderAiChat();
+  if (typeof prefillPrompt === 'string' && prefillPrompt.trim()) {
+    if (aiCfg.apiKey || aiCfg.baseUrl) {
+      sendAiPrompt(prefillPrompt.trim());
+      return;
+    } else {
+      $('ai-inp').value = prefillPrompt.trim();
+      $('ai-bridge-panel').classList.add('on');
+    }
+  }
   setTimeout(function(){ if ($('ai-inp')) $('ai-inp').focus(); }, 60);
 }
 function closeAiM() {
   $('ov-ai').classList.remove('on');
 }
 
-$('btn-ai').onclick = openAiM;
+$('btn-ai').onclick = function(){ openAiM(); };
+if ($('btn-ai-vis')) {
+  $('btn-ai-vis').onclick = function() {
+    openAiM('می‌خواهم حداقل‌های ۴ ستون، قوانین عمومی یا فرضیه‌های بخش ویژن را بازنگری و بهینه کنم؛ سوال‌های لازم را از من بپرس');
+  };
+}
 $('ai-cn-x').onclick = closeAiM;
 $('ov-ai').onclick = function(e){ if (e.target === $('ov-ai')) closeAiM(); };
 document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && $('ov-ai').classList.contains('on')) closeAiM(); });
 
+$('ai-btn-bridge').onclick = function() {
+  $('ai-cfg-panel').classList.remove('on');
+  $('ai-bridge-panel').classList.toggle('on');
+};
+$('ai-bridge-close').onclick = function() {
+  $('ai-bridge-panel').classList.remove('on');
+};
+$('ai-copy-full-prompt').onclick = function() {
+  var userAsk = ($('ai-inp') && $('ai-inp').value.trim()) ? ('\n\nدرخواست فعلی من:\n' + $('ai-inp').value.trim()) : '';
+  copyTextFallback(buildAiSystemPrompt() + userAsk).then(function() {
+    showToast('پرامپت کامل و وضعیت برنامه کپی شد ✓');
+    tgHaptic('success');
+  });
+};
+$('ai-copy-snap').onclick = function() {
+  copyTextFallback(JSON.stringify(buildAiContextSnapshot())).then(function() {
+    showToast('وضعیت فعلی (JSON) کپی شد ✓');
+    tgHaptic('success');
+  });
+};
+$('ai-bridge-inp').addEventListener('input', function() {
+  updateBridgePreview(this.value);
+});
+$('ai-bridge-apply').onclick = function() {
+  var raw = $('ai-bridge-inp').value.trim();
+  if (!raw) {
+    $('ai-bridge-err').textContent = 'لطفاً ابتدا JSON بسته تغییر را در کادر بالا بچسبانید.';
+    return;
+  }
+  try {
+    var d = extractJsonObject(raw);
+    var patch = detectPatchObject(d);
+    if (!patch || !summarizeAiPatch(patch).length) {
+      $('ai-bridge-err').textContent = 'بسته تغییر معتبری در این متن پیدا نشد.';
+      return;
+    }
+    var lines = summarizeAiPatch(patch);
+    applyAiPatch(patch);
+    aiMessages.push({
+      role: 'bot',
+      text: (d.reply && typeof d.reply === 'string') ? d.reply : 'بسته تغییر دریافتی از دستیار بیرونی با موفقیت اعمال شد.',
+      patch: patch,
+      patchStatus: 'applied',
+      apiText: JSON.stringify({ reply: 'اعمال بسته تغییر بیرونی', patch: patch })
+    });
+    saveAiChat();
+    $('ai-bridge-inp').value = '';
+    updateBridgePreview('');
+    $('ai-bridge-panel').classList.remove('on');
+    renderAiChat();
+  } catch(err) {
+    $('ai-bridge-err').textContent = 'خطا در خواندن JSON: ' + err.message;
+  }
+};
+
 $('ai-btn-cfg').onclick = function() {
+  $('ai-bridge-panel').classList.remove('on');
   $('ai-cfg-panel').classList.toggle('on');
   $('ai-cfg-msg').textContent = '';
 };
@@ -3643,6 +3898,7 @@ $('ai-cfg-save').onclick = function() {
 };
 $('ai-btn-reset').onclick = function() {
   aiMessages = [];
+  saveAiChat();
   renderAiChat();
 };
 $('ai-send').onclick = function() {
@@ -3663,6 +3919,24 @@ $('ai-quick').onclick = function(e) {
   if (b && !aiBusy) sendAiPrompt(b.getAttribute('data-aiq'));
 };
 $('ai-chat').onclick = function(e) {
+  var openBridgeBtn = e.target.closest('[data-ai-open-bridge]');
+  if (openBridgeBtn) {
+    $('ai-cfg-panel').classList.remove('on');
+    $('ai-bridge-panel').classList.add('on');
+    return;
+  }
+  var openCfgBtn = e.target.closest('[data-ai-open-cfg]');
+  if (openCfgBtn) {
+    $('ai-bridge-panel').classList.remove('on');
+    $('ai-cfg-panel').classList.add('on');
+    return;
+  }
+  var sugBtn = e.target.closest('[data-ai-sug]');
+  if (sugBtn) {
+    var sugTxt = sugBtn.getAttribute('data-ai-sug');
+    if (sugTxt && !aiBusy) sendAiPrompt(sugTxt);
+    return;
+  }
   var appBtn = e.target.closest('[data-ai-apply]');
   if (appBtn) {
     var idx = parseInt(appBtn.getAttribute('data-ai-apply'), 10);
@@ -3670,6 +3944,7 @@ $('ai-chat').onclick = function(e) {
     if (m && m.patch && m.patchStatus === 'pending') {
       applyAiPatch(m.patch);
       m.patchStatus = 'applied';
+      saveAiChat();
       renderAiChat();
     }
     return;
@@ -3680,6 +3955,7 @@ $('ai-chat').onclick = function(e) {
     var m2 = aiMessages[idx2];
     if (m2 && m2.patch && m2.patchStatus === 'pending') {
       m2.patchStatus = 'dismissed';
+      saveAiChat();
       renderAiChat();
     }
   }
@@ -3690,7 +3966,10 @@ $('ai-chat').onclick = function(e) {
   if(mb) mb.onclick=function(){tab(k)};
 });
 var fab=$('fab-add');
-if(fab) fab.onclick=function(){openM(null)};
+if(fab) fab.onclick=function(){
+  if(fab.dataset.mode==='ai') openAiM();
+  else openM(null);
+};
 
 render();
 tab(t0);
