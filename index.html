@@ -1627,25 +1627,32 @@ svg g[data-id]:hover rect, svg g[data-id]:hover circle{
   <div class="modal">
     <div class="m3-drag-handle" aria-hidden="true"></div>
     <div style="display:flex;justify-content:space-between;align-items:center">
-      <b id="imp-mt" style="font-size:16px">بارگذاری اطلاعات برنامه</b>
+      <b id="imp-mt" style="font-size:16px">بارگذاری اطلاعات و بسته تغییر</b>
       <button type="button" class="ghost mini" id="imp-cn-x" aria-label="بستن">✕</button>
     </div>
-    <p style="font-size:13px;color:var(--fg-sec);margin:4px 0 12px">می‌توانید فایل را از دستگاه انتخاب کنید یا متن آن را مستقیماً این‌جا الصاق (Paste) نمایید:</p>
+    <p style="font-size:13px;color:var(--fg-sec);margin:4px 0 10px">می‌توانید فایل پشتیبان کامل را انتخاب کنید، وضعیت فعلی را برای چت با دستیار بیرونی کپی کنید، یا بسته تغییر دریافتی از دستیار را این‌جا بچسبانید:</p>
     
-    <button type="button" class="pri" id="btn-pick-file" style="width:100%;padding:10px;display:flex;align-items:center;justify-content:center;gap:8px">
-      <svg class="ic ic-sm" aria-hidden="true" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-      <span>انتخاب فایل پشتیبان (JSON) از دستگاه</span>
-    </button>
+    <div style="display:grid;gap:8px">
+      <button type="button" class="pri" id="btn-pick-file" style="width:100%;padding:10px;display:flex;align-items:center;justify-content:center;gap:8px">
+        <svg class="ic ic-sm" aria-hidden="true" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <span>انتخاب فایل پشتیبان (JSON) از دستگاه</span>
+      </button>
+      <button type="button" class="ai-btn" id="btn-copy-ctx" style="width:100%;padding:9px;display:flex;align-items:center;justify-content:center;gap:8px">
+        <svg class="ic ic-sm" aria-hidden="true" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span>کپی وضعیت فعلی برای چت با دستیار بیرونی</span>
+      </button>
+    </div>
 
     <div style="text-align:center;color:var(--fg-sec);font-size:12px;margin:14px 0;position:relative">
-      <span style="background:var(--card);padding:0 10px;position:relative;z-index:1">یا الصاق مستقیم متن</span>
+      <span style="background:var(--card);padding:0 10px;position:relative;z-index:1">یا الصاق مستقیم متن / بسته تغییر</span>
       <div style="position:absolute;top:50%;left:0;right:0;border-top:1px solid var(--line);z-index:0"></div>
     </div>
 
-    <label style="font-size:12.5px">متن اطلاعات (JSON)
-      <textarea id="imp-raw-text" rows="5" placeholder="متن فایل پشتیبان را اینجا Paste کنید..." style="font-family:monospace;font-size:12px;direction:ltr;text-align:left;line-height:1.4"></textarea>
+    <label style="font-size:12.5px">متن فایل پشتیبان یا بسته تغییر (JSON)
+      <textarea id="imp-raw-text" rows="5" placeholder="متن پشتیبان کامل یا بسته تغییر (patch) را اینجا Paste کنید..." style="font-family:monospace;font-size:12px;direction:ltr;text-align:left;line-height:1.4"></textarea>
     </label>
-    
+
+    <div id="imp-preview" class="ai-patch" style="display:none"></div>
     <div id="imp-err" style="color:var(--err);font-size:12px;font-weight:600" role="alert"></div>
 
     <div class="btns">
@@ -2675,11 +2682,94 @@ function onA(e){
 }
 ['vis','qv'].forEach(function(id){$(id).addEventListener('change',onF);$(id).addEventListener('click',onA)});
 
+function extractJsonObject(rawStr) {
+  var txt = String(rawStr || '').trim();
+  if (!txt) throw new Error('متن خالی است.');
+  try {
+    return JSON.parse(txt);
+  } catch(e1) {
+    var m = txt.match(/```(?:json)?\s*([\s\S]*?)```/i);
+    if (m && m[1]) {
+      try { return JSON.parse(m[1].trim()); } catch(e2) {}
+    }
+    var sIdx = txt.indexOf('{'), eIdx = txt.lastIndexOf('}');
+    if (sIdx !== -1 && eIdx > sIdx) {
+      return JSON.parse(txt.slice(sIdx, eIdx + 1));
+    }
+    throw e1;
+  }
+}
+
+function detectPatchObject(d) {
+  if (!d || typeof d !== 'object') return null;
+  if (d.patch && typeof d.patch === 'object' && (d.patch.vision || d.patch.quarter)) return d.patch;
+  if (d.quarter && typeof d.quarter === 'object') return { vision: d.vision, quarter: d.quarter };
+  if (d.vision && typeof d.vision === 'object' && !Array.isArray(d.vision.items)) {
+    if (d.vision.updatePillars || d.vision.addDirs || d.vision.updateDirs || d.vision.removeDirs || typeof d.vision.general === 'string') {
+      return { vision: d.vision };
+    }
+  }
+  return null;
+}
+
+function isFullBackupObject(d) {
+  if (!d || typeof d !== 'object') return false;
+  return Array.isArray(d.events) || (d.vision && Array.isArray(d.vision.items)) || d.qtr !== undefined;
+}
+
+function updateImpPreview(rawStr) {
+  var prev = $('imp-preview'), btn = $('btn-apply-paste'), errEl = $('imp-err');
+  if (!prev || !btn) return;
+  errEl.textContent = '';
+  var txt = String(rawStr || '').trim();
+  if (!txt) {
+    prev.style.display = 'none';
+    prev.innerHTML = '';
+    btn.textContent = 'اعمال و ذخیره در تلگرام';
+    return;
+  }
+  try {
+    var d = extractJsonObject(txt);
+    if (d && d.data && typeof d.data === 'string') d = JSON.parse(d.data);
+    var patch = detectPatchObject(d);
+    if (patch) {
+      var lines = summarizeAiPatch(patch);
+      if (lines.length) {
+        prev.innerHTML = '<div class="ai-patch-head"><span>بسته تغییر شناسایی شد (ادغام بدون حذف داده‌های قبلی)</span></div>' +
+          '<ul class="ai-patch-list">' + lines.map(function(it){ return '<li>' + esc(it) + '</li>'; }).join('') + '</ul>';
+        prev.style.display = 'grid';
+        btn.textContent = 'اعمال بسته تغییر در برنامه';
+        return;
+      }
+    }
+    if (isFullBackupObject(d)) {
+      prev.innerHTML = '<div class="ai-patch-head" style="color:var(--fg)"><span>پشتیبان کامل برنامه شناسایی شد (جایگزینی کل داده‌ها)</span></div>';
+      prev.style.display = 'grid';
+      btn.textContent = 'اعمال و ذخیره در تلگرام';
+      return;
+    }
+  } catch(e) {}
+  prev.style.display = 'none';
+  prev.innerHTML = '';
+  btn.textContent = 'اعمال و ذخیره در تلگرام';
+}
+
 function applyImportedData(rawStr) {
   try {
-    var d = JSON.parse(rawStr);
+    var d = extractJsonObject(rawStr);
     if (d && d.data && typeof d.data === 'string') d = JSON.parse(d.data);
-    if (d && (d.events || d.vision || d.qtr)) {
+    var patch = detectPatchObject(d);
+    if (patch) {
+      var lines = summarizeAiPatch(patch);
+      if (!lines.length) {
+        $('imp-err').textContent = 'بسته تغییر معتبر نیست یا هیچ تغییری در آن وجود ندارد.';
+        return false;
+      }
+      applyAiPatch(patch);
+      closeImpM();
+      return true;
+    }
+    if (isFullBackupObject(d)) {
       S = d;
       migrate();
       save('اطلاعات با موفقیت بارگذاری و ذخیره شد ✓');
@@ -2700,11 +2790,52 @@ function applyImportedData(rawStr) {
 function openImpM() {
   $('imp-err').textContent = '';
   $('imp-raw-text').value = '';
+  if ($('imp-preview')) {
+    $('imp-preview').style.display = 'none';
+    $('imp-preview').innerHTML = '';
+  }
+  if ($('btn-apply-paste')) $('btn-apply-paste').textContent = 'اعمال و ذخیره در تلگرام';
   $('ov-imp').classList.add('on');
 }
 function closeImpM() {
   $('ov-imp').classList.remove('on');
 }
+
+function copyTextFallback(txt) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    return navigator.clipboard.writeText(txt).catch(function() {
+      var ta = document.createElement('textarea');
+      ta.value = txt;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    });
+  }
+  var ta = document.createElement('textarea');
+  ta.value = txt;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  document.execCommand('copy');
+  document.body.removeChild(ta);
+  return Promise.resolve();
+}
+
+$('btn-copy-ctx').onclick = function() {
+  var snapStr = JSON.stringify(buildAiContextSnapshot());
+  copyTextFallback(snapStr).then(function() {
+    showToast('وضعیت فعلی کپی شد؛ در چت با دستیار Paste کنید');
+    tgHaptic('success');
+  });
+};
+
+$('imp-raw-text').addEventListener('input', function() {
+  updateImpPreview(this.value);
+});
 
 $('btn-exp').onclick=function(){
   var blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
