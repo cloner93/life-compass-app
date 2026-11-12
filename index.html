@@ -1776,7 +1776,7 @@ body.hide-guides .guide-bar{display:none!important}
   flex-shrink:0;
 }
 @media (max-width:600px){
-  #ov-set{padding:0;align-items:flex-end}
+  #ov-set,#ov-about,#ov-onb{padding:0;align-items:flex-end}
   .set-modal{
     max-width:100%;
     height:90vh;
@@ -1791,7 +1791,56 @@ body.hide-guides .guide-bar{display:none!important}
   .set-tabs{gap:5px}
   .set-tab{padding:6px 10px;font-size:12px;flex:0 0 auto}
   .theme-seg{grid-template-columns:1fr}
+  .stat-pill-sec{display:none!important}
 }
+
+/* About & Onboarding Modals */
+.about-grid{display:grid;gap:10px}
+.about-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:13px 14px;display:flex;flex-direction:column;gap:6px;
+}
+.about-card h4{margin:0;font-size:13.5px;font-weight:800;color:var(--fg);display:flex;align-items:center;gap:7px}
+.about-card p,.about-card li{margin:0;font-size:12.5px;line-height:1.7;color:var(--fg-sec)}
+.about-list{margin:2px 0 0;padding-right:18px;display:grid;gap:4px}
+.src-link{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  padding:10px 12px;border-radius:var(--r-md);border:1px solid var(--line-strong);
+  background:var(--card-alt);
+  color:var(--fg);text-decoration:none;transition:.16s;
+}
+.src-link:hover{border-color:var(--pri);transform:translateY(-1px)}
+.src-link-title{font-size:12.5px;font-weight:700;color:var(--fg)}
+.src-link-sub{font-size:11px;color:var(--mut);margin-top:2px}
+.src-badge{
+  font-size:11px;font-weight:700;padding:4px 9px;border-radius:999px;
+  background:#ef4444;color:#fff;white-space:nowrap;flex-shrink:0;
+}
+
+.onb-steps{display:flex;align-items:center;gap:6px;margin-bottom:12px}
+.onb-step-dot{
+  flex:1;height:6px;border-radius:999px;background:var(--line);transition:.2s;
+}
+.onb-step-dot.done{background:var(--accent-soft)}
+.onb-step-dot.on{background:var(--pri)}
+.onb-step-lbl{font-size:11.5px;color:var(--mut);font-weight:700;margin-inline-start:6px;white-space:nowrap}
+.onb-pane{display:none;flex-direction:column;gap:12px}
+.onb-pane.on{display:flex}
+.onb-cap-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.onb-cap-btn{
+  padding:10px 8px;border-radius:var(--r-md);border:1.5px solid var(--line);
+  background:var(--card-alt);color:var(--fg);cursor:pointer;text-align:center;font:inherit;
+  display:flex;flex-direction:column;gap:2px;align-items:center;transition:.15s;
+}
+.onb-cap-btn b{font-size:14px}
+.onb-cap-btn span{font-size:11px;color:var(--mut)}
+.onb-cap-btn.on{border-color:var(--pri);background:var(--md-sys-color-primary-container);color:var(--md-sys-color-on-primary-container)}
+.onb-preset-chips{display:flex;flex-wrap:wrap;gap:6px}
+.onb-chip{
+  padding:6px 10px;border-radius:999px;border:1px solid var(--line);
+  background:var(--card-alt);color:var(--fg-sec);font:inherit;font-size:11.5px;cursor:pointer;
+}
+.onb-chip:hover{border-color:var(--pri);color:var(--fg)}
 </style>
 </head>
 <body>
@@ -1815,6 +1864,10 @@ body.hide-guides .guide-bar{display:none!important}
       <button type="button" class="mini ai-btn" id="btn-ai" title="دستیار هوش مصنوعی (Gemini)">
         <svg class="ic ic-sm" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l1.9 4.6L18.5 9.5l-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9z"/><path d="M19 15l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z"/></svg>
         <span>دستیار هوشمند</span>
+      </button>
+      <button type="button" class="mini" id="btn-about" title="هدف، نحوه عملکرد برنامه و منابع">
+        <svg class="ic ic-sm" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        <span class="btn-lbl-hide-sm">راهنما و منبع</span>
       </button>
       <button type="button" class="mini" id="btn-set" title="تنظیمات برنامه، تاریخ تولد، پوسته، دستیار و پشتیبان">
         <svg class="ic ic-sm" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
@@ -2043,6 +2096,9 @@ body.hide-guides .guide-bar{display:none!important}
               <input type="number" id="set-def-cap" min="1" max="80" step="0.5" value="5">
             </label>
           </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
+            <button type="button" class="mini" id="set-open-onb">شروع مجدد راه‌اندازی سریع (۳ مرحله)</button>
+          </div>
         </div>
       </div>
 
@@ -2061,6 +2117,10 @@ body.hide-guides .guide-bar{display:none!important}
           <label class="set-toggle">
             <span>نمایش کادرهای راهنما در تب‌ها</span>
             <input type="checkbox" id="set-show-guides" checked>
+          </label>
+          <label class="set-toggle">
+            <span>تمرکز روی همین هفته (مخفی کردن نوار ۱۲ هفته‌ای کارت‌های کف)</span>
+            <input type="checkbox" id="set-focus-week" checked>
           </label>
         </div>
       </div>
@@ -2120,6 +2180,153 @@ body.hide-guides .guide-bar{display:none!important}
     <div class="set-foot">
       <button type="button" class="pri" id="set-save">ذخیره و اعمال تنظیمات</button>
       <button type="button" id="set-cn">بستن</button>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT / PURPOSE & SOURCES MODAL -->
+<div class="ov" id="ov-about" role="dialog" aria-modal="true" aria-labelledby="about-mt">
+  <div class="modal set-modal" style="max-width:660px">
+    <div class="set-head">
+      <div class="m3-drag-handle" aria-hidden="true" style="margin:0 auto"></div>
+      <div class="set-head-top">
+        <div style="display:flex;align-items:center;gap:8px">
+          <svg class="ic" style="color:var(--pri)" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <b id="about-mt" style="font-size:15.5px">هدف برنامه، نحوه عملکرد و منابع</b>
+        </div>
+        <button type="button" class="ghost mini" id="about-cn-x" aria-label="بستن">✕</button>
+      </div>
+    </div>
+    <div class="set-body">
+      <div class="about-grid">
+        <div class="about-card">
+          <h4>چرا این برنامه ساخته شده؟ (هدف)</h4>
+          <p>برنامه‌های ۵ ساله و ۱۰ ساله سفت‌وسخت در دنیای غیرقابل‌پیش‌بینی، با یک اتفاق غیرمنتظره (قوی سیاه) می‌شکنند. هدف این قطب‌نما ساختن یک سیستم <b>پادشکننده و چابک</b> است: به‌جای پیش‌بینی آینده، جهت کلی را می‌دانید و با چرخه‌های <b>۹۰ روزه (فصلی)</b> و <b>آزمایش‌های کوچک</b> پیش می‌روید.</p>
+        </div>
+
+        <div class="about-card">
+          <h4>برنامه چطور کار می‌کند؟ (۳ تب اصلی)</h4>
+          <ul class="about-list">
+            <li><b>فصل ۹۰ روزه (چک‌این هفتگی):</b> اولویت روزمره همین‌جاست؛ هفته‌ای یک‌بار وضعیت ۴ کف غیرقابل‌مذاکره و ۱ تا ۳ نتیجه اصلی فصل را ثبت می‌کنید.</li>
+            <li><b>قطب‌نمای زندگی (چشم‌انداز و کف‌ها):</b> خط قرمزهای ۴ ستون اصلی زندگی (سلامت، کار و یادگیری، روابط، تفریح و تجربه) و فرضیه‌های کنجکاوی خود را می‌نویسید تا مسیر گم نشود.</li>
+            <li><b>تایم‌لاین (آینه مسیر):</b> مرور رویدادهای مهم گذشته از تولد تا امروز و جایگاه فصل فعلی روی محور عمر.</li>
+          </ul>
+        </div>
+
+        <div class="about-card">
+          <h4>عادت ساده استفاده (بدون وسواس)</h4>
+          <p>هفته‌ای فقط <b>۵ دقیقه</b> برای تیک زدن همین هفته در تب فصل، و در پایان هر ۹۰ روز فقط <b>۱۵ دقیقه</b> برای مرور، تغییر یا بستن فصل کافی است. تمام داده‌ها ابتدا روی دستگاه یا فضای ابری تلگرام خودتان ذخیره می‌شود.</p>
+        </div>
+
+        <div class="about-card">
+          <h4>منبع الهام و چارچوب‌های فکری</h4>
+          <a class="src-link" href="https://youtu.be/DDMb31XJM1A" target="_blank" rel="noopener noreferrer">
+            <div>
+              <div class="src-link-title">ویدیوی مبنای فکری برنامه — کانال یوتیوب خشایار</div>
+              <div class="src-link-sub">چارچوب قطب‌نمای زندگی، ۴ ستون کف غیرقابل‌مذاکره و برنامه‌ریزی ۹۰ روزه پادشکننده</div>
+            </div>
+            <span class="src-badge">مشاهده در یوتیوب ↗</span>
+          </a>
+          <ul class="about-list" style="margin-top:4px">
+            <li><b>پادشکنندگی (Antifragility) و تصمیم‌های برگشت‌پذیر:</b> تست‌های کوچک و ارزان قبل از تعهد سنگین.</li>
+            <li><b>چرخه‌های ۹۰ روزه فصلی:</b> تمرکز روی ۱ تا ۳ خروجیِ مشخص در هر فصل به‌جای برنامه‌ریزی خشک ۵ ساله.</li>
+            <li><b>توازن ۴ ستون زندگی:</b> حفظ کف غیرقابل‌مذاکره در سلامت، حرفه، روابط و تجربه‌های معنادار.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="set-foot">
+      <button type="button" class="pri" id="about-open-onb">شروع سریع (تنظیم در ۳ مرحله)</button>
+      <button type="button" id="about-cn">بستن</button>
+    </div>
+  </div>
+</div>
+
+<!-- 3-STEP QUICK ONBOARDING WIZARD -->
+<div class="ov" id="ov-onb" role="dialog" aria-modal="true" aria-labelledby="onb-mt">
+  <div class="modal set-modal" style="max-width:560px">
+    <div class="set-head">
+      <div class="m3-drag-handle" aria-hidden="true" style="margin:0 auto"></div>
+      <div class="set-head-top">
+        <div style="display:flex;align-items:center;gap:8px">
+          <svg class="ic" style="color:var(--pri)" aria-hidden="true" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <b id="onb-mt" style="font-size:15.5px">راه‌اندازی سریع قطب‌نمای شخصی</b>
+        </div>
+        <button type="button" class="ghost mini" id="onb-cn-x" aria-label="بستن">✕</button>
+      </div>
+    </div>
+    <div class="set-body">
+      <div class="onb-steps">
+        <div class="onb-step-dot on" id="onb-dot-1"></div>
+        <div class="onb-step-dot" id="onb-dot-2"></div>
+        <div class="onb-step-dot" id="onb-dot-3"></div>
+        <span class="onb-step-lbl" id="onb-step-lbl">مرحله ۱ از ۳</span>
+      </div>
+
+      <!-- STEP 1 -->
+      <div class="onb-pane on" id="onb-pane-1">
+        <div class="set-card">
+          <h4>۱. شما و خط زمان شما</h4>
+          <p class="n" style="margin:0;font-size:12px">تاریخ تولد شما فقط برای محاسبه سن و جایگاه دقیق تایم‌لاین استفاده می‌شود و از دستگاه شما خارج نمی‌شود.</p>
+          <label>نام یا لقب (اختیاری)
+            <input type="text" id="onb-uname" placeholder="مثلاً: میلاد">
+          </label>
+          <div class="d3">
+            <label>سال تولد (شمسی)<input type="number" id="onb-by" min="1300" max="1410" placeholder="۱۳۷۶"></label>
+            <label>ماه<select id="onb-bm"></select></label>
+            <label>روز<input type="number" id="onb-bd" min="1" max="31" placeholder="۱ تا ۳۱"></label>
+          </div>
+          <div class="chip" id="onb-age-preview" style="align-self:flex-start">سن محاسبه‌شده: —</div>
+        </div>
+        <div class="set-card">
+          <h4>پوسته ظاهری</h4>
+          <div class="theme-seg" id="onb-theme-seg">
+            <button type="button" data-thm="auto">خودکار</button>
+            <button type="button" data-thm="light">روشن</button>
+            <button type="button" data-thm="dark">تاریک</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="onb-pane" id="onb-pane-2">
+        <div class="set-card">
+          <h4>۲. ظرفیت هفتگی و کف سلامت</h4>
+          <p class="n" style="margin:0;font-size:12px">در هفته به‌طور واقع‌بینانه چند ساعت وقتِ آزاد برای کارهای فصلی دارید؟</p>
+          <div class="onb-cap-grid" id="onb-cap-grid">
+            <button type="button" class="onb-cap-btn" data-cap="3"><b>۳ ساعت</b><span>هفته شلوغ / سبک</span></button>
+            <button type="button" class="onb-cap-btn on" data-cap="5"><b>۵ ساعت</b><span>متعادل و پیشنهادی</span></button>
+            <button type="button" class="onb-cap-btn" data-cap="8"><b>۸ ساعت</b><span>تمرکز بالا</span></button>
+          </div>
+          <label>یک خط حداقلِ غیرقابل‌مذاکره برای «سلامت» این روزها
+            <input type="text" id="onb-health" placeholder="مثلاً: ۳ جلسه پیاده‌روی یا ورزش ۳۰ دقیقه‌ای و خواب منظم">
+          </label>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="onb-pane" id="onb-pane-3">
+        <div class="set-card">
+          <h4>۳. مهم‌ترین نتیجه ۹۰ روز آینده</h4>
+          <p class="n" style="margin:0;font-size:12px">یک خروجی مشخص و قابل‌لمس برای همین فصل بنویسید (یا از نمونه‌ها انتخاب کنید):</p>
+          <label>هدف اول فصل جاری
+            <input type="text" id="onb-goal" placeholder="مثلاً: تمام کردن پروژه X یا ساخت عادت مطالعه روزانه">
+          </label>
+          <div class="onb-preset-chips" id="onb-presets">
+            <button type="button" class="onb-chip" data-goal="تحویل نسخه اول یک پروژه واقعی و انتشار آن">تحویل نسخه اول پروژه</button>
+            <button type="button" class="onb-chip" data-goal="جا انداختن عادت ۳ جلسه ورزش هفتگی + چکاپ سلامت">تثبیت روتین سلامت</button>
+            <button type="button" class="onb-chip" data-goal="یادگیری یک مهارت جدید با ساخت ۲ نمونه عملی">یادگیری مهارت با نمونه عملی</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="set-foot">
+      <div style="display:flex;gap:8px;align-items:center">
+        <button type="button" id="onb-prev" style="display:none">مرحله قبل</button>
+        <button type="button" class="pri" id="onb-next">مرحله بعد</button>
+        <button type="button" class="pri" id="onb-finish" style="display:none">شروع کار با برنامه ✓</button>
+      </div>
+      <button type="button" id="onb-skip">رد کردن</button>
     </div>
   </div>
 </div>
@@ -2592,9 +2799,9 @@ function renderStatusStrip(){
   if($('cnt-t-m')) $('cnt-t-m').textContent=fa(S.events.length);
 
   $('status-strip').innerHTML=
-    '<div class="stat-pill">'+ICONS.calendar+'<span>امروز:</span><b>'+fmtJ(curJ)+' ('+fa(Math.round(S.cur*10)/10)+')</b></div>'+
+    '<div class="stat-pill stat-pill-sec">'+ICONS.calendar+'<span>امروز:</span><b>'+fmtJ(curJ)+' ('+fa(Math.round(S.cur*10)/10)+')</b></div>'+
     '<div class="stat-pill">'+ICONS.target+'<span>فصل:</span><b>'+qTxt+'</b></div>'+
-    '<div class="stat-pill">'+ICONS.clock+'<span>ظرفیت:</span><b>'+capTxt+'</b></div>'+
+    '<div class="stat-pill stat-pill-sec">'+ICONS.clock+'<span>ظرفیت:</span><b>'+capTxt+'</b></div>'+
     '<div class="stat-pill" style="background:'+flrBg+';color:'+flrCol+';border-color:'+flrCol+'">'+ICONS.shield+'<b style="color:'+flrCol+'">'+flrTxt+'</b></div>';
 }
 
@@ -2785,6 +2992,7 @@ function renderQuarter(){
   h+='<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">';
   h+='<div class="wk-selector" style="background:var(--card)"><button type="button" data-a="wknav" data-k="-1" title="هفته قبل">‹</button><span class="wk-cur-lbl">'+esc(activeWkLabel)+'</span><button type="button" data-a="wknav" data-k="1" title="هفته بعد">›</button></div>';
   if(!isCurrentWk) h+='<button type="button" class="mini" data-a="wkcur" style="background:var(--card)">بازگشت به هفته جاری</button>';
+  h+='<button type="button" class="mini" data-a="tgfocus" style="background:var(--card)">'+(appPrefs.focusWeek!==false?'نمای کامل ۱۲ هفته':'تمرکز روی همین هفته')+'</button>';
   h+=btn('aiask','می‌خواهم وضعیت «'+activeWkLabel+'» (کف‌های ۴ ستون و نتایج فصل) را با یک پیام ثبت کنم؛ از من بپرس این هفته چطور گذشت',ICONS.sparkles+' <span>ثبت گزارش هفته با دستیار</span>','mini ai-btn');
   h+='</div></div>';
 
@@ -2808,13 +3016,13 @@ function renderQuarter(){
     h+='<button type="button" class="st-btn'+(curSt===3?' on-miss':'')+'" data-a="fset" data-k="'+idx+'_'+fWk+'_3" title="رد شد">'+ICONS.x+' <span>رد شد</span></button>';
     h+='</div></div>';
     h+='<div class="floor-desc" style="font-size:12px">'+esc(firstLine)+'</div>';
-    h+=renderMiniStrip(fw, 'fdot_'+idx, fWk, Q.s);
+    if(appPrefs.focusWeek===false) h+=renderMiniStrip(fw, 'fdot_'+idx, fWk, Q.s);
     h+='</div>';
   });
   h+='</div></div>';
 
   // Quarterly Outcomes (1 to 3 items, Compact with Collapsible Details)
-  h+='<div style="display:flex;justify-content:space-between;align-items:center;margin:16px 0 10px;flex-wrap:wrap;gap:8px"><div><b style="font-size:15.5px">نتایج و آزمایش‌های این فصل (۱ تا ۳ خروجی مشخص)</b></div><div style="display:flex;gap:6px;flex-wrap:wrap">'+btn('aiask','می‌خواهم یک خروجی یا آزمایش جدید به این فصل اضافه کنم؛ سوال‌های لازم را از من بپرس',ICONS.sparkles+' <span>طراحی با دستیار</span>','mini ai-btn')+(Q.items.length<4?btn('addo','',ICONS.plus+' <span>افزودن نتیجه</span>','pri mini'):'')+'</div></div>';
+  h+='<div style="display:flex;justify-content:space-between;align-items:center;margin:16px 0 10px;flex-wrap:wrap;gap:8px"><div><b style="font-size:15.5px">کارها و خروجی‌های این فصل (۱ تا ۳ هدف ۹۰ روزه)</b></div><div style="display:flex;gap:6px;flex-wrap:wrap">'+btn('aiask','می‌خواهم یک خروجی یا آزمایش جدید به این فصل اضافه کنم؛ سوال‌های لازم را از من بپرس',ICONS.sparkles+' <span>طراحی با دستیار</span>','mini ai-btn')+(Q.items.length<4?btn('addo','',ICONS.plus+' <span>افزودن نتیجه</span>','pri mini'):'')+'</div></div>';
 
   Q.items.forEach(function(it,i){
     var k='o'+i,ed=ED[k];
@@ -3097,6 +3305,20 @@ function onF(e){
   save();
   if(t.dataset.re)render();
 }
+function createQuarterObj(y,sn,opts){
+  var o=opts||{},r=y&&sRange(y,sn);
+  if(!r)return null;
+  var tn=qToday(),f=(tn>=r.a&&tn<=r.b)?tn:r.a;
+  var V=S.vision||{items:[{name:'سلامت'}]};
+  var capVal=parseFloat(o.cap)||appPrefs.defaultCap||5;
+  return {
+    y:y,s:sn,name:SN[sn-1]+' '+fa(y),from:gToJ(f),to:gToJ(r.b),
+    theme:o.theme||'',cap:capVal,drop:'',
+    floorWeeks:{"0":[0,0,0,0,0,0,0,0,0,0,0,0],"1":[0,0,0,0,0,0,0,0,0,0,0,0],"2":[0,0,0,0,0,0,0,0,0,0,0,0],"3":[0,0,0,0,0,0,0,0,0,0,0,0]},
+    items:[{pillar:o.pillar||(V.items[1]?V.items[1].name:V.items[0].name),dir:'',mode:'exp',title:o.title||'',done:'',rhythm:'',hours:2,pct:0,weeks:[0,0,0,0,0,0,0,0,0,0,0,0]}],
+    review:{a:'',b:'',c:''}
+  };
+}
 function onA(e){
   var b=e.target.closest('[data-a]');
   if(!b)return;
@@ -3116,6 +3338,18 @@ function onA(e){
   }
   else if(a==='wkcur'){
     selWk = getCurSeasonWeek(Q).dotIdx;
+    renderQuarter();
+    return;
+  }
+  else if(a==='tgfocus'){
+    saveAppPrefs({
+      theme: appPrefs.theme,
+      showGuides: appPrefs.showGuides,
+      showAiBar: appPrefs.showAiBar,
+      focusWeek: !(appPrefs.focusWeek !== false),
+      defaultCap: appPrefs.defaultCap,
+      userName: appPrefs.userName
+    });
     renderQuarter();
     return;
   }
@@ -3198,16 +3432,10 @@ function onA(e){
     Q.items.splice(+k.slice(1),1);ED={};
   }
   else if(a==='start'){
-    var y=parseInt($('qy').value,10),sn=+$('qs').value,r=y&&sRange(y,sn);
-    if(!r){$('qerr').textContent='سال را درست وارد کن.';return}
-    var tn=qToday(),f=(tn>=r.a&&tn<=r.b)?tn:r.a;
-    S.qtr={
-      y:y,s:sn,name:SN[sn-1]+' '+fa(y),from:gToJ(f),to:gToJ(r.b),
-      theme:'',cap:5,drop:'',
-      floorWeeks:{"0":[0,0,0,0,0,0,0,0,0,0,0,0],"1":[0,0,0,0,0,0,0,0,0,0,0,0],"2":[0,0,0,0,0,0,0,0,0,0,0,0],"3":[0,0,0,0,0,0,0,0,0,0,0,0]},
-      items:[{pillar:V.items[1]?V.items[1].name:V.items[0].name,dir:'',mode:'exp',title:'',done:'',rhythm:'',hours:2,pct:0,weeks:[0,0,0,0,0,0,0,0,0,0,0,0]}],
-      review:{a:'',b:'',c:''}
-    };
+    var y=parseInt($('qy').value,10),sn=+$('qs').value;
+    var qNew=createQuarterObj(y,sn,{cap:appPrefs.defaultCap||5});
+    if(!qNew){$('qerr').textContent='سال را درست وارد کن.';return}
+    S.qtr=qNew;
     ED={qh:1,o0:1};
   }
   else if(a==='rest'){
@@ -3434,7 +3662,7 @@ function syncTelegramTheme(){
 }
 
 var PREFS_KEY = 'lifeTimeline.prefs';
-var appPrefs = { theme: 'auto', showGuides: true, showAiBar: true, defaultCap: 5, userName: '' };
+var appPrefs = { theme: 'auto', showGuides: true, showAiBar: true, focusWeek: true, defaultCap: 5, userName: '' };
 
 function loadAppPrefs(){
   try{
@@ -3445,6 +3673,7 @@ function loadAppPrefs(){
         appPrefs.theme = (p.theme === 'light' || p.theme === 'dark') ? p.theme : 'auto';
         appPrefs.showGuides = (p.showGuides !== false);
         appPrefs.showAiBar = (p.showAiBar !== false);
+        appPrefs.focusWeek = (p.focusWeek !== false);
         appPrefs.defaultCap = parseFloat(p.defaultCap) > 0 ? parseFloat(p.defaultCap) : 5;
         appPrefs.userName = String(p.userName || '');
       }
@@ -3467,13 +3696,15 @@ function applyAppPrefs(){
     document.body.classList.toggle('hide-aibar', appPrefs.showAiBar === false);
   }
   syncTelegramTheme();
-  var seg = $('set-theme-seg');
-  if(seg){
-    var btns = seg.querySelectorAll ? seg.querySelectorAll('button') : [];
-    for(var i = 0; i < btns.length; i++){
-      btns[i].classList.toggle('on', btns[i].getAttribute('data-thm') === appPrefs.theme);
+  ['set-theme-seg','onb-theme-seg'].forEach(function(segId){
+    var seg = $(segId);
+    if(seg){
+      var btns = seg.querySelectorAll ? seg.querySelectorAll('button') : [];
+      for(var i = 0; i < btns.length; i++){
+        btns[i].classList.toggle('on', btns[i].getAttribute('data-thm') === appPrefs.theme);
+      }
     }
-  }
+  });
 }
 applyAppPrefs();
 
@@ -3482,6 +3713,7 @@ function saveAppPrefs(next){
     theme: (next.theme === 'light' || next.theme === 'dark') ? next.theme : 'auto',
     showGuides: (next.showGuides !== false),
     showAiBar: (next.showAiBar !== false),
+    focusWeek: next.hasOwnProperty('focusWeek') ? (next.focusWeek !== false) : (appPrefs.focusWeek !== false),
     defaultCap: parseFloat(next.defaultCap) > 0 ? parseFloat(next.defaultCap) : 5,
     userName: String(next.userName || '').trim()
   };
@@ -3508,13 +3740,14 @@ function loadPrefsFromTgCloud(){
             appPrefs.theme = (p.theme === 'light' || p.theme === 'dark') ? p.theme : 'auto';
             appPrefs.showGuides = (p.showGuides !== false);
             appPrefs.showAiBar = (p.showAiBar !== false);
+            appPrefs.focusWeek = (p.focusWeek !== false);
             appPrefs.defaultCap = parseFloat(p.defaultCap) > 0 ? parseFloat(p.defaultCap) : 5;
             appPrefs.userName = String(p.userName || '');
             try{ localStorage.setItem(PREFS_KEY, JSON.stringify(appPrefs)); }catch(e){}
             applyAppPrefs();
           }
         }catch(e){}
-      } else if(appPrefs.userName || appPrefs.theme !== 'auto' || appPrefs.defaultCap !== 5){
+      } else if(appPrefs.userName || appPrefs.theme !== 'auto' || appPrefs.defaultCap !== 5 || appPrefs.focusWeek === false){
         try{ tg.CloudStorage.setItem('lt_prefs', JSON.stringify(appPrefs), function(){}); }catch(e){}
       }
     });
@@ -3571,6 +3804,7 @@ function syncSettingsUI(){
   if($('set-uname')) $('set-uname').value = appPrefs.userName || '';
   if($('set-def-cap')) $('set-def-cap').value = appPrefs.defaultCap || 5;
   if($('set-show-guides')) $('set-show-guides').checked = (appPrefs.showGuides !== false);
+  if($('set-focus-week')) $('set-focus-week').checked = (appPrefs.focusWeek !== false);
   applyAppPrefs();
   updateAgePreview();
   if(typeof syncAiCfgUI === 'function') syncAiCfgUI();
@@ -3654,6 +3888,8 @@ if($('set-save')) $('set-save').onclick = function(){
   saveAppPrefs({
     theme: appPrefs.theme,
     showGuides: $('set-show-guides') ? $('set-show-guides').checked : true,
+    showAiBar: appPrefs.showAiBar,
+    focusWeek: $('set-focus-week') ? $('set-focus-week').checked : (appPrefs.focusWeek !== false),
     defaultCap: $('set-def-cap') ? (parseFloat($('set-def-cap').value) || 5) : 5,
     userName: $('set-uname') ? $('set-uname').value : ''
   });
@@ -4633,8 +4869,187 @@ if(fab) fab.onclick=function(){
   else openM(null);
 };
 
+/* --- ABOUT MODAL & 3-STEP ONBOARDING WIZARD --- */
+var ONB_KEY = 'lifeTimeline.onbDone';
+function markOnbDone(){
+  try{ localStorage.setItem(ONB_KEY, '1'); }catch(e){}
+}
+function openAboutM(){
+  if($('ov-about')) $('ov-about').classList.add('on');
+}
+function closeAboutM(){
+  if($('ov-about')) $('ov-about').classList.remove('on');
+}
+if($('btn-about')) $('btn-about').onclick = openAboutM;
+if($('about-cn')) $('about-cn').onclick = closeAboutM;
+if($('about-cn-x')) $('about-cn-x').onclick = closeAboutM;
+if($('ov-about')) $('ov-about').onclick = function(e){ if(e.target === $('ov-about')) closeAboutM(); };
+if($('about-open-onb')) $('about-open-onb').onclick = function(){ closeAboutM(); openOnbM(); };
+if($('set-open-onb')) $('set-open-onb').onclick = function(){ closeSetM(); openOnbM(); };
+
+var onbStep = 1;
+var onbCap = appPrefs.defaultCap || 5;
+if($('onb-bm')){
+  $('onb-bm').innerHTML = MN.map(function(n, i){ return '<option value="' + (i + 1) + '">' + n + '</option>'; }).join('');
+}
+function updateOnbAgePreview(){
+  var pv = $('onb-age-preview');
+  if(!pv) return;
+  var by = parseInt($('onb-by').value, 10), bm = parseInt($('onb-bm').value, 10) || 1, bdVal = parseInt($('onb-bd').value, 10) || 1;
+  if(!by || by < 1300 || by > 1410){ pv.textContent = 'سن محاسبه‌شده: نامعتبر'; return; }
+  var dt = jToDate(by, bm, bdVal);
+  if(!dt){ pv.textContent = 'تاریخ شمسی معتبر نیست'; return; }
+  var tn = new Date(), nowUtc = new Date(Date.UTC(tn.getFullYear(), tn.getMonth(), tn.getDate(), 12));
+  var yDiff = nowUtc.getUTCFullYear() - dt.getUTCFullYear();
+  var bdThisYear = Date.UTC(dt.getUTCFullYear() + yDiff, dt.getUTCMonth(), dt.getUTCDate(), 12);
+  if(bdThisYear > nowUtc.getTime()) yDiff--;
+  var bdPrev = Date.UTC(dt.getUTCFullYear() + yDiff, dt.getUTCMonth(), dt.getUTCDate(), 12);
+  var bdNext = Date.UTC(dt.getUTCFullYear() + yDiff + 1, dt.getUTCMonth(), dt.getUTCDate(), 12);
+  var exactAge = yDiff + (nowUtc.getTime() - bdPrev) / (bdNext - bdPrev);
+  pv.textContent = 'سن محاسبه‌شده فعلی: ' + fa(Math.round(exactAge * 10) / 10) + ' سال';
+}
+function renderOnbStep(){
+  for(var s = 1; s <= 3; s++){
+    var pane = $('onb-pane-' + s), dot = $('onb-dot-' + s);
+    if(pane) pane.classList.toggle('on', s === onbStep);
+    if(dot){
+      dot.classList.toggle('on', s === onbStep);
+      dot.classList.toggle('done', s < onbStep);
+    }
+  }
+  if($('onb-step-lbl')) $('onb-step-lbl').textContent = 'مرحله ' + fa(onbStep) + ' از ۳';
+  if($('onb-prev')) $('onb-prev').style.display = (onbStep > 1) ? '' : 'none';
+  if($('onb-next')) $('onb-next').style.display = (onbStep < 3) ? '' : 'none';
+  if($('onb-finish')) $('onb-finish').style.display = (onbStep === 3) ? '' : 'none';
+}
+function syncOnbCapGrid(){
+  var g = $('onb-cap-grid');
+  if(!g || !g.querySelectorAll) return;
+  var bs = g.querySelectorAll('[data-cap]');
+  for(var i = 0; i < bs.length; i++){
+    bs[i].classList.toggle('on', parseFloat(bs[i].getAttribute('data-cap')) === onbCap);
+  }
+}
+function openOnbM(){
+  var b = (S.birth && S.birth.y) ? S.birth : DEFAULT_BIRTH;
+  if($('onb-uname')) $('onb-uname').value = appPrefs.userName || '';
+  if($('onb-by')) $('onb-by').value = b.y;
+  if($('onb-bm')) $('onb-bm').value = b.m || 1;
+  if($('onb-bd')) $('onb-bd').value = b.d || 1;
+  onbCap = [3,5,8].indexOf(appPrefs.defaultCap) >= 0 ? appPrefs.defaultCap : 5;
+  syncOnbCapGrid();
+  var hTxt = (S.vision && S.vision.items && S.vision.items[0] && S.vision.items[0].text) ? String(S.vision.items[0].text) : '';
+  var hVal = hTxt ? hTxt.split('\n')[0] : '';
+  if($('onb-health')) $('onb-health').value = hVal;
+  var gVal = (S.qtr && S.qtr.items && S.qtr.items[0] && S.qtr.items[0].title) ? S.qtr.items[0].title : '';
+  if($('onb-goal')) $('onb-goal').value = gVal;
+  applyAppPrefs();
+  updateOnbAgePreview();
+  onbStep = 1;
+  renderOnbStep();
+  if($('ov-onb')) $('ov-onb').classList.add('on');
+}
+function closeOnbM(){
+  if($('ov-onb')) $('ov-onb').classList.remove('on');
+}
+['onb-by','onb-bm','onb-bd'].forEach(function(id){
+  if($(id)) $(id).addEventListener('input', updateOnbAgePreview);
+  if($(id)) $(id).addEventListener('change', updateOnbAgePreview);
+});
+if($('onb-theme-seg')) $('onb-theme-seg').onclick = function(e){
+  var b = e.target.closest('[data-thm]');
+  if(!b) return;
+  saveAppPrefs({
+    theme: b.getAttribute('data-thm'),
+    showGuides: appPrefs.showGuides,
+    showAiBar: appPrefs.showAiBar,
+    focusWeek: appPrefs.focusWeek,
+    defaultCap: appPrefs.defaultCap,
+    userName: appPrefs.userName
+  });
+};
+if($('onb-cap-grid')) $('onb-cap-grid').onclick = function(e){
+  var b = e.target.closest('[data-cap]');
+  if(!b) return;
+  onbCap = parseFloat(b.getAttribute('data-cap')) || 5;
+  syncOnbCapGrid();
+};
+if($('onb-presets')) $('onb-presets').onclick = function(e){
+  var b = e.target.closest('[data-goal]');
+  if(b && $('onb-goal')){
+    $('onb-goal').value = b.getAttribute('data-goal') || '';
+    $('onb-goal').focus();
+  }
+};
+if($('onb-prev')) $('onb-prev').onclick = function(){ if(onbStep > 1){ onbStep--; renderOnbStep(); } };
+if($('onb-next')) $('onb-next').onclick = function(){ if(onbStep < 3){ onbStep++; renderOnbStep(); } };
+if($('onb-skip')) $('onb-skip').onclick = function(){ markOnbDone(); closeOnbM(); };
+if($('onb-cn-x')) $('onb-cn-x').onclick = function(){ markOnbDone(); closeOnbM(); };
+if($('ov-onb')) $('ov-onb').onclick = function(e){ if(e.target === $('ov-onb')){ markOnbDone(); closeOnbM(); } };
+if($('onb-finish')) $('onb-finish').onclick = function(){
+  var by = parseInt($('onb-by').value, 10), bm = parseInt($('onb-bm').value, 10) || 1, bdVal = parseInt($('onb-bd').value, 10) || 1;
+  if(by && by >= 1300 && by <= 1410){
+    var dt = jToDate(by, bm, bdVal);
+    if(!dt){
+      onbStep = 1;
+      renderOnbStep();
+      showToast('تاریخ تولد شمسی نامعتبر است');
+      return;
+    }
+    S.birth = { y: by, m: bm, d: bdVal };
+    recalcTimelineAges();
+    S.cur = calcAge();
+  }
+  saveAppPrefs({
+    theme: appPrefs.theme,
+    showGuides: appPrefs.showGuides,
+    showAiBar: appPrefs.showAiBar,
+    focusWeek: appPrefs.focusWeek,
+    defaultCap: onbCap,
+    userName: $('onb-uname') ? $('onb-uname').value : appPrefs.userName
+  });
+  var hl = $('onb-health') ? $('onb-health').value.trim() : '';
+  if(hl && S.vision && S.vision.items && S.vision.items[0]){
+    var restLines = String(S.vision.items[0].text || '').split('\n').slice(1);
+    S.vision.items[0].text = [hl].concat(restLines).filter(Boolean).join('\n');
+  }
+  var goalTxt = $('onb-goal') ? $('onb-goal').value.trim() : '';
+  if(goalTxt){
+    if(!S.qtr){
+      var curJ = gToJ(qToday());
+      var curS = Math.floor((curJ.m - 1) / 3) + 1;
+      S.qtr = createQuarterObj(curJ.y, curS, { cap: onbCap, title: goalTxt });
+    } else if(S.qtr.items && S.qtr.items[0] && !S.qtr.items[0].title){
+      S.qtr.items[0].title = goalTxt;
+      S.qtr.cap = onbCap;
+    } else if(S.qtr.items && S.qtr.items.length < 4){
+      S.qtr.items.push({ pillar: (S.vision && S.vision.items && S.vision.items[1]) ? S.vision.items[1].name : 'سلامت', dir: '', mode: 'exp', title: goalTxt, done: '', rhythm: '', hours: 2, pct: 0, weeks: [0,0,0,0,0,0,0,0,0,0,0,0] });
+    }
+  }
+  markOnbDone();
+  save('راه‌اندازی انجام شد ✓');
+  render();
+  closeOnbM();
+  if(goalTxt || S.qtr) tab('q');
+};
+document.addEventListener('keydown', function(e){
+  if(e.key !== 'Escape') return;
+  if($('ov-about') && $('ov-about').classList.contains('on')) closeAboutM();
+  if($('ov-onb') && $('ov-onb').classList.contains('on')){ markOnbDone(); closeOnbM(); }
+});
+
 render();
 tab(t0);
+
+(function(){
+  try{
+    var hasLocal = !!(localStorage.getItem(KEY) || localStorage.getItem(LEGACY_KEY));
+    var onbDone = !!localStorage.getItem(ONB_KEY);
+    if(!hasLocal && !onbDone && !isTgCloud && (!S.events || !S.events.length) && !S.qtr){
+      setTimeout(openOnbM, 350);
+    }
+  }catch(e){}
+})();
 </script>
 </body>
 </html>
