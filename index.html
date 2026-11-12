@@ -1619,6 +1619,200 @@ svg g[data-id]:hover rect, svg g[data-id]:hover circle{
   .ai-cfg-panel{max-height:40dvh}
   .ai-foot{padding:6px 12px}
 }
+
+/* ==========================================================================
+   AI-FIRST COMMAND BAR, WEEKLY SCORECARD, LEAD/LAG & DECISION GUARD
+   ========================================================================== */
+.ai-cmd-bar{
+  background:linear-gradient(135deg, var(--md-sys-color-primary-container) 0%, var(--card) 90%);
+  border:1.5px solid var(--pri);
+  border-radius:var(--r-xl);
+  padding:12px 14px;
+  margin-bottom:16px;
+  box-shadow:var(--shadow-sm);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.ai-cmd-top{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.ai-cmd-input-wrap{
+  flex:1;
+  min-width:210px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  background:var(--card);
+  border:1px solid var(--line-strong);
+  border-radius:var(--r-full);
+  padding:4px 6px 4px 12px;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,0.04);
+}
+.ai-cmd-input-wrap:focus-within{
+  border-color:var(--pri);
+  box-shadow:0 0 0 3px var(--ring);
+}
+.ai-cmd-input-wrap input{
+  flex:1;
+  border:0;
+  background:transparent;
+  padding:6px 4px;
+  font-size:13px;
+  min-width:0;
+}
+.ai-cmd-input-wrap input:focus-visible{
+  box-shadow:none;
+}
+.ai-cmd-chips{
+  display:flex;
+  gap:6px;
+  overflow-x:auto;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+  padding-bottom:2px;
+  align-items:center;
+}
+.ai-cmd-chips::-webkit-scrollbar{display:none}
+.ai-cmd-chip{
+  font-size:11.5px;
+  padding:4px 11px;
+  min-height:30px;
+  border-radius:var(--r-full);
+  background:var(--card);
+  color:var(--fg);
+  border:1px solid var(--line-strong);
+  white-space:nowrap;
+  cursor:pointer;
+  font-weight:600;
+  transition:background .15s,border-color .15s,transform .1s;
+}
+.ai-cmd-chip:hover{
+  border-color:var(--pri);
+  background:var(--card-hover);
+}
+
+/* Weekly Scorecard & Fast Iteration Box */
+.scorecard-strip{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--r-lg);
+  padding:10px 14px;
+  margin-top:8px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+  width:100%;
+}
+.score-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:4px 12px;
+  border-radius:var(--r-full);
+  font-size:12.5px;
+  font-weight:800;
+}
+.score-badge.sc-ok{background:var(--ok-bg);color:var(--ok);border:1px solid var(--ok-bdr)}
+.score-badge.sc-warn{background:var(--warn-bg);color:var(--warn);border:1px solid var(--warn-bdr)}
+.score-badge.sc-err{background:var(--err-bg);color:var(--err);border:1px solid var(--err-bdr)}
+.score-badge.sc-none{background:var(--card-alt);color:var(--fg-sec);border:1px solid var(--line)}
+
+.wk-note-box{
+  width:100%;
+  background:var(--card);
+  border:1px dashed var(--line-strong);
+  border-radius:var(--r-md);
+  padding:10px 12px;
+  margin-top:6px;
+  font-size:12.5px;
+}
+
+/* Lead Rhythm & 80/20 Step Box inside Outcome Cards */
+.lead-rhythm-box{
+  background:var(--shade);
+  border:1px solid var(--line);
+  border-inline-start:3.5px solid var(--pri);
+  border-radius:var(--r-md);
+  padding:9px 12px;
+  margin-bottom:10px;
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  font-size:12.5px;
+}
+.lead-rhythm-row{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.step80-badge{
+  font-size:11px;
+  padding:2px 9px;
+  border-radius:var(--r-full);
+  background:var(--ok-bg);
+  color:var(--ok);
+  border:1px solid var(--ok-bdr);
+  font-weight:700;
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+}
+
+/* Pillar Sub-Metric Tags */
+.pillar-sub-tags{
+  display:flex;
+  gap:5px;
+  flex-wrap:wrap;
+  margin:4px 0 8px;
+}
+.pillar-sub-tag{
+  font-size:11px;
+  padding:2px 8px;
+  border-radius:var(--r-sm);
+  background:var(--card-alt);
+  color:var(--fg-sec);
+  border:1px solid var(--line);
+  font-weight:600;
+}
+
+/* Decision Guard (One-Way vs Two-Way Doors) */
+.dec-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));
+  gap:10px;
+  margin-top:10px;
+}
+.dec-card{
+  background:var(--card-alt);
+  border:1px solid var(--line);
+  border-radius:var(--r-lg);
+  padding:12px 14px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.door-badge{
+  font-size:11px;
+  padding:2px 9px;
+  border-radius:var(--r-full);
+  font-weight:700;
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+}
+.door-badge.two-way{background:var(--ok-bg);color:var(--ok);border:1px solid var(--ok-bdr)}
+.door-badge.one-way{background:var(--warn-bg);color:var(--warn);border:1px solid var(--warn-bdr)}
+.dec-st-waiting{background:var(--warn-bg);color:var(--warn);border-color:var(--warn-bdr);cursor:pointer}
+.dec-st-approved{background:var(--ok-bg);color:var(--ok);border-color:var(--ok-bdr);cursor:pointer}
+.dec-st-rejected{background:var(--err-bg);color:var(--err);border-color:var(--err-bdr);text-decoration:line-through;cursor:pointer}
 </style>
 </head>
 <body>
@@ -1682,16 +1876,32 @@ svg g[data-id]:hover rect, svg g[data-id]:hover circle{
   </div>
 </nav>
 
+<!-- OMNIPRESENT AI-FIRST SMART COMMAND BAR -->
+<section class="ai-cmd-bar" id="ai-cmd-bar" aria-label="فرمان هوشمند دستیار">
+  <div class="ai-cmd-top">
+    <div style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:800;color:var(--fg)">
+      <svg class="ic" style="color:var(--pri)" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l1.9 4.6L18.5 9.5l-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9z"/><path d="M19 15l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z"/></svg>
+      <span>مدیریت هوشمند با دستیار (AI-First):</span>
+    </div>
+    <div class="ai-cmd-input-wrap">
+      <input type="text" id="ai-inline-inp" placeholder="با زبان عادی بنویس دستیار برایت انجام دهد (مثلاً: این هفته ۳ جلسه ورزش کردم و پروژه جلو رفت)...">
+      <button type="button" class="pri mini" id="ai-inline-go" style="min-height:32px;padding:4px 14px">اجرا</button>
+    </div>
+    <button type="button" class="mini" id="ai-inline-undo" style="display:none;background:var(--warn-bg);color:var(--warn);border-color:var(--warn-bdr)" title="برگرداندن آخرین تغییر دستیار">↩ واگرد تغییر</button>
+  </div>
+  <div class="ai-cmd-chips" id="ai-inline-chips"></div>
+</section>
+
 <!-- TAB 1: VISION -->
 <section id="tab-v" role="tabpanel">
   <div class="guide-bar">
     <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:220px">
       <svg class="ic" style="color:var(--pri)" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-      <span><b>فلسفه قطب‌نما:</b> در دنیای پر از «قوی سیاه»، این ۴ ستون پایدار جایگزین برنامه‌های خشک بلندمدت هستند تا بدون تعهد نابالغانه، مسیر حرکت روشن بماند.</span>
+      <span><b>فلسفه قطب‌نما (تفکر اصولی و اثر لیندی):</b> در دنیای پر از «قوی سیاه»، این ۴ ستون پایدار (که ۱۰۰ سال پیش و ۱۰۰ سال بعد هم مهم‌اند) جایگزین برنامه‌های خشک بلندمدت هستند تا بدون تعهد نابالغانه، مسیر حرکت روشن بماند.</span>
     </div>
     <button type="button" class="mini ai-btn" id="btn-ai-vis">
       <svg class="ic ic-sm" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l1.9 4.6L18.5 9.5l-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9z"/><path d="M19 15l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z"/></svg>
-      <span>بازنگری ویژن با دستیار</span>
+      <span>همفکری و بازنگری ویژن با دستیار</span>
     </button>
   </div>
   <div id="vis"></div>
@@ -1707,9 +1917,15 @@ svg g[data-id]:hover rect, svg g[data-id]:hover circle{
   <div class="guide-bar">
     <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:220px">
       <svg class="ic" style="color:var(--pri)" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-      <span><b>آینه مسیر طی‌شده تا امروز:</b> روی هر خط کلیک کنید تا رویداد جدیدی ثبت شود یا روی رویدادهای موجود کلیک کنید تا ویرایش شوند.</span>
+      <span><b>آینه مسیر طی‌شده تا امروز:</b> روی هر خط کلیک کنید یا به دستیار بگویید رویداد جدیدی ثبت کند.</span>
     </div>
-    <input type="search" id="tl-search" placeholder="جستجو در رویدادها..." style="width:190px;max-width:100%;padding:6px 12px;font-size:12px;border-radius:var(--r-full)">
+    <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+      <button type="button" class="mini ai-btn" id="btn-ai-tl">
+        <svg class="ic ic-sm" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l1.9 4.6L18.5 9.5l-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9z"/><path d="M19 15l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z"/></svg>
+        <span>ثبت رویداد با دستیار</span>
+      </button>
+      <input type="search" id="tl-search" placeholder="جستجو در رویدادها..." style="width:190px;max-width:100%;padding:6px 12px;font-size:12px;border-radius:var(--r-full)">
+    </div>
   </div>
   <div class="bar">
     <div class="legend" id="tl-filters"></div>
@@ -1849,6 +2065,8 @@ svg g[data-id]:hover rect, svg g[data-id]:hover circle{
         <button type="button" class="ghost mini ai-close-mob" id="ai-cn-x-mob" aria-label="بستن">✕</button>
       </div>
       <div class="ai-head-actions">
+        <button type="button" class="mini" id="ai-btn-undo" style="display:none;background:var(--warn-bg);color:var(--warn);border-color:var(--warn-bdr)" title="واگرد آخرین تغییر دستیار">↩ واگرد</button>
+        <button type="button" class="mini" id="ai-btn-auto" title="اعمال خودکار تغییرات دستیار به محض دریافت پاسخ">⚡ خودکار: روشن</button>
         <button type="button" class="mini" id="ai-btn-bridge" title="کپی وضعیت یا الصاق بسته تغییر بدون نیاز به کلید API">پل دستیار بیرونی</button>
         <button type="button" class="ghost mini" id="ai-btn-reset" title="شروع گفتگوی جدید">گفتگوی جدید</button>
         <button type="button" class="mini" id="ai-btn-cfg" title="تنظیمات اتصال Gemini">تنظیمات</button>
@@ -1898,6 +2116,10 @@ svg g[data-id]:hover rect, svg g[data-id]:hover circle{
       <label>آدرس درگاه یا پروکسی (اختیاری؛ پیش‌فرض آدرس رسمی گوگل)
         <input id="ai-base-url" type="url" placeholder="https://generativelanguage.googleapis.com" dir="ltr" style="text-align:left">
       </label>
+      <label style="display:flex;flex-direction:row;align-items:center;gap:8px;color:var(--fg);cursor:pointer;margin-top:2px">
+        <input type="checkbox" id="ai-auto-chk" style="width:18px;height:18px;accent-color:var(--pri)">
+        <span>اعمال خودکار تغییرات دستیار به محض دریافت پاسخ (با قابلیت واگرد فوری)</span>
+      </label>
       <div class="n" style="font-size:11.5px;line-height:1.6">
         کلید و تنظیمات جدا از فایل پشتیبان ذخیره می‌شوند و در خروجی JSON قرار نمی‌گیرند. در صورت محدودیت شبکه می‌توانید آدرس پروکسی کلودفلر یا درگاه شخصی خود را وارد کنید.
       </div>
@@ -1911,12 +2133,13 @@ svg g[data-id]:hover rect, svg g[data-id]:hover circle{
     <div class="ai-chat" id="ai-chat"></div>
 
     <div class="ai-quick" id="ai-quick">
-      <button type="button" class="flt-btn" data-aiq="می‌خواهم وضعیت این هفته کف‌های ۴ ستون و نتایج فصل را با یک پیام ثبت کنم؛ از من بپرس این هفته چطور گذشت">ثبت گزارش این هفته</button>
-      <button type="button" class="flt-btn" data-aiq="می‌خواهم یک مورد یا عادت جدید به برنامه این فصل اضافه کنم؛ سوال‌های لازم را از من بپرس">افزودن مورد به فصل</button>
-      <button type="button" class="flt-btn" data-aiq="می‌خواهم حداقل‌ها، فرضیه‌ها یا مسیرهای بخش ویژن را مدیریت یا ویرایش کنم؛ اول سوال‌های لازم را از من بپرس">مدیریت ویژن و حداقل‌ها</button>
-      <button type="button" class="flt-btn" data-aiq="بر اساس ویژن و ظرفیت من، برنامه این فصل سه‌ماهه را طراحی یا بهبود بده">طراحی برنامه فصل</button>
-      <button type="button" class="flt-btn" data-aiq="عملکرد و ریتم این فصل را تحلیل کن و برای بازبینی پایان فصل کمکم کن">بازبینی پایان فصل</button>
-      <button type="button" class="flt-btn" data-aiq="تراز ظرفیت هفتگی و وضعیت کف‌های پایدار من در این فصل را بررسی کن">تحلیل ظرفیت و کف‌ها</button>
+      <button type="button" class="flt-btn" data-aiq="می‌خواهم وضعیت این هفته کف‌های ۴ ستون و نتایج فصل را با یک پیام ثبت کنم؛ از من بپرس این هفته چطور گذشت">⚡ ثبت گزارش این هفته</button>
+      <button type="button" class="flt-btn" data-aiq="می‌خواهم یک خروجی یا آزمایش فصلی جدید بر اساس قانون ۸۰/۲۰ (۱ پله بالاتر) و تفکیک سنجه پیشرو و پسرو اضافه کنم">🎯 طراحی هدف فصلی (۸۰/۲۰)</button>
+      <button type="button" class="flt-btn" data-aiq="می‌خواهم یک تصمیم یا تعهد جدید را با فیلتر تعهد نابالغانه و مدل درب یک‌طرفه یا دوطرفه محک بزنم و ثبت کنم">⚖️ محک تصمیم (درب یک‌طرفه/دوطرفه)</button>
+      <button type="button" class="flt-btn" data-aiq="کارنامه امتیاز اجرای این هفته من را تحلیل کن و برای بازنگری هفتگی و کج کردن هوشمندانه مسیر در هفته بعد کمکم کن">📊 کارنامه و بازنگری هفته</button>
+      <button type="button" class="flt-btn" data-aiq="می‌خواهم حداقل‌های ۴ ستون پایدار (سلامت، ثروت، قبیله، تجربه) یا فرضیه‌های ویژن را مدیریت و بهینه کنم">🧭 بهینه‌سازی ویژن و ستون‌ها</button>
+      <button type="button" class="flt-btn" data-aiq="می‌خواهم یک رویداد جدید در تایم‌لاین مسیر زندگی‌ام ثبت کنم؛ جزئیاتش را از من بپرس">📅 ثبت رویداد در تایم‌لاین</button>
+      <button type="button" class="flt-btn" data-aiq="عملکرد ۱۲ هفته این فصل را تحلیل کن و برای بازبینی پایان فصل کمکم کن">🏆 بازبینی پایان فصل</button>
     </div>
 
     <div class="ai-foot">
@@ -1951,6 +2174,8 @@ var ICONS = {
   repeat: '<svg class="ic ic-sm" aria-hidden="true" viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>',
   archive: '<svg class="ic ic-sm" aria-hidden="true" viewBox="0 0 24 24"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>',
   plus: '<svg class="ic ic-sm" aria-hidden="true" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
+  chart: '<svg class="ic ic-sm" aria-hidden="true" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>',
+  bolt: '<svg class="ic ic-sm" aria-hidden="true" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
   sparkles: '<svg class="ic ic-sm" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l1.9 4.6L18.5 9.5l-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9z"/><path d="M19 15l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z"/></svg>'
 };
 
@@ -1969,6 +2194,13 @@ var PILLAR_STYLES=[
   {col:'var(--e)',fill:'var(--e-fill)',bg:'var(--e-bg)',bdr:'var(--e-bdr)',ic:ICONS.compass}
 ];
 
+var PILLAR_META = [
+  { badge: 'کف غیرقابل‌مذاکره (لیندی ۱۰۰ ساله)', tags: ['ورزش قدرتی و هوازی (Outlive)', 'کیفیت خواب و تغذیه', 'قانون خشایار: روز با ورزش هدر نرفته'] },
+  { badge: 'ستون ۱ · بازی برد-برد', tags: ['حل مسئله واقعی دیگران', 'ذخیره امن (پادشکنندگی)', 'تست ارزان قبل از تعهد'] },
+  { badge: 'ستون ۲ · مطالعه هاروارد', tags: ['حلقه اول و رفقای روز مبادا', 'وقت باکیفیت با خانواده', 'شبکه و قبیله هم‌فکر'] },
+  { badge: 'ستون ۳ · زیستن و خلاقیت', tags: ['پروژه قلقلک‌دهنده ذهن', 'تجربه نو در هر فصل', 'خاطرات ماندگار'] }
+];
+
 var SEED_DATA = {
   "birth": null,
   "cur": 25,
@@ -1976,28 +2208,29 @@ var SEED_DATA = {
   "vision": {
     "items": [
       {
-        "name": "سلامتی (کف پایدار)",
+        "name": "سلامتی و طول عمر (کف پایدار)",
         "floor": 1,
-        "text": "حداقل: ۳ جلسه ورزش در هفته، خواب حدود ۷ ساعت.\nدو هفته پشت هم زیر حداقل: اون هفته‌ها سلامتی از همه جلوتره.",
+        "text": "حداقل غیرقابل‌مذاکره: ۳ جلسه ورزش (قدرتی/هوازی) در هفته و خواب حدود ۷ ساعت.\nقانون خشایار: روزی که در آن ورزش کرده باشم و مراقب تغذیه‌ام باشم، به هیچ عنوان هدر نرفته است.\nدو هفته پشت هم زیر حداقل: در هفته بعد، بازگرداندن سلامتی اولویت اولِ تمام برنامه‌هاست.",
         "dirs": []
       },
       {
         "name": "جایگاه، حرفه و ثروت",
-        "text": "حداقل: هر فصل یه خروجی قابل نمایش در حوزه تخصصی.\n«کافی» مالی: ذخیره‌ی اضطراری؛ بعدش پول از اولویت خودکار خارج می‌شه.\nتصمیم بزرگ شغلی یا مالی: ۷۲ ساعت صبر و یادداشت مزایا/معایب.",
+        "text": "حداقل فصلی: هر فصل ۱ خروجی ملموس و قابل نمایش که یک مسئله واقعی را حل کند (بازی برد-برد).\nکف امنیت مالی (پادشکنندگی): حفظ ذخیره اضطراری؛ پس از آن، تصمیم‌ها بر اساس رشد و اثرگذاری گرفته می‌شوند.\nپرهیز از تعهد نابالغانه: هیچ تعهد بلندمدتی بدون آزمایش ارزان ۳ ماهه داده نمی‌شود.",
         "dirs": []
       },
       {
-        "name": "ارتباطات اجتماعی (خانواده، دوست، شبکه)",
-        "text": "حلقه‌ی نزدیک (خانواده و دوست‌ها): هر هفته حداقل یه وعده‌ی واقعی یا تماس باکیفیت.\nدایره‌ی وسیع: ماهی ۱ جمع یا رویداد.\nحلقه‌ی نزدیک دو هفته پشت هم رد شد: تو بازبینی علامت می‌خوره.",
+        "name": "قبیله و ارتباطات اصیل (خانواده و دوستان)",
+        "text": "حلقه اول (خانواده و رفقای نزدیک): هر هفته حداقل ۱ وعده دیدار واقعی یا گفتگوی عمیق و باکیفیت.\nقبیله و شبکه حرفه‌ای: ماهی ۱ رویداد، جمع یا تعامل مشترک.\nهشدار تنهایی (مطالعه هاروارد): اگر حلقه نزدیک دو هفته پیاپی رد شد، در بازبینی هفتگی اولویت می‌گیرد.",
         "dirs": []
       },
       {
-        "name": "تجربیات معنادار (تک جدید، غیرتک، سفر)",
-        "text": "حداقل: هر فصل یه تجربه‌ی جدید و مشخص.\nهر سال یه ماجراجویی یا سفر بزرگ‌تر.",
+        "name": "تجربیات زیسته و خلاقیت",
+        "text": "حداقل فصلی: هر فصل ۱ تجربه جدید، سفر کوتاه یا پروژه خلاقانه‌ای که ذهنم را قلقلک می‌دهد.\nزندگی واقعی در خاطرات و تجربه‌های زیسته شکل می‌گیرد، نه در روزهای تکراری پای گوشی.",
         "dirs": []
       }
     ],
-    "general": "تصمیم برگشت‌پذیر: تو یه هفته بگیر و امتحان کن.\nتصمیم برگشت‌ناپذیر و سنگین: ۷۲ ساعت صبر و نوشتن مزایا/معایب.\nهر حداقلی که دو هفته پشت هم رد شد، تو بازبینی هفتگی علامت می‌خوره.\nتعهد بیشتر از ۳ تا ۶ ماه فقط برای چیزی که در آزمایش‌های کوتاه‌مدت شواهد واقعی آورده."
+    "general": "درب دوطرفه (تصمیم برگشت‌پذیر و کم‌هزینه): در کمتر از ۱ هفته تصمیم بگیر و در عمل تست کن.\nدرب یک‌طرفه (تصمیم سنگین و برگشت‌ناپذیر): قانون ۷۲ ساعت صبر، نوشتن مزایا/معایب و مشورت با نسخه ۳ سال بعد.\nقانون ۸۰/۲۰ در هدف‌گذاری: هر هدف فصلی باید ۱ تا ۲ پله بالاتر از سطح فعلی باشد (۸۰٪ آشنا، ۲۰٪ چالش جدید).\nهر کف پایداری که دو هفته پیاپی رد شود، زنگ هشدار قطب‌نما را فعال می‌کند.",
+    "decisions": []
   },
   "qtr": null,
   "hist": []
@@ -2026,6 +2259,8 @@ function jToAge(j,isEnd){var dt=jToDate(j.y,j.m||(isEnd?12:1),j.d||(isEnd?29:1))
 function ageToJ(a){var j=gToJ(new Date(bd(0)+a*365.2425*864e5));return{y:j.y,m:j.m,d:0}}
 
 function stLbl(x){return{active:'در حال کاوش',paused:'متوقف (فعلاً نه)',dropped:'کنار گذاشته شد'}[x]||'در حال کاوش'}
+function decStLbl(x){return{waiting:'⏳ در انتظار ۷۲ ساعت / تست ارزان',approved:'✓ تایید شده با شواهد',rejected:'✕ رد شد (تعهد نابالغانه)'}[x]||'⏳ در انتظار ۷۲ ساعت / تست ارزان'}
+function doorLbl(d){return d==='one-way'?'🔴 درب یک‌طرفه (سنگین و برگشت‌ناپذیر)':'🟢 درب دوطرفه (برگشت‌پذیر — تست سریع)'}
 function modeLbl(m){return m==='build'?(ICONS.hammer+' <span>تعهد و ساختن</span>'):(ICONS.flask+' <span>کاوش و تست ارزان</span>')}
 function fld(k,f,ph,v,r){return '<textarea class="f" data-k="'+k+'" data-f="'+f+'" rows="'+(r||2)+'" placeholder="'+ph+'">'+esc(v||'')+'</textarea>'}
 function lv(l,v){return v?'<div class="lv"><span>'+l+':</span> '+esc(v)+'</div>':''}
@@ -2034,6 +2269,44 @@ function bulletHtml(txt){
   var lines=String(txt||'').split('\n').map(function(s){return s.trim()}).filter(Boolean);
   if(!lines.length)return '';
   return '<ul class="rule-list">'+lines.map(function(l){return '<li><span class="bul" aria-hidden="true"></span><span>'+esc(l)+'</span></li>'}).join('')+'</ul>';
+}
+
+// 12-Week Year Execution Score Calculator (Lead Measures + Floor Pillars)
+function calcWeekExecutionScore(Q, wIdx) {
+  if (!Q) return { pct: null, logged: 0, total: 4 };
+  var total = 4 + ((Q.items && Q.items.length) || 0);
+  var logged = 0, pts = 0;
+  for (var p = 0; p < 4; p++) {
+    var st = (Q.floorWeeks && Q.floorWeeks[p] && Q.floorWeeks[p][wIdx]) || 0;
+    if (st > 0) {
+      logged++;
+      if (st === 1) pts += 1;
+      else if (st === 2) pts += 0.5;
+    }
+  }
+  (Q.items || []).forEach(function(it) {
+    var st2 = (it.weeks && it.weeks[wIdx]) || 0;
+    if (st2 > 0) {
+      logged++;
+      if (st2 === 1) pts += 1;
+      else if (st2 === 2) pts += 0.5;
+    }
+  });
+  var pct = logged > 0 ? Math.round((pts / logged) * 100) : null;
+  return { pct: pct, logged: logged, total: total, pts: pts };
+}
+
+function calcSeasonExecutionScore(Q) {
+  if (!Q) return null;
+  var sum = 0, cnt = 0;
+  for (var w = 0; w < 12; w++) {
+    var sc = calcWeekExecutionScore(Q, w);
+    if (sc.pct !== null) {
+      sum += sc.pct;
+      cnt++;
+    }
+  }
+  return cnt > 0 ? Math.round(sum / cnt) : null;
 }
 
 function showToast(msg){
@@ -2052,6 +2325,7 @@ function migrate(){
   S.vision.items.forEach(function(it){
     if(!it.dirs) it.dirs=[];
   });
+  if(!Array.isArray(S.vision.decisions)) S.vision.decisions=[];
   S.hist=(S.hist||[]).concat((S.events||[]).filter(function(e){return e.cat==='q'}));
   S.events=(S.events||[]).filter(function(e){return e.cat!=='q'});
   S.events.forEach(function(e){
@@ -2062,9 +2336,11 @@ function migrate(){
     if(!S.qtr.floorWeeks){
       S.qtr.floorWeeks={"0":[0,0,0,0,0,0,0,0,0,0,0,0],"1":[0,0,0,0,0,0,0,0,0,0,0,0],"2":[0,0,0,0,0,0,0,0,0,0,0,0],"3":[0,0,0,0,0,0,0,0,0,0,0,0]};
     }
+    if(!S.qtr.weeklyNotes || typeof S.qtr.weeklyNotes!=='object') S.qtr.weeklyNotes={};
     (S.qtr.items||[]).forEach(function(it){
       if(!it.pillar) it.pillar = S.vision.items[1]?S.vision.items[1].name:'';
       if(!it.mode) it.mode = 'exp';
+      if(typeof it.stepCheck !== 'string') it.stepCheck = '';
       if(!it.weeks || it.weeks.length!==12) it.weeks=[0,0,0,0,0,0,0,0,0,0,0,0];
     });
   }
@@ -2075,7 +2351,7 @@ try{
   if(raw){
     var d=JSON.parse(raw);
     if(d && d.data && typeof d.data==='string') d=JSON.parse(d.data);
-    if(d && d.events && d.events.length){S=d;}
+    if(d && (Array.isArray(d.events) || d.vision || d.qtr)){S=d;}
   }
 }catch(e){}
 migrate();
@@ -2262,6 +2538,7 @@ function renderStatusStrip(){
   var curJ=gToJ(new Date());
   var Q=S.qtr,tn=qToday();
   var qTxt='بدون فصل فعال',capTxt='—',flrTxt='همه ستون‌ها پایدار',flrCol='var(--ok)',flrBg='var(--ok-bg)';
+  var scTxt='—',scCol='var(--mut)',scBg='var(--card-alt)';
   if(Q){
     var a=jToDate(Q.from.y,Q.from.m,Q.from.d),b=jToDate(Q.to.y,Q.to.m,Q.to.d);
     var tot=Math.max(1,Math.round((b-a)/864e5)+1),n=Math.floor((tn-a)/864e5)+1;
@@ -2276,6 +2553,20 @@ function renderStatusStrip(){
       for(var w=0;w<11;w++){if(fw[w]===3&&fw[w+1]===3){broken++;break}}
     });
     if(broken>0){flrTxt=fa(broken)+' ستون نیازمند توجه';flrCol='var(--err)';flrBg='var(--err-bg)';}
+    var wkSc=calcWeekExecutionScore(Q,cWkObj.dotIdx),seaSc=calcSeasonExecutionScore(Q);
+    if(wkSc.pct!=null){
+      scTxt=fa(wkSc.pct)+'٪'+(seaSc!=null?' (فصل: '+fa(seaSc)+'٪)':'');
+      if(wkSc.pct>=85){scCol='var(--ok)';scBg='var(--ok-bg)';}
+      else if(wkSc.pct>=60){scCol='var(--warn)';scBg='var(--warn-bg)';}
+      else{scCol='var(--err)';scBg='var(--err-bg)';}
+    }else if(seaSc!=null){
+      scTxt='میانگین فصل: '+fa(seaSc)+'٪';
+      if(seaSc>=85){scCol='var(--ok)';scBg='var(--ok-bg)';}
+      else if(seaSc>=60){scCol='var(--warn)';scBg='var(--warn-bg)';}
+      else{scCol='var(--err)';scBg='var(--err-bg)';}
+    }else{
+      scTxt='ثبت نشده (هدف ≥۸۵٪)';
+    }
   }
   $('cnt-q').textContent=fa(Q&&Q.items?Q.items.length:0);
   $('cnt-v').textContent=fa(S.vision.items.length);
@@ -2288,6 +2579,7 @@ function renderStatusStrip(){
     '<div class="stat-pill">'+ICONS.calendar+'<span>امروز:</span><b>'+fmtJ(curJ)+' ('+fa(Math.round(S.cur*10)/10)+')</b></div>'+
     '<div class="stat-pill">'+ICONS.target+'<span>فصل:</span><b>'+qTxt+'</b></div>'+
     '<div class="stat-pill">'+ICONS.clock+'<span>ظرفیت:</span><b>'+capTxt+'</b></div>'+
+    '<div class="stat-pill" style="background:'+scBg+';color:'+scCol+';border-color:'+scCol+'">'+ICONS.chart+'<span>اجرای ۱۲هفته‌ای:</span><b style="color:'+scCol+'">'+scTxt+'</b></div>'+
     '<div class="stat-pill" style="background:'+flrBg+';color:'+flrCol+';border-color:'+flrCol+'">'+ICONS.shield+'<b style="color:'+flrCol+'">'+flrTxt+'</b></div>';
 }
 
@@ -2365,7 +2657,13 @@ function renderVision(){
       h+='<div class="edit-panel"><label>عنوان ستون ارزشی<input class="f" data-k="'+k+'" data-f="name" value="'+esc(it.name)+'"></label>';
       h+='<label>حداقل‌های هفتگی و قوانین تصمیم‌گیری (هر خط یک قانون)'+fld(k,'text','حداقل غیرقابل‌مذاکره هفتگی...',it.text,4)+'</label></div>';
     }else{
+      var pm=PILLAR_META[i%4];
       h+='<h3 style="margin:0 0 8px;font-size:15.5px;font-weight:800">'+esc(it.name)+'</h3>';
+      if(pm&&pm.tags&&pm.tags.length){
+        h+='<div class="pillar-sub-tags" title="'+esc(pm.badge||'')+'">';
+        pm.tags.forEach(function(tg){h+='<span class="pillar-sub-tag">'+esc(tg)+'</span>';});
+        h+='</div>';
+      }
       h+=bulletHtml(it.text);
     }
 
@@ -2393,6 +2691,46 @@ function renderVision(){
 
   h+='<div class="cd"><div class="cd-head"><h3 class="cd-title">'+ICONS.shield+' <span>قوانین عمومی تصمیم‌گیری (ضد قوی سیاه و تعهد نابالغانه)</span></h3>'+(ED.g?'<div style="display:flex;gap:6px">'+btn('ok','g',ICONS.check+' <span>ذخیره</span>','pri mini')+btn('cned','g','بستن','mini')+'</div>':btn('ed','g',ICONS.edit+' <span>ویرایش قوانین</span>','mini'))+'</div>';
   h+=(ED.g?'<div class="edit-panel"><label>قوانین پایه تصمیم‌گیری (هر خط یک مورد)'+fld('g','general','',V.general,4)+'</label></div>':bulletHtml(V.general))+'</div>';
+
+  var decs=V.decisions||[];
+  h+='<div class="cd" style="margin-top:16px"><div class="cd-head"><h3 class="cd-title">'+ICONS.bolt+' <span>محک تصمیم‌گیری و سد تعهد نابالغانه (درب یک‌طرفه در برابر دوطرفه)</span></h3><div style="display:flex;gap:6px;flex-wrap:wrap">'+btn('aiask','یک تصمیم مهم پیش رو دارم؛ کمک کن مشخص کنم درب یک‌طرفه است یا دوطرفه و چه تست یا قانون انتظاری برایش بگذارم',ICONS.sparkles+' <span>تحلیل تصمیم با دستیار</span>','mini ai-btn')+btn('adddec','',ICONS.plus+' <span>تصمیم جدید</span>','pri mini')+'</div></div>';
+  h+='<p style="margin:0 0 12px;font-size:12.5px;color:var(--mut)"><b>درب دوطرفه (برگشت‌پذیر):</b> با تست ارزان در ۷ روز آزمایش کن. <b>درب یک‌طرفه (سنگین):</b> قانون ۷۲ ساعت مکث و مشورت با نسخه ۳ سال آینده خودت را اجرا کن.</p>';
+  if(!decs.length){
+    h+='<div class="empty" style="padding:16px;font-size:12.5px">هنوز تصمیمی در انتظار فیلتر نیست. برای تصمیم‌های شغلی، مهاجرت، تعهد مالی یا پروژه‌های بزرگ از «تصمیم جدید» یا دستیار استفاده کن.</div>';
+  }else{
+    h+='<div class="dec-grid">';
+    decs.forEach(function(dec,di){
+      var dk='dec'+di,ded=ED[dk],door=dec.door==='one-way'?'one-way':'two-way',st=dec.status||'waiting';
+      var stCls=st==='approved'?'dec-st-approved':(st==='rejected'?'dec-st-rejected':'dec-st-waiting');
+      h+='<div class="dec-card">';
+      if(ded){
+        h+='<div class="edit-panel" style="margin-top:0">';
+        h+='<label>عنوان تصمیم<input class="f" data-k="'+dk+'" data-f="title" placeholder="مثلاً: قرارداد تمام‌وقت یا شروع پروژه..." value="'+esc(dec.title||'')+'"></label>';
+        h+='<div class="grid-2">';
+        h+='<label>نوع درب<select class="f" data-k="'+dk+'" data-f="door"><option value="two-way"'+(door==='two-way'?' selected':'')+'>دوطرفه (برگشت‌پذیر)</option><option value="one-way"'+(door==='one-way'?' selected':'')+'>یک‌طرفه (پرریسک و سنگین)</option></select></label>';
+        h+='<label>وضعیت تصمیم<select class="f" data-k="'+dk+'" data-f="status"><option value="waiting"'+(st==='waiting'?' selected':'')+'>در انتظار مکث / آزمایش</option><option value="approved"'+(st==='approved'?' selected':'')+'>تایید و اجرا</option><option value="rejected"'+(st==='rejected'?' selected':'')+'>رد / منصرف</option></select></label>';
+        h+='</div>';
+        h+='<label>مهلت مکث ۷۲ ساعته یا زمان تست (اختیاری)<input class="f" data-k="'+dk+'" data-f="waitUntil" placeholder="مثلاً: ۴۸ ساعت دیگر یا تا پایان هفته" value="'+esc(dec.waitUntil||'')+'"></label>';
+        h+='<label>تست کوچک / مشورت با خود ۳ سال آینده'+fld(dk,'note','اگر این تصمیم ۳ سال دیگر هم مهم است چه دلیلی دارد؟ تست کوچک آن چیست؟',dec.note||'',2)+'</label>';
+        h+='<div class="act" style="justify-content:space-between">'+btn('deldec',''+di,'حذف','del mini')+'<div style="display:flex;gap:6px">'+btn('ok',dk,ICONS.check+' <span>ذخیره</span>','pri mini')+btn('cned',dk,'بستن','mini')+'</div></div>';
+        h+='</div>';
+      }else{
+        h+='<div class="dec-top"><span class="door-badge '+door+'">'+doorLbl(door)+'</span><span class="dec-st '+stCls+'">'+decStLbl(st)+'</span></div>';
+        h+='<h4>'+esc(dec.title||'تصمیم بدون عنوان')+'</h4>';
+        if(dec.waitUntil) h+='<div class="dec-meta">'+ICONS.clock+' <span>زمان بازبینی: '+esc(dec.waitUntil)+'</span></div>';
+        if(dec.note) h+='<p class="dec-note">'+esc(dec.note)+'</p>';
+        h+='<div class="dec-actions">';
+        h+=btn('tgdec',''+di,'تغییر وضعیت','mini');
+        h+=btn('ed',dk,ICONS.edit+' <span>ویرایش</span>','mini');
+        h+=btn('aiask','این تصمیم من است: «'+(dec.title||'')+'» ('+doorLbl(door)+'). نظر ۳ سال آینده و ریسک آن را نقد کن و یک تست کوچک پیشنهاد بده.',ICONS.sparkles+' <span>تحلیل</span>','mini ai-btn');
+        h+=btn('deldec',''+di,'حذف','del mini');
+        h+='</div>';
+      }
+      h+='</div>';
+    });
+    h+='</div>';
+  }
+  h+='</div>';
   $('vis').innerHTML=h;
 }
 
@@ -2481,6 +2819,20 @@ function renderQuarter(){
   h+=btn('aiask','می‌خواهم وضعیت «'+activeWkLabel+'» (کف‌های ۴ ستون و نتایج فصل) را با یک پیام ثبت کنم؛ از من بپرس این هفته چطور گذشت',ICONS.sparkles+' <span>ثبت گزارش هفته با دستیار</span>','mini ai-btn');
   h+='</div></div>';
 
+  var wkSc=calcWeekExecutionScore(Q,activeWk),seaSc=calcSeasonExecutionScore(Q);
+  var scCls=wkSc.pct==null?'sc-none':(wkSc.pct>=85?'sc-ok':(wkSc.pct>=60?'sc-warn':'sc-err'));
+  var wkNoteVal=(Q.weeklyNotes&&Q.weeklyNotes[activeWk])||'';
+  h+='<div class="scorecard-strip">';
+  h+='<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">';
+  h+='<span class="score-badge '+scCls+'">'+ICONS.chart+' <span>امتیاز اجرای '+esc(activeWkLabel)+': '+(wkSc.pct!=null?fa(wkSc.pct)+'٪':'ثبت نشده')+'</span></span>';
+  if(wkSc.total) h+='<span class="n">'+fa(wkSc.logged)+' از '+fa(wkSc.total)+' مورد ثبت شده</span>';
+  if(seaSc!=null) h+='<span class="chip">میانگین کل فصل: <b>'+fa(seaSc)+'٪</b></span>';
+  h+='<span class="chip" title="در متد سال ۱۲ هفته‌ای، اجرای بالای ۸۵٪ نشانه پیش‌بینی‌پذیری موفقیت هدف است">معیار ۱۲هفته‌ای: ≥۸۵٪</span>';
+  h+='</div>';
+  h+=btn('aiask','کارت امتیاز هفته «'+activeWkLabel+'» من '+(wkSc.pct!=null?wkSc.pct+'٪':'ثبت‌نشده')+' است. وضعیت را تحلیل کن و بگو هفته بعد دقیقاً چه اصلاح کوچکی بدهم؟',ICONS.sparkles+' <span>تحلیل هفته با دستیار</span>','mini ai-btn');
+  h+='<div class="wk-note-box"><label style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px;font-weight:700;color:var(--fg-sec)"><span>بازنگری هفتگی (چه چیزی کار کرد؟ هفته بعد چه تغییری بدهم؟)</span></label><textarea class="f" rows="2" data-k="wn" data-f="'+activeWk+'" placeholder="مثلاً: صبح‌ها ریتم خوب بود، اما عصرها خسته می‌شدم؛ هفته بعد کار سخت را اول صبح می‌گذارم...">'+esc(wkNoteVal)+'</textarea></div>';
+  h+='</div>';
+
   // COMPACT WEEKLY FLOOR TRACKER
   h+='<div class="cd"><div class="cd-head" style="margin-bottom:10px"><h3 class="cd-title">'+ICONS.shield+' <span>پایش هفتگی کف‌های ۴ ارزش پایدار</span></h3>';
   h+='<span class="n">وضعیت «'+esc(activeWkLabel)+'» را مشخص کنید</span></div>';
@@ -2523,17 +2875,24 @@ function renderQuarter(){
     }
 
     if(ed){
-      h+='<div class="edit-panel"><label>عنوان نتیجه‌ی ملموس سه‌ماهه (یک جمله شفاف)<input class="f" data-k="'+k+'" data-f="title" placeholder="نتیجه‌ی ملموس سه‌ماهه..." value="'+esc(it.title)+'"></label>';
+      h+='<div class="edit-panel"><label>عنوان نتیجه‌ی ملموس سه‌ماهه / سنجه پسرو (یک جمله شفاف)<input class="f" data-k="'+k+'" data-f="title" placeholder="نتیجه‌ی ملموس سه‌ماهه..." value="'+esc(it.title)+'"></label>';
       h+='<div class="grid-2">';
       h+='<label>ستون ارزشی مرتبط<select class="f" data-k="'+k+'" data-f="pillar">'+S.vision.items.map(function(v){return '<option value="'+esc(v.name)+'"'+(v.name===it.pillar?' selected':'')+'>'+esc(v.name)+'</option>'}).join('')+'</select></label>';
       h+='<label>نوع گام (جلوگیری از تعهد نابالغانه)<select class="f" data-k="'+k+'" data-f="mode"><option value="exp"'+(it.mode!=='build'?' selected':'')+'>کاوش و آزمایش ارزان (تست فرضیه)</option><option value="build"'+(it.mode==='build'?' selected':'')+'>تعهد و ساختن (تست‌شده و مطمئن)</option></select></label>';
       h+='<label>فرضیه / جهت مرتبط (اختیاری)<select class="f" data-k="'+k+'" data-f="dir"><option value="">— بدون جهت خاص —</option>'+S.vision.items.map(function(v){return v.dirs&&v.dirs.length?'<optgroup label="'+esc(v.name)+'">'+v.dirs.map(function(d){return '<option'+(d.title===it.dir?' selected':'')+'>'+esc(d.title)+'</option>'}).join('')+'</optgroup>':''}).join('')+'</select></label>';
       h+='<label>ساعت در هفته (خارج از کار اصلی)<input class="f" type="number" step="0.5" data-n="1" data-re="1" data-k="'+k+'" data-f="hours" value="'+(+it.hours||0)+'"></label>';
       h+='</div>';
-      h+='<label>معیار پایان و موفقیت (از کجا بفهمم این تست یا هدف به نتیجه رسیده؟)'+fld(k,'done','تعریف دقیق خروجی یا شواهد لازم...',it.done)+'</label>';
-      h+='<label>سیستم و ریتم هفتگی (چه روزی، چه ساعتی، چه گام‌هایی؟)'+fld(k,'rhythm','مثلاً: پنجشنبه صبح‌ها بلوک ۳ ساعته...',it.rhythm,2)+'</label>';
+      h+='<label>فیلتر واقع‌بینی ۸۰/۲۰ (چرا این گام فقط ۱ تا ۲ پله بالاتر از وضعیت فعلی است؟)<input class="f" data-k="'+k+'" data-f="stepCheck" placeholder="مثلاً: الان روزی ۱۰ دقیقه مطالعه دارم و هدف فصل ۲۰ دقیقه پایدار است" value="'+esc(it.stepCheck||'')+'"></label>';
+      h+='<label>سنجه پسرو و معیار پایان (در پایان ۱۲ هفته دقیقاً چه چیزی تحویل داده می‌شود؟)'+fld(k,'done','تعریف دقیق خروجی یا شواهد لازم...',it.done)+'</label>';
+      h+='<label>سنجه پیشرو و ریتم هفتگی (اقدام هفتگی قابل کنترل: چه روزی و چه ساعتی؟)'+fld(k,'rhythm','مثلاً: پنجشنبه صبح‌ها بلوک ۳ ساعته...',it.rhythm,2)+'</label>';
       h+='<div class="act">'+btn('delo',k,'حذف این نتیجه','del mini')+'</div></div>';
     }else{
+      if(it.stepCheck||it.rhythm||it.done){
+        h+='<div class="lead-rhythm-box">';
+        h+='<div class="lead-rhythm-row"><div><b>'+ICONS.repeat+' <span>سنجه پیشرو (اقدام این هفته):</span></b> <span>'+esc(it.rhythm||'تعیین نشده')+'</span></div>'+(it.stepCheck?'<span class="step80-badge">گام ۸۰/۲۰: '+esc(it.stepCheck)+'</span>':'')+'</div>';
+        if(it.done) h+='<div class="n" style="font-size:12px"><b>'+ICONS.flag+' <span>سنجه پسرو (هدف ۹۰ روزه):</span></b> '+esc(it.done)+'</div>';
+        h+='</div>';
+      }
       h+='<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;background:var(--card-alt);padding:8px 12px;border-radius:var(--r-md);border:1px solid var(--line)">';
       h+='<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="n" style="font-size:12px">این هفته ('+esc(activeWkLabel)+'):</span>';
       h+='<div class="st-group">';
@@ -2689,6 +3048,8 @@ function render(){
     var st=isOng?'در جریان':'گذشته';
     return '<div class="item" data-id="'+ev.id+'"><i class="dot" style="background:'+CATS[ev.cat].c+';margin-top:8px"></i><div class="age">'+fmtJ(ev.sd||ageToJ(ev.age))+(ev.ongoing?' تا الان':(ev.ed?' تا '+fmtJ(ev.ed):''))+'<div class="n">'+fa(Math.floor(ev.age))+' سالگی · '+CATS[ev.cat].n+'</div></div><div style="flex:1;min-width:0"><div class="t">'+esc(ev.title)+'</div>'+(ev.note?'<div class="n">'+esc(ev.note)+'</div>':'')+'</div><span class="chip'+(isOng?' build':'')+'">'+st+'</span></div>';
   }).join(''):'<div class="empty">رویدادی با این مشخصات پیدا نشد.</div>';
+  if(typeof renderInlineAiBar==='function') renderInlineAiBar();
+  if(typeof syncAiAutoUndoUI==='function') syncAiAutoUndoUI();
 }
 
 function openM(id,cat,age){
@@ -2776,8 +3137,10 @@ function tgt(k){
   if(k==='g')return S.vision;
   if(k==='qh')return S.qtr;
   if(k==='rv')return S.qtr.review;
+  if(k==='wn'){if(!S.qtr)return null;return S.qtr.weeklyNotes||(S.qtr.weeklyNotes={});}
   if(m=k.match(/^v(\d+)$/))return S.vision.items[m[1]];
   if(m=k.match(/^d(\d+)_(\d+)$/))return S.vision.items[m[1]].dirs[m[2]];
+  if(m=k.match(/^dec(\d+)$/))return (S.vision.decisions=S.vision.decisions||[])[m[1]];
   if(m=k.match(/^o(\d+)$/))return S.qtr.items[m[1]];
   return null;
 }
@@ -2881,9 +3244,24 @@ function onA(e){
     m=k.match(/^d(\d+)_(\d+)$/);
     V.items[m[1]].dirs.splice(m[2],1);ED={};
   }
+  else if(a==='adddec'){
+    var decArr=V.decisions=V.decisions||[];
+    decArr.push({title:'',door:'two-way',status:'waiting',waitUntil:'',note:''});
+    ED['dec'+(decArr.length-1)]=1;
+  }
+  else if(a==='deldec'){
+    (V.decisions=V.decisions||[]).splice(+k,1);ED={};
+  }
+  else if(a==='tgdec'){
+    var decObj=(V.decisions=V.decisions||[])[+k];
+    if(decObj){
+      var dOrd=['waiting','approved','rejected'];
+      decObj.status=dOrd[(dOrd.indexOf(decObj.status||'waiting')+1)%3];
+    }
+  }
   else if(a==='addo'){
     if(Q.items.length<4){
-      Q.items.push({pillar:V.items[0].name,dir:'',mode:'exp',title:'',done:'',rhythm:'',hours:1,pct:0,weeks:[0,0,0,0,0,0,0,0,0,0,0,0]});
+      Q.items.push({pillar:V.items[0].name,dir:'',mode:'exp',title:'',stepCheck:'',done:'',rhythm:'',hours:1,pct:0,weeks:[0,0,0,0,0,0,0,0,0,0,0,0]});
       ED['o'+(Q.items.length-1)]=1;
     }
   }
@@ -2939,10 +3317,12 @@ function extractJsonObject(rawStr) {
 
 function detectPatchObject(d) {
   if (!d || typeof d !== 'object') return null;
-  if (d.patch && typeof d.patch === 'object' && (d.patch.vision || d.patch.quarter)) return d.patch;
-  if (d.quarter && typeof d.quarter === 'object') return { vision: d.vision, quarter: d.quarter };
+  if (d.patch && typeof d.patch === 'object' && (d.patch.vision || d.patch.quarter || d.patch.timeline)) return d.patch;
+  if ((d.quarter && typeof d.quarter === 'object') || (d.timeline && typeof d.timeline === 'object')) {
+    return { vision: d.vision, quarter: d.quarter, timeline: d.timeline };
+  }
   if (d.vision && typeof d.vision === 'object' && !Array.isArray(d.vision.items)) {
-    if (d.vision.updatePillars || d.vision.addDirs || d.vision.updateDirs || d.vision.removeDirs || typeof d.vision.general === 'string') {
+    if (d.vision.updatePillars || d.vision.addDirs || d.vision.updateDirs || d.vision.removeDirs || d.vision.addDecisions || d.vision.updateDecisions || d.vision.removeDecisions || typeof d.vision.general === 'string') {
       return { vision: d.vision };
     }
   }
@@ -3143,7 +3523,9 @@ try{
   if(th)document.documentElement.setAttribute('data-theme',th);
 }catch(e){}
 
+var curTabName='q';
 function tab(t){
+  curTabName=t;
   ['v','q','t'].forEach(function(k){
     $('tab-'+k).style.display=k===t?'':'none';
     var dt=$('tb-'+k);if(dt){dt.className=k===t?'on':'';dt.setAttribute('aria-selected',k===t?'true':'false');}
@@ -3163,6 +3545,7 @@ function tab(t){
     }
   }
   try{localStorage.setItem('lifeTimeline.tab',t)}catch(e){}
+  if(typeof renderInlineAiBar==='function') renderInlineAiBar();
   if(t==='t'){
     var w=$('tl').parentNode;
     w.scrollLeft=Math.max(0,x(S.cur)-w.clientWidth*0.75);
@@ -3213,9 +3596,62 @@ if (tg) {
 // ==========================================================================
 var AI_CFG_KEY = 'lifeTimeline.ai';
 var AI_CHAT_KEY = 'lifeTimeline.aiChat';
-var aiCfg = { apiKey: '', baseUrl: '', model: 'gemini-2.5-flash' };
+var aiCfg = { apiKey: '', baseUrl: '', model: 'gemini-2.5-flash', autoApply: true };
 var aiMessages = [];
 var aiBusy = false;
+var aiUndoStack = [];
+
+function pushAiUndo(lines) {
+  try {
+    aiUndoStack.push({ snap: JSON.stringify(S), lines: lines || [] });
+    if (aiUndoStack.length > 15) aiUndoStack.shift();
+  } catch(e) {}
+}
+
+function syncAiAutoUndoUI() {
+  var isAuto = (aiCfg.autoApply !== false);
+  var chk = $('ai-auto-chk');
+  if (chk) chk.checked = isAuto;
+  var btnAuto = $('ai-btn-auto');
+  if (btnAuto) {
+    btnAuto.classList.toggle('pri', isAuto);
+    btnAuto.textContent = isAuto ? 'اعمال خودکار: روشن ✓' : 'اعمال خودکار: خاموش';
+  }
+  var hasUndo = aiUndoStack.length > 0;
+  var u1 = $('ai-btn-undo');
+  if (u1) u1.style.display = hasUndo ? '' : 'none';
+  var u2 = $('ai-inline-undo');
+  if (u2) u2.style.display = hasUndo ? '' : 'none';
+}
+
+function undoLastAiPatch() {
+  if (!aiUndoStack.length) {
+    showToast('تغییری برای بازگردانی وجود ندارد');
+    return;
+  }
+  try {
+    var entry = aiUndoStack.pop();
+    var prev = JSON.parse(entry.snap);
+    if (prev && typeof prev === 'object') {
+      S = prev;
+      migrate();
+      ED = {};
+      for (var i = aiMessages.length - 1; i >= 0; i--) {
+        if (aiMessages[i].patchStatus === 'applied') {
+          aiMessages[i].patchStatus = 'pending';
+          break;
+        }
+      }
+      saveAiChat();
+      save('آخرین تغییر دستیار بازگردانی شد ↩');
+      render();
+      renderAiChat();
+      syncAiAutoUndoUI();
+    }
+  } catch(e) {
+    showToast('خطا در بازگردانی وضعیت قبلی');
+  }
+}
 
 function loadAiChat() {
   try {
@@ -3242,6 +3678,7 @@ function loadAiCfg() {
         aiCfg.apiKey = p.apiKey || '';
         aiCfg.baseUrl = p.baseUrl || '';
         aiCfg.model = p.model || 'gemini-2.5-flash';
+        aiCfg.autoApply = (p.autoApply !== false);
       }
     }
   } catch(e) {}
@@ -3252,7 +3689,8 @@ function saveAiCfg(nextCfg) {
   aiCfg = {
     apiKey: (nextCfg.apiKey || '').trim(),
     baseUrl: (nextCfg.baseUrl || '').trim().replace(/\/+$/, ''),
-    model: (nextCfg.model || 'gemini-2.5-flash').trim() || 'gemini-2.5-flash'
+    model: (nextCfg.model || 'gemini-2.5-flash').trim() || 'gemini-2.5-flash',
+    autoApply: (nextCfg.autoApply !== undefined) ? !!nextCfg.autoApply : (aiCfg.autoApply !== false)
   };
   var str = JSON.stringify(aiCfg);
   try { localStorage.setItem(AI_CFG_KEY, str); } catch(e) {}
@@ -3273,6 +3711,7 @@ function loadAiCfgFromTgCloud() {
             aiCfg.apiKey = p.apiKey || aiCfg.apiKey || '';
             aiCfg.baseUrl = p.baseUrl || aiCfg.baseUrl || '';
             aiCfg.model = p.model || aiCfg.model || 'gemini-2.5-flash';
+            if (p.autoApply !== undefined) aiCfg.autoApply = !!p.autoApply;
             try { localStorage.setItem(AI_CFG_KEY, JSON.stringify(aiCfg)); } catch(e) {}
             syncAiCfgUI();
           }
@@ -3289,6 +3728,7 @@ function syncAiCfgUI() {
   if (chip) chip.textContent = aiCfg.model || 'gemini-2.5-flash';
   if ($('ai-key')) $('ai-key').value = aiCfg.apiKey || '';
   if ($('ai-base-url')) $('ai-base-url').value = aiCfg.baseUrl || '';
+  syncAiAutoUndoUI();
   var sel = $('ai-model-sel'), custWrap = $('ai-custom-model-wrap'), custInp = $('ai-custom-model');
   if (sel && custWrap && custInp) {
     var known = ['gemini-2.5-flash', 'gemini-2.5-pro', 'gemini-2.0-flash'];
@@ -3338,6 +3778,7 @@ function initQuarterObj(y, s) {
     cap: 5,
     drop: '',
     floorWeeks: {"0":[0,0,0,0,0,0,0,0,0,0,0,0],"1":[0,0,0,0,0,0,0,0,0,0,0,0],"2":[0,0,0,0,0,0,0,0,0,0,0,0],"3":[0,0,0,0,0,0,0,0,0,0,0,0]},
+    weeklyNotes: {},
     items: [],
     review: { a: '', b: '', c: '' }
   };
@@ -3364,11 +3805,14 @@ function buildAiContextSnapshot() {
       })
     };
   });
+  var decSnap = ((S.vision && S.vision.decisions) || []).map(function(dc, di) {
+    return { index: di, title: dc.title, door: dc.door || 'two-way', status: dc.status || 'waiting', waitUntil: dc.waitUntil || '', note: dc.note || '' };
+  });
   var histSnap = (S.hist || []).slice(-6).map(function(h) {
     return { title: h.title, note: h.note || '' };
   });
-  var eventsSnap = (S.events || []).slice().sort(function(a, b){ return b.age - a.age; }).slice(0, 12).map(function(e) {
-    return { cat: CATS[e.cat] ? CATS[e.cat].n : e.cat, title: e.title, ongoing: !!e.ongoing, note: e.note || '' };
+  var eventsSnap = (S.events || []).slice().sort(function(a, b){ return b.age - a.age; }).slice(0, 15).map(function(e) {
+    return { id: e.id, cat: e.cat, catName: CATS[e.cat] ? CATS[e.cat].n : e.cat, title: e.title, sd: e.sd || null, ed: e.ed || null, ongoing: !!e.ongoing, note: e.note || '' };
   });
   var qCap = S.qtr ? (+S.qtr.cap || 0) : 0;
   var qAllocated = S.qtr ? (S.qtr.items || []).reduce(function(t, i){ return t + (+i.hours || 0); }, 0) : 0;
@@ -3376,13 +3820,19 @@ function buildAiContextSnapshot() {
   return {
     todayJalali: curJ,
     todayText: fmtJ(curJ),
+    birthJalali: S.birth || { y: 1376, m: 7, d: 2 },
     currentSeasonWeek: curSeasonInfo,
     selectedWeekIndex: activeWk,
     selectedWeekLabel: activeWkLabel,
     suggestedNextSeason: { y: suggestedYear, s: suggestedSeason, name: SN[suggestedSeason - 1] + ' ' + fa(suggestedYear) },
     userAge: Math.round((S.cur || 0) * 10) / 10,
-    vision: { items: visionSnap, general: (S.vision && S.vision.general) || '' },
+    vision: { items: visionSnap, general: (S.vision && S.vision.general) || '', decisions: decSnap },
     qtr: S.qtr,
+    weeklyScorecard: S.qtr ? {
+      selectedWeek: calcWeekExecutionScore(S.qtr, activeWk),
+      seasonAveragePct: calcSeasonExecutionScore(S.qtr),
+      benchmarkPct: 85
+    } : null,
     quarterCapacitySummary: S.qtr ? {
       cap: qCap,
       allocatedHours: qAllocated,
@@ -3391,54 +3841,61 @@ function buildAiContextSnapshot() {
       maxOutcomes: 4
     } : null,
     recentHistory: histSnap,
-    timelineReadOnlyContext: eventsSnap
+    timelineEvents: eventsSnap
   };
 }
 
 function buildAiSystemPrompt() {
   var snap = buildAiContextSnapshot();
   return [
-    'تو دستیار هوشمند برنامه‌ریزی چابک زندگی «قطب‌نما» هستی و به فارسی روان، شفاف، دلسوز و عملی با کاربر گفتگو می‌کنی.',
-    'فلسفه این برنامه مبتنی بر پذیرش عدم قطعیت (ضد قوی سیاه) است: ۴ ستون پایدار زندگی (کف‌های غیرقابل‌مذاکره) + چرخه‌های سه‌ماهه (۹۰ روزه) با ۱ تا ۳ نتیجه مشخص، تفکیک گام‌ها به «کاوش و آزمایش ارزان» (exp) در برابر «تعهد و ساختن» (build)، رعایت تراز ظرفیت هفتگی (مجموع ساعت نتایج <= cap)، داشتن قانون حذف در بحران (drop)، و اولویت‌دادن به ستون‌هایی که دو هفته پیاپی رد شده‌اند (مقدار 3 در floorWeeks).',
+    'تو دستیار هوشمند و مجری AI-First برنامه «قطب‌نما و برنامه‌ریزی چابک زندگی» هستی و به فارسی روان، شفاف، دلسوز و عملی کارهای کاربر را انجام می‌دهی.',
+    'اصول محوری برنامه:',
+    '- ضد قوی سیاه و عدم قطعیت: ۴ ستون پایدار (سلامتی/طول عمر به عنوان کف غیرقابل‌مذاکره، حرفه و ثروت با بازی برد-برد، روابط عمیق و حلقه اول هاروارد، تجربه‌ها و پروژه ذهن)، چرخه‌های ۹۰ روزه (فصل‌ها)، تفکیک «کاوش ارزان» (exp) از «تعهد و ساختن» (build)، قانون حذف در بحران (drop)، و بازگشت فوری به ستون‌هایی که دو هفته پیاپی رد شده‌اند (3 در floorWeeks).',
+    '- سال ۱۲ هفته‌ای (12-Week Year): تفکیک روشن بین «سنجه پیشرو / اقدام هفتگی قابل کنترل» (rhythm) و «سنجه پسرو / خروجی ۹۰ روزه» (title و done)، هدف اجرای هفتگی حداقل ۸۵٪ در کارت امتیاز (weeklyScorecard)، و ثبت بازنگری کوتاه هفتگی (weeklyNotes).',
+    '- قانون ۸۰/۲۰ و گام واقع‌بینانه: هر خروجی فصل باید حداکثر ۱ تا ۲ پله بالاتر از وضعیت فعلی باشد (در فیلد stepCheck توضیح داده شود).',
+    '- محک تصمیم‌گیری (decisions): تفکیک «درب دوطرفه» (two-way: برگشت‌پذیر و آماده تست سریع ۷ روزه) در برابر «درب یک‌طرفه» (one-way: سنگین و پرهزینه؛ نیازمند قانون انتظار ۷۲ ساعته در waitUntil و مشورت با نسخه ۳ سال آینده خود در note).',
+    '- تایم‌لاین زندگی (timeline): امکان ثبت و ویرایش رویدادهای زندگی با دسته‌بندی‌های p (شخصی)، e (درس و مهارت)، c (کار و حرفه)، h (محل زندگی).',
     '',
     'وضعیت فعلی داده‌های کاربر (JSON):',
     JSON.stringify(snap),
     '',
-    'وظیفه و شیوه مصاحبه تو:',
-    '1. به کاربر در طراحی، اصلاح و شفاف‌سازی «برنامه فصل سه‌ماهه»، «ثبت گزارش هفتگی کف‌ها و نتایج»، «ستون‌های ویژن و فرضیه‌های کاوش» و «بازبینی پایان فصل» کمک کن.',
-    '2. تغییر تایم‌لاین رویدادها (events) یا حذف تاریخچه (hist) در حیطه مجاز تو نیست؛ رویدادهای تایم‌لاین فقط برای شناخت پس‌زمینه زندگی کاربر ارائه شده‌اند.',
-    '3. قاعده مهم مصاحبه پیش از ثبت (بسیار مهم): اگر کاربر فقط یک خواسته کلی گفت (مثلاً «می‌خواهم زبان بخوانم» یا «می‌خواهم یک مورد به فصل اضافه کنم») و هنوز جزئیات کلیدی را نگفته و صراحتاً نخواسته «خودت بدون پرسش پر کنی»، حتماً پیش از ساختن patch، ابتدا patch را null بگذار و با یک چک‌لیست کوتاه و شماره‌گذاری‌شده فقط موارد نامشخص را از او بپرس (و در آرایه suggestions هم ۲ تا ۴ گزینه پاسخ کوتاه و قابل کلیک قرار بده تا با یک ضربه جواب بدهد):',
-    '   - برای ثبت گزارش هفتگی (Check-in هفتگی کف‌ها و نتایج): اگر کاربر خواست گزارش هفته را ثبت کند یا در یک جمله گفت این هفته چطور گذشت، وضعیت ۴ ستون ویژن (floorUpdates با کدهای: 1=رعایت شد، 2=مرزی، 3=رد شد، 0=ثبت‌نشده) و وضعیت نتایج فصل (outcomeWeekUpdates با کدهای: 1=انجام شد، 2=نصفه، 3=نشد، 0=ثبت‌نشده) را برای هفته انتخابی (selectedWeekIndex) تنظیم کن.',
-    '   - برای افزودن نتیجه به فصل: (الف) آیا در حد «کاوش و آزمایش ارزان» است یا «تعهد و ساختن»؟ (ب) چند ساعت در هفته وقت می‌گذارد و با توجه به quarterCapacitySummary چقدر با ظرفیت آزاد فعلی سازگار است؟ (پ) در پایان ۹۰ روز چه خروجی ملموسی معیار موفقیت است؟ (ت) ریتم هفتگی پیشنهادی‌اش چیست؟ (ث) اگر الان ۴ نتیجه ثبت شده است کدام یک جایگزین شود، و اگر هنوز فصلی شروع نشده (qtr: null) آیا همین فصل جاری را با چه تمرکز اصلی و سقف ساعتی شروع کنیم؟',
-    '   - برای مدیریت بخش ویژن (حداقل‌های ستون‌ها، قوانین عمومی، فرضیه‌ها و مسیرها): ابتدا بر اساس نوع درخواست سوال بپرس:',
-    '     * اگر بحث تغییر/افزودن/حذف «حداقل‌ها یا قوانین ستون» است: بپرس مربوط به کدام ستون یا قوانین عمومی است، دقیقاً کدام خط تغییر کند یا اضافه شود، و چه حداقل واقع‌بینانه‌ای در هفته‌های شلوغ هم قابل حفظ است؟ (در updatePillars هنگام ویرایش text حتماً سایر خطوط فعلی کاربر را حفظ کن مگر اینکه خودش حذف آن‌ها را خواسته باشد).',
-    '     * اگر بحث افزودن «فرضیه یا مسیر جدید» است: بپرس زیرمجموعه کدام ستون باشد، چرایی فرضیه چیست (hyp)، معیار ادامه یا توقف پس از تست ۹۰ روزه چیست (crit)، و وضعیت فعلی چه باشد (active یا paused)؟',
-    '     * اگر بحث مدیریت/تغییر وضعیت/حذف «مسیرها و فرضیه‌های موجود» است: فهرست کوتاه مسیرهای فعلی را نشان بده و بپرس کدام مورد تغییر کند، وضعیتش به «متوقف» (paused) یا «کنار گذاشته شد» (dropped) برود یا از لیست حذف شود (removeDirs)؟',
-    '   - برای بازبینی پایان فصل: اول داده‌های ۱۲ هفته ثبت‌شده در qtr را خلاصه کن و درباره سه محور بازبینی (چه جواب داد، چه جواب نداد، تصمیم فصل بعد) از او بپرس.',
-    '4. به محض اینکه کاربر به سوال‌ها پاسخ داد (یا از ابتدا اطلاعات کافی داد، یا خودش گفت «خودت پیشنهاد بده و بساز»)، در کنار توضیح فارسی در فیلد reply، بسته تغییر کامل و دقیق را در فیلد patch بگذار تا کاربر با یک کلیک پیش‌نمایش و اعمال کند.',
-    '5. مجموع نتایج یک فصل (qtr.items) حداکثر ۴ مورد (و ترجیحاً ۱ تا ۳ مورد) است. برای pillar دقیقاً یکی از نام‌های فعلی ستون‌ها در vision.items را بنویس.',
+    'رفتار AI-First و قوانین تولید بسته تغییر (patch):',
+    '1. هر زمان کاربر فرمان یا گزارش روشنی داد (مثلاً ثبت وضعیت هفته، اضافه یا ویرایش خروجی ۱۲ هفته‌ای، ثبت تصمیم برای ارزیابی، نوشتن بازنگری هفته، تغییر کف ستون‌ها، یا ثبت رویداد روی تایم‌لاین)، مستقیم و دقیق patch کامل را بساز تا بلافاصله در برنامه اعمال شود و توضیح کوتاه و شفاف بده.',
+    '2. فقط زمانی patch را null بگذار و سؤال کوتاه بپرس (همراه ۲ تا ۴ گزینه قابل کلیک در suggestions) که نیت کاربر کاملاً مبهم باشد و اطلاعات کلیدی قابل حدس نباشد (مثلاً تاریخ یا عنوان نامشخص برای یک رویداد تازه تایم‌لاین، یا انتخاب بین حذف کدام هدف وقتی سقف ۴ خروجی پر است).',
+    '3. کدهای هفته: برای کف‌ها 1=رعایت شد، 2=مرزی، 3=رد شد، 0=ثبت‌نشده. برای نتایج فصل 1=انجام شد، 2=نصفه، 3=نشد، 0=ثبت‌نشده. هفته پیش‌فرض برابر selectedWeekIndex است.',
+    '4. هنگام ویرایش متن ستون‌ها (updatePillars) حتماً خطوط قبلی مهم کاربر را حفظ کن مگر اینکه حذف آن را خواسته باشد. نام pillar در نتایج فصل باید دقیقاً یکی از نام‌های فعلی ستون‌های vision.items باشد.',
+    '5. اگر کاربر خواست تایم‌لاین را به‌روز کند (timeline.addEvents)، تاریخ شمسی sd را به صورت { "y": 1403, "m": 1, "d": 1 } و بعد از birthJalali و حداکثر تا todayJalali بساز.',
     '',
     'خروجی تو باید حتماً یک JSON معتبر دقیقاً با ساختار زیر باشد (بدون هیچ متن اضافه بیرون از JSON):',
     '{',
-    '  "reply": "متن پاسخ و راهنمایی فارسی برای کاربر",',
-    '  "suggestions": ["پاسخ سریع یا گام بعدی پیشنهادی ۱", "پاسخ سریع ۲"],',
+    '  "reply": "متن پاسخ کوتاه و کاربردی فارسی برای کاربر",',
+    '  "suggestions": ["پاسخ سریع یا گام بعدی ۱", "پاسخ سریع ۲"],',
     '  "patch": null | {',
     '    "vision": {',
     '      "general": "متن کامل قوانین عمومی تصمیم‌گیری (اختیاری)",',
-    '      "updatePillars": [{ "index": 0, "name": "عنوان ستون (اختیاری)", "text": "متن کامل قوانین و حداقل‌های ستون با خط جدید (اختیاری)" }],',
-    '      "addDirs": [{ "pillarIndex": 1, "title": "عنوان فرضیه یا مسیر", "hyp": "فرضیه...", "crit": "معیار تصمیم...", "status": "active" }],',
+    '      "updatePillars": [{ "index": 0, "name": "عنوان ستون (اختیاری)", "text": "متن کامل قوانین و حداقل‌های ستون (اختیاری)" }],',
+    '      "addDirs": [{ "pillarIndex": 1, "title": "عنوان فرضیه", "hyp": "فرضیه...", "crit": "معیار ادامه یا توقف...", "status": "active" }],',
     '      "updateDirs": [{ "pillarIndex": 1, "dirIndex": 0, "title": "...", "hyp": "...", "crit": "...", "status": "active|paused|dropped" }],',
-    '      "removeDirs": [{ "pillarIndex": 1, "dirIndex": 0 }]',
+    '      "removeDirs": [{ "pillarIndex": 1, "dirIndex": 0 }],',
+    '      "addDecisions": [{ "title": "عنوان تصمیم", "door": "two-way|one-way", "status": "waiting|approved|rejected", "waitUntil": "۷۲ ساعت مکث یا تست ۷ روزه", "note": "تست کوچک یا نظر خود ۳ سال آینده..." }],',
+    '      "updateDecisions": [{ "index": 0, "title": "...", "door": "two-way|one-way", "status": "waiting|approved|rejected", "waitUntil": "...", "note": "..." }],',
+    '      "removeDecisions": [0]',
     '    },',
     '    "quarter": {',
     '      "startNew": { "y": 1405, "s": 3 },',
     '      "framework": { "theme": "تمرکز اصلی فصل", "cap": 6, "drop": "قانون حذف در بحران" },',
-    '      "addOutcomes": [{ "title": "عنوان نتیجه ملموس", "pillar": "نام دقیق ستون", "dir": "نام فرضیه مرتبط یا خالی", "mode": "exp|build", "hours": 2, "done": "معیار پایان", "rhythm": "ریتم هفتگی" }],',
-    '      "updateOutcomes": [{ "index": 0, "title": "...", "pillar": "...", "dir": "...", "mode": "exp|build", "hours": 2, "done": "...", "rhythm": "...", "pct": 0 }],',
+    '      "addOutcomes": [{ "title": "عنوان خروجی ۹۰ روزه", "pillar": "نام دقیق ستون", "dir": "", "mode": "exp|build", "hours": 2, "stepCheck": "چرا ۱ تا ۲ پله بالاتر از وضعیت فعلی است", "done": "معیار پایان (سنجه پسرو)", "rhythm": "ریتم هفتگی قابل کنترل (سنجه پیشرو)" }],',
+    '      "updateOutcomes": [{ "index": 0, "title": "...", "pillar": "...", "dir": "...", "mode": "exp|build", "hours": 2, "stepCheck": "...", "done": "...", "rhythm": "...", "pct": 0 }],',
     '      "removeOutcomeIndices": [0],',
     '      "floorUpdates": [{ "pillarIndex": 0, "weekIndex": 6, "status": 1 }],',
     '      "outcomeWeekUpdates": [{ "outcomeIndex": 0, "weekIndex": 6, "status": 1 }],',
+    '      "weeklyNotes": { "6": "یادداشت بازنگری و اصلاح هفته" },',
     '      "review": { "a": "چه چیزهایی جواب داد", "b": "چه چیزهایی جواب نداد", "c": "تصمیم برای فصل بعد" }',
+    '    },',
+    '    "timeline": {',
+    '      "addEvents": [{ "cat": "p|e|c|h", "title": "عنوان رویداد", "sd": { "y": 1403, "m": 7, "d": 1 }, "ed": null, "ongoing": false, "note": "توضیح کوتاه یا درس‌آموخته" }],',
+    '      "updateEvents": [{ "id": "e123", "cat": "c", "title": "...", "sd": { "y": 1403, "m": 7, "d": 1 }, "ed": null, "ongoing": true, "note": "..." }],',
+    '      "removeEventIds": ["e123"]',
     '    }',
     '  }',
     '}'
@@ -3467,7 +3924,7 @@ function parseGeminiPayload(rawText) {
     return { reply: txt, suggestions: [], patch: null };
   }
   var patch = (parsed.patch && typeof parsed.patch === 'object') ? parsed.patch : null;
-  if (patch && !patch.vision && !patch.quarter) patch = null;
+  if (patch && !patch.vision && !patch.quarter && !patch.timeline) patch = null;
   var sugs = Array.isArray(parsed.suggestions)
     ? parsed.suggestions.map(function(s){ return String(s || '').trim(); }).filter(Boolean).slice(0, 4)
     : [];
@@ -3514,6 +3971,21 @@ function summarizeAiPatch(patch) {
         lines.push('حذف مسیر/فرضیه «' + dTitle + '»');
       });
     }
+    if (Array.isArray(v.addDecisions)) {
+      v.addDecisions.forEach(function(dc) {
+        lines.push('ثبت تصمیم جدید: «' + (dc.title || 'بدون عنوان') + '» (' + doorLbl(dc.door) + ')');
+      });
+    }
+    if (Array.isArray(v.updateDecisions)) {
+      v.updateDecisions.forEach(function(dc) {
+        var curDec = S.vision.decisions && S.vision.decisions[dc.index];
+        var dcTitle = dc.title || (curDec && curDec.title) || ('شماره ' + fa((dc.index || 0) + 1));
+        lines.push('به‌روزرسانی تصمیم «' + dcTitle + '»' + (dc.status ? ' ← ' + decStLbl(dc.status) : ''));
+      });
+    }
+    if (Array.isArray(v.removeDecisions) && v.removeDecisions.length) {
+      lines.push('حذف ' + fa(v.removeDecisions.length) + ' مورد از فهرست تصمیم‌ها');
+    }
   }
   var q = patch.quarter;
   if (q) {
@@ -3559,8 +4031,27 @@ function summarizeAiPatch(patch) {
         lines.push('ثبت وضعیت هفتگی «' + oTitle + '»: ' + outStNames[stCode2]);
       });
     }
+    if (q.weeklyNotes && typeof q.weeklyNotes === 'object' && Object.keys(q.weeklyNotes).length) {
+      lines.push('ثبت یادداشت و بازنگری هفتگی (' + fa(Object.keys(q.weeklyNotes).length) + ' هفته)');
+    }
     if (q.review) {
       lines.push('ثبت یا تکمیل متن بازبینی پایان فصل');
+    }
+  }
+  var tl = patch.timeline;
+  if (tl && typeof tl === 'object') {
+    if (Array.isArray(tl.addEvents)) {
+      tl.addEvents.forEach(function(ev) {
+        lines.push('افزودن رویداد تایم‌لاین: «' + (ev.title || 'بدون عنوان') + '»');
+      });
+    }
+    if (Array.isArray(tl.updateEvents)) {
+      tl.updateEvents.forEach(function(ev) {
+        lines.push('ویرایش رویداد تایم‌لاین' + (ev.title ? ': «' + ev.title + '»' : ''));
+      });
+    }
+    if (Array.isArray(tl.removeEventIds) && tl.removeEventIds.length) {
+      lines.push('حذف ' + fa(tl.removeEventIds.length) + ' رویداد از تایم‌لاین');
     }
   }
   return lines;
@@ -3568,6 +4059,7 @@ function summarizeAiPatch(patch) {
 
 function applyAiPatch(patch) {
   if (!patch || typeof patch !== 'object') return false;
+  pushAiUndo(summarizeAiPatch(patch));
   var v = patch.vision;
   if (v && typeof v === 'object') {
     if (typeof v.general === 'string') S.vision.general = v.general;
@@ -3616,13 +4108,45 @@ function applyAiPatch(patch) {
         if (arr && !isNaN(di) && di >= 0 && di < arr.length) arr.splice(di, 1);
       });
     }
+    if (Array.isArray(v.addDecisions)) {
+      S.vision.decisions = S.vision.decisions || [];
+      v.addDecisions.forEach(function(dc) {
+        S.vision.decisions.push({
+          title: String(dc.title || '').trim(),
+          door: dc.door === 'one-way' ? 'one-way' : 'two-way',
+          status: (dc.status === 'approved' || dc.status === 'rejected') ? dc.status : 'waiting',
+          waitUntil: String(dc.waitUntil || ''),
+          note: String(dc.note || '')
+        });
+      });
+    }
+    if (Array.isArray(v.updateDecisions)) {
+      S.vision.decisions = S.vision.decisions || [];
+      v.updateDecisions.forEach(function(dc) {
+        var idx = parseInt(dc.index, 10);
+        var tgtDec = S.vision.decisions[idx];
+        if (tgtDec) {
+          if (typeof dc.title === 'string') tgtDec.title = dc.title;
+          if (dc.door === 'one-way' || dc.door === 'two-way') tgtDec.door = dc.door;
+          if (dc.status === 'waiting' || dc.status === 'approved' || dc.status === 'rejected') tgtDec.status = dc.status;
+          if (typeof dc.waitUntil === 'string') tgtDec.waitUntil = dc.waitUntil;
+          if (typeof dc.note === 'string') tgtDec.note = dc.note;
+        }
+      });
+    }
+    if (Array.isArray(v.removeDecisions) && S.vision.decisions) {
+      v.removeDecisions.slice().sort(function(a, b){ return b - a; }).forEach(function(idx) {
+        var i = parseInt(idx, 10);
+        if (!isNaN(i) && i >= 0 && i < S.vision.decisions.length) S.vision.decisions.splice(i, 1);
+      });
+    }
   }
 
   var q = patch.quarter;
   if (q && typeof q === 'object') {
     if (q.startNew && !S.qtr) {
       S.qtr = initQuarterObj(q.startNew.y, q.startNew.s);
-    } else if (!S.qtr && (q.framework || (Array.isArray(q.addOutcomes) && q.addOutcomes.length) || (Array.isArray(q.floorUpdates) && q.floorUpdates.length) || (Array.isArray(q.outcomeWeekUpdates) && q.outcomeWeekUpdates.length) || q.review)) {
+    } else if (!S.qtr && (q.framework || (Array.isArray(q.addOutcomes) && q.addOutcomes.length) || (Array.isArray(q.floorUpdates) && q.floorUpdates.length) || (Array.isArray(q.outcomeWeekUpdates) && q.outcomeWeekUpdates.length) || q.weeklyNotes || q.review)) {
       var curJ = gToJ(new Date());
       S.qtr = initQuarterObj(curJ.y, Math.ceil(curJ.m / 3));
     }
@@ -3649,6 +4173,7 @@ function applyAiPatch(patch) {
             if (typeof o.dir === 'string') it.dir = o.dir;
             if (o.mode === 'build' || o.mode === 'exp') it.mode = o.mode;
             if (o.hours != null && !isNaN(parseFloat(o.hours))) it.hours = Math.max(0, parseFloat(o.hours));
+            if (typeof o.stepCheck === 'string') it.stepCheck = o.stepCheck;
             if (typeof o.done === 'string') it.done = o.done;
             if (typeof o.rhythm === 'string') it.rhythm = o.rhythm;
             if (o.pct != null && !isNaN(parseFloat(o.pct))) it.pct = Math.max(0, Math.min(100, parseFloat(o.pct)));
@@ -3666,6 +4191,7 @@ function applyAiPatch(patch) {
               dir: String(o.dir || ''),
               mode: o.mode === 'build' ? 'build' : 'exp',
               title: String(o.title || ''),
+              stepCheck: String(o.stepCheck || ''),
               done: String(o.done || ''),
               rhythm: String(o.rhythm || ''),
               hours: !isNaN(parseFloat(o.hours)) ? Math.max(0, parseFloat(o.hours)) : 1,
@@ -3708,6 +4234,15 @@ function applyAiPatch(patch) {
           }
         });
       }
+      if (q.weeklyNotes && typeof q.weeklyNotes === 'object') {
+        S.qtr.weeklyNotes = S.qtr.weeklyNotes || {};
+        Object.keys(q.weeklyNotes).forEach(function(wkKey) {
+          var wNum = parseInt(wkKey, 10);
+          if (!isNaN(wNum) && wNum >= 0 && wNum <= 11) {
+            S.qtr.weeklyNotes[wNum] = String(q.weeklyNotes[wkKey] || '');
+          }
+        });
+      }
       if (q.review && typeof q.review === 'object') {
         S.qtr.review = S.qtr.review || { a: '', b: '', c: '' };
         if (typeof q.review.a === 'string') S.qtr.review.a = q.review.a;
@@ -3716,10 +4251,72 @@ function applyAiPatch(patch) {
       }
     }
   }
+
+  var tl = patch.timeline;
+  if (tl && typeof tl === 'object') {
+    S.events = S.events || [];
+    if (Array.isArray(tl.removeEventIds) && tl.removeEventIds.length) {
+      S.events = S.events.filter(function(ev){ return tl.removeEventIds.indexOf(ev.id) === -1; });
+    }
+    if (Array.isArray(tl.updateEvents)) {
+      tl.updateEvents.forEach(function(ue) {
+        var idx = -1;
+        for (var k = 0; k < S.events.length; k++) {
+          if (S.events[k].id === ue.id) { idx = k; break; }
+        }
+        if (idx === -1) return;
+        var curEv = S.events[idx];
+        var nextCat = (ue.cat && CATS[ue.cat] && ue.cat !== 'q') ? ue.cat : curEv.cat;
+        var nextSd = (ue.sd && ue.sd.y) ? { y: parseInt(ue.sd.y, 10), m: parseInt(ue.sd.m, 10) || 0, d: parseInt(ue.sd.d, 10) || 0 } : curEv.sd;
+        var nextOng = (ue.ongoing !== undefined) ? !!ue.ongoing : curEv.ongoing;
+        var nextEd = nextOng ? null : ((ue.ed && ue.ed.y) ? { y: parseInt(ue.ed.y, 10), m: parseInt(ue.ed.m, 10) || 0, d: parseInt(ue.ed.d, 10) || 0 } : curEv.ed);
+        var nextAge = nextSd ? jToAge(nextSd, false) : curEv.age;
+        var nextEnd = (!nextOng && nextEd) ? jToAge(nextEd, true) : null;
+        S.events[idx] = {
+          id: curEv.id,
+          cat: nextCat,
+          title: typeof ue.title === 'string' ? ue.title : curEv.title,
+          age: (nextAge != null && nextAge >= 0) ? nextAge : curEv.age,
+          sd: nextSd,
+          ed: nextEd,
+          status: curEv.status || '',
+          ongoing: nextOng,
+          end: nextEnd,
+          note: typeof ue.note === 'string' ? ue.note : (curEv.note || '')
+        };
+      });
+    }
+    if (Array.isArray(tl.addEvents)) {
+      tl.addEvents.forEach(function(ae, idxOffset) {
+        var curJ2 = gToJ(new Date());
+        var sd = (ae.sd && ae.sd.y) ? { y: parseInt(ae.sd.y, 10), m: parseInt(ae.sd.m, 10) || 1, d: parseInt(ae.sd.d, 10) || 1 } : curJ2;
+        var ong = !!ae.ongoing;
+        var ed = (!ong && ae.ed && ae.ed.y) ? { y: parseInt(ae.ed.y, 10), m: parseInt(ae.ed.m, 10) || 1, d: parseInt(ae.ed.d, 10) || 1 } : null;
+        var ageVal = jToAge(sd, false);
+        if (ageVal == null || ageVal < 0) ageVal = Math.max(0, S.cur || 0);
+        if (ageVal > (S.cur || 0) + 1) ageVal = S.cur || ageVal;
+        var endVal = (!ong && ed) ? jToAge(ed, true) : null;
+        var catKey = (ae.cat && CATS[ae.cat] && ae.cat !== 'q') ? ae.cat : 'p';
+        S.events.push({
+          id: 'e' + (Date.now() + idxOffset),
+          cat: catKey,
+          title: String(ae.title || 'رویداد جدید'),
+          age: ageVal,
+          sd: sd,
+          ed: ed,
+          status: '',
+          ongoing: ong,
+          end: (endVal != null && endVal > ageVal) ? endVal : null,
+          note: String(ae.note || '')
+        });
+      });
+    }
+  }
   ED = {};
   migrate();
   save('تغییرات دستیار در برنامه ثبت شد ✓');
   render();
+  syncAiAutoUndoUI();
   tgHaptic('success');
   return true;
 }
@@ -3785,13 +4382,15 @@ function renderAiChat() {
   box.scrollTop = box.scrollHeight;
 }
 
-async function sendAiPrompt(userText) {
+async function sendAiPrompt(userText, opts) {
   var txt = String(userText || '').trim();
   if (!txt || aiBusy) return;
+  var fromInline = !!(opts && opts.inline);
 
   if (!aiCfg.apiKey && !aiCfg.baseUrl) {
     $('ai-inp').value = txt;
     $('ai-bridge-panel').classList.add('on');
+    $('ov-ai').classList.add('on');
     showToast('کلید API تنظیم نشده؛ از «پل دستیار بیرونی» یا «تنظیمات» استفاده کنید');
     return;
   }
@@ -3802,6 +4401,10 @@ async function sendAiPrompt(userText) {
   $('ai-inp').style.height = 'auto';
   aiBusy = true;
   $('ai-send').disabled = true;
+  if ($('ai-inline-go')) {
+    $('ai-inline-go').disabled = true;
+    $('ai-inline-go').textContent = 'در حال اجرا...';
+  }
   renderAiChat();
 
   try {
@@ -3854,15 +4457,29 @@ async function sendAiPrompt(userText) {
     }
 
     var parsed = parseGeminiPayload(candText);
+    var pLines = parsed.patch ? summarizeAiPatch(parsed.patch) : [];
+    var hasPatch = !!(parsed.patch && pLines.length);
+    var shouldAuto = hasPatch && (aiCfg.autoApply !== false);
+    if (shouldAuto) {
+      applyAiPatch(parsed.patch);
+    }
     aiMessages.push({
       role: 'bot',
       text: parsed.reply,
       suggestions: parsed.suggestions || [],
-      patch: parsed.patch,
-      patchStatus: parsed.patch ? 'pending' : null,
+      patch: hasPatch ? parsed.patch : null,
+      patchStatus: hasPatch ? (shouldAuto ? 'applied' : 'pending') : null,
       apiText: JSON.stringify({ reply: parsed.reply, suggestions: parsed.suggestions || [], patch: parsed.patch || null })
     });
     saveAiChat();
+    if (fromInline) {
+      if (shouldAuto) {
+        if ($('ai-inline-inp')) $('ai-inline-inp').value = '';
+        showToast(parsed.reply ? parsed.reply.slice(0, 75) + (parsed.reply.length > 75 ? '...' : '') : 'انجام شد ✓');
+      } else {
+        openAiM();
+      }
+    }
   } catch(err) {
     var msg = (err && err.message) ? err.message : 'خطا در برقراری ارتباط با Gemini';
     if (/failed to fetch|networkerror|load failed/i.test(msg)) {
@@ -3870,10 +4487,16 @@ async function sendAiPrompt(userText) {
     }
     aiMessages.push({ role: 'err', text: msg });
     saveAiChat();
+    if (fromInline) openAiM();
   } finally {
     aiBusy = false;
     $('ai-send').disabled = false;
+    if ($('ai-inline-go')) {
+      $('ai-inline-go').disabled = false;
+      $('ai-inline-go').innerHTML = ICONS.sparkles + ' <span>انجام بده</span>';
+    }
     renderAiChat();
+    syncAiAutoUndoUI();
   }
 }
 
@@ -4007,13 +4630,102 @@ $('ai-cfg-save').onclick = function() {
   saveAiCfg({
     apiKey: $('ai-key').value,
     baseUrl: $('ai-base-url').value,
-    model: mdl
+    model: mdl,
+    autoApply: $('ai-auto-chk') ? $('ai-auto-chk').checked : true
   });
   $('ai-cfg-msg').textContent = 'تنظیمات ذخیره شد ✓';
   $('ai-cfg-panel').classList.remove('on');
   renderAiChat();
   showToast('تنظیمات دستیار ذخیره شد');
 };
+if ($('ai-btn-auto')) {
+  $('ai-btn-auto').onclick = function() {
+    saveAiCfg({
+      apiKey: aiCfg.apiKey,
+      baseUrl: aiCfg.baseUrl,
+      model: aiCfg.model,
+      autoApply: !(aiCfg.autoApply !== false)
+    });
+    showToast(aiCfg.autoApply ? 'حالت خودکار روشن شد: تغییرات بلافاصله اعمال می‌شوند' : 'حالت خودکار خاموش شد: پیش‌نمایش و تأیید دستی');
+  };
+}
+if ($('ai-btn-undo')) $('ai-btn-undo').onclick = undoLastAiPatch;
+if ($('ai-inline-undo')) $('ai-inline-undo').onclick = undoLastAiPatch;
+if ($('btn-ai-tl')) {
+  $('btn-ai-tl').onclick = function() {
+    openAiM('می‌خواهم یک رویداد جدید روی تایم‌لاین زندگی‌ام ثبت کنم؛ بپرس چه اتفاقی افتاد و حدوداً چه سال یا فصلی بود.');
+  };
+}
+
+function renderInlineAiBar() {
+  var box = $('ai-inline-chips');
+  if (!box) return;
+  var curTab = curTabName || 'q';
+  var chips = [];
+  if (curTab === 'q') {
+    if (!S.qtr) {
+      chips = [
+        { l: 'شروع فصل ۱۲ هفته‌ای جدید', p: 'می‌خواهم همین فصل جاری را با متد سال ۱۲ هفته‌ای و قانون ۸۰/۲۰ شروع کنم؛ از من ۳ سؤال کوتاه بپرس.' },
+        { l: 'پیشنهاد ۱ هدف واقعی برای این فصل', p: 'با توجه به تاریخچه و ۴ ستونم، ۱ هدف آزمایشی (گام ۸۰/۲۰) با سنجه پیشرو و پسرو پیشنهاد بده.' }
+      ];
+    } else {
+      var cw = getCurSeasonWeek(S.qtr);
+      var aWk = selWk != null ? Math.max(0, Math.min(11, selWk)) : cw.dotIdx;
+      var aLbl = formatWeekLabel(aWk, S.qtr.s, aWk === cw.dotIdx);
+      chips = [
+        { l: 'گزارش سریع ' + aLbl, p: 'می‌خواهم وضعیت «' + aLbl + '» را ثبت کنم؛ با یک پرسش کوتاه وضعیت ۴ ستون و نتایج را بپرس و در برنامه ثبت کن.' },
+        { l: 'تحلیل کارت امتیاز (هدف ≥۸۵٪)', p: 'کارت امتیاز ۱۲ هفته‌ای و تراز ظرفیت فصل را بررسی کن و بگو هفته بعد دقیقاً چه اصلاح کوچکی بدهم.' },
+        { l: 'طراحی گام ۸۰/۲۰ جدید', p: 'یک خروجی جدید متناسب با ظرفیت باقی‌مانده و ۱ تا ۲ پله بالاتر از وضعیت فعلی طراحی کن.' }
+      ];
+      var brokenAny = false;
+      (S.vision.items || []).forEach(function(vi, idx) {
+        var fw = (S.qtr.floorWeeks && S.qtr.floorWeeks[idx]) || [];
+        for (var w = 0; w < 11; w++) { if (fw[w] === 3 && fw[w + 1] === 3) brokenAny = true; }
+      });
+      if (brokenAny) {
+        chips.unshift({ l: 'بازیابی ستون آسیب‌دیده ⚠️', p: 'یکی از کف‌های ۴ ستونم ۲ هفته پیاپی رد شده؛ کمک کن بلافاصله با حذف یا کوچک‌سازی بار فصل به کف برگردم.' });
+      }
+    }
+  } else if (curTab === 'v') {
+    chips = [
+      { l: 'فیلتر تصمیم (درب یک‌طرفه/دوطرفه)', p: 'یک تصمیم مهم پیش رو دارم؛ ارزیابی کن درب یک‌طرفه است یا دوطرفه و در محک تصمیم‌گیری ثبتش کن.' },
+      { l: 'بهینه‌سازی کف‌های غیرقابل‌مذاکره', p: 'حداقل‌های ۴ ستون من را با نگاه طول عمر و مطالعه هاروارد بررسی کن تا در هفته‌های شلوغ هم قابل حفظ باشند.' },
+      { l: 'افزودن فرضیه تست ارزان', p: 'بر اساس ستون کار و تجربه‌ها، یک فرضیه آزمایش ارزان به بخش ویژن اضافه کن.' }
+    ];
+  } else {
+    chips = [
+      { l: 'ثبت رویداد با زبان ساده', p: 'می‌خواهم یک رویداد جدید روی تایم‌لاین ثبت کنم؛ موضوع و تاریخ تقریبی‌اش را از من بپرس.' },
+      { l: 'الگوها و درس‌های زندگی من تا الان', p: 'رویدادهای تایم‌لاین و تاریخچه فصل‌هایم را تحلیل کن و بگو بزرگ‌ترین الگوها و مزیت‌های من چه بوده است.' }
+    ];
+  }
+  box.innerHTML = chips.map(function(c) {
+    return '<button type="button" class="ai-cmd-chip" data-ai-cmd="' + esc(c.p) + '">' + ICONS.sparkles + ' <span>' + esc(c.l) + '</span></button>';
+  }).join('');
+}
+
+if ($('ai-inline-go')) {
+  $('ai-inline-go').onclick = function() {
+    var inp = $('ai-inline-inp');
+    var v = inp ? inp.value.trim() : '';
+    if (!v) { openAiM(); return; }
+    sendAiPrompt(v, { inline: true });
+  };
+}
+if ($('ai-inline-inp')) {
+  $('ai-inline-inp').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      var v = this.value.trim();
+      if (v) sendAiPrompt(v, { inline: true });
+    }
+  });
+}
+if ($('ai-inline-chips')) {
+  $('ai-inline-chips').onclick = function(e) {
+    var b = e.target.closest('[data-ai-cmd]');
+    if (b && !aiBusy) sendAiPrompt(b.getAttribute('data-ai-cmd'), { inline: true });
+  };
+}
 $('ai-btn-reset').onclick = function() {
   aiMessages = [];
   saveAiChat();
