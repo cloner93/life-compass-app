@@ -329,49 +329,82 @@ h1{font-size:clamp(15.5px,2vw,19px);font-weight:800;margin:0;line-height:1.35;co
   .tools .chip{flex:1;justify-content:center}
 }
 
-/* Responsive 4-Column Status Strip */
+/* Compact Top Status Strip */
 .status-strip{
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:10px;
-  margin-top:14px;
-  padding-top:14px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:12px;
+  padding-top:12px;
   border-top:1px solid var(--line);
+  align-items:center;
 }
-@media (max-width:860px){
-  .status-strip{grid-template-columns:repeat(2,minmax(0,1fr))}
-}
-@media (max-width:480px){
-  .status-strip{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-  .stat-card{padding:8px 10px;gap:8px}
-  .stat-icon{width:32px;height:32px}
-  .stat-body .lbl{font-size:10px}
-  .stat-body .val{font-size:11.5px}
-}
-
-.stat-card{
+.stat-pill{
   background:var(--card-alt);
   border:1px solid var(--line);
-  border-radius:var(--r-lg);
-  padding:10px 12px;
+  border-radius:var(--r-full);
+  padding:5px 12px;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  font-size:12px;
+  color:var(--fg-sec);
+  min-width:0;
+}
+.stat-pill .ic{width:15px;height:15px}
+.stat-pill b{color:var(--fg);font-weight:700;white-space:nowrap}
+
+/* Unified Week Bar & Collapsible Details */
+.wk-bar{
+  background:var(--md-sys-color-secondary-container);
+  color:var(--md-sys-color-on-secondary-container);
+  border-radius:var(--r-xl);
+  padding:10px 16px;
+  margin-bottom:14px;
   display:flex;
   align-items:center;
+  justify-content:space-between;
   gap:10px;
-  min-width:0;
-  transition:background var(--duration-short) var(--ease-m3);
+  flex-wrap:wrap;
 }
-.stat-card:hover{background:var(--card-hover)}
-.stat-icon{
-  width:36px;height:36px;
-  border-radius:var(--r-md);
-  background:var(--md-sys-color-surface-container-high);
-  color:var(--fg);
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;
+.wk-bar-title{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:13px;
+  font-weight:700;
 }
-.stat-body{display:flex;flex-direction:column;min-width:0;flex:1}
-.stat-body .lbl{font-size:11px;color:var(--fg-sec);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.stat-body .val{font-size:13px;font-weight:700;color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.out-more{
+  margin-top:10px;
+  padding-top:8px;
+  border-top:1px dashed var(--line);
+}
+.out-more > summary{
+  cursor:pointer;
+  font-size:12px;
+  font-weight:600;
+  color:var(--fg-sec);
+  user-select:none;
+  list-style:none;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+}
+.out-more > summary::-webkit-details-marker{display:none}
+.out-more > summary::before{
+  content:'◂';
+  display:inline-block;
+  transition:transform var(--duration-short) var(--ease-m3);
+  font-size:11px;
+}
+.out-more[open] > summary::before{transform:rotate(-90deg)}
+.mini-dots{
+  display:grid;
+  grid-template-columns:repeat(12,1fr);
+  gap:3px;
+  margin-top:6px;
+}
+.mini-dots .seg-dot{height:7px;border-radius:3px}
 
 /* Desktop/Tablet Sticky Navigation Bar (Hidden on Mobile) */
 .nav-bar{
@@ -1805,7 +1838,7 @@ var SEED_DATA = {
 };
 
 var S = JSON.parse(JSON.stringify(SEED_DATA));
-var editId=null, ED={}, qConfirm=false, activeFilter='all', searchQuery='', selFloorWk={}, selOutWk={}, toastTimer=null;
+var editId=null, ED={}, qConfirm=false, activeFilter='all', searchQuery='', selWk=null, selFloorWk={}, selOutWk={}, toastTimer=null;
 var SN=['بهار','تابستان','پاییز','زمستان'];
 var MN=['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
 var $=function(i){return document.getElementById(i)};
@@ -2086,10 +2119,24 @@ function renderStatusStrip(){
   if($('cnt-t-m')) $('cnt-t-m').textContent=fa(S.events.length);
 
   $('status-strip').innerHTML=
-    '<div class="stat-card"><div class="stat-icon">'+ICONS.calendar+'</div><div class="stat-body"><span class="lbl">امروز و سن</span><span class="val">'+fmtJ(curJ)+' ('+fa(Math.round(S.cur*10)/10)+')</span></div></div>'+
-    '<div class="stat-card"><div class="stat-icon">'+ICONS.target+'</div><div class="stat-body"><span class="lbl">فصل جاری</span><span class="val">'+qTxt+'</span></div></div>'+
-    '<div class="stat-card"><div class="stat-icon">'+ICONS.clock+'</div><div class="stat-body"><span class="lbl">ظرفیت هفتگی</span><span class="val">'+capTxt+'</span></div></div>'+
-    '<div class="stat-card"><div class="stat-icon" style="background:'+flrBg+';color:'+flrCol+'">'+ICONS.shield+'</div><div class="stat-body"><span class="lbl">وضعیت کف‌های زندگی</span><span class="val" style="color:'+flrCol+'">'+flrTxt+'</span></div></div>';
+    '<div class="stat-pill">'+ICONS.calendar+'<span>امروز:</span><b>'+fmtJ(curJ)+' ('+fa(Math.round(S.cur*10)/10)+')</b></div>'+
+    '<div class="stat-pill">'+ICONS.target+'<span>فصل:</span><b>'+qTxt+'</b></div>'+
+    '<div class="stat-pill">'+ICONS.clock+'<span>ظرفیت:</span><b>'+capTxt+'</b></div>'+
+    '<div class="stat-pill" style="background:'+flrBg+';color:'+flrCol+';border-color:'+flrCol+'">'+ICONS.shield+'<b style="color:'+flrCol+'">'+flrTxt+'</b></div>';
+}
+
+function renderMiniStrip(arr, actionPrefix, activeWkIdx, qSeason){
+  var s = qSeason || 1;
+  var h = '<div class="mini-dots">';
+  for(var idx=0;idx<12;idx++){
+    var m=Math.floor(idx/4),w=idx%4,st=arr[idx]||0;
+    var mName = MN[((s - 1) * 3) + m] || ('ماه ' + fa(m + 1));
+    var stTxt=st===1?'رعایت شد':(st===2?'مرزی':(st===3?'رد شد':'ثبت نشده'));
+    var wkTitle = mName + ' · هفته ' + fa(w + 1) + ': ' + stTxt;
+    h+='<button type="button" class="seg-dot s-'+st+(idx===activeWkIdx?' is-sel':'')+'" data-a="'+actionPrefix+'" data-k="'+idx+'" title="'+esc(wkTitle)+'" aria-label="'+esc(wkTitle)+'"></button>';
+  }
+  h+='</div>';
+  return h;
 }
 
 function getCurSeasonWeek(Q) {
@@ -2232,74 +2279,78 @@ function renderQuarter(){
     h+='<div class="alert-box" role="alert"><div class="al-ic">'+ICONS.alert+'</div><div><b>هشدار قطب‌نما (شکسته شدن کف دو هفته پیاپی):</b>'+alerts.map(function(al){return '<div style="margin-top:4px">• '+al+'</div>'}).join('')+'</div></div>';
   }
 
-  // Quarter Hero Card
+  // Quarter Hero Card (Simplified & Focused)
   h+='<div class="cd"><div class="cd-head"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><h3 class="cd-title">'+ICONS.calendar+' <span>فصل جاری: '+esc(Q.name)+'</span></h3><span class="chip">'+fmtJ(Q.from)+' تا '+fmtJ(Q.to)+'</span></div>'+(ED.qh?'<div style="display:flex;gap:6px">'+btn('ok','qh',ICONS.check+' <span>ذخیره</span>','pri mini')+btn('cned','qh','بستن','mini')+'</div>':btn('ed','qh',ICONS.edit+' <span>ویرایش چارچوب</span>','mini'))+'</div>';
-
-  h+='<div class="pb-grid">';
-  h+='<div><div class="pb-meta"><span>زمان سپری‌شده ('+info+')</span><b>'+fa(pc)+'٪</b></div><div class="pb"><i style="width:'+pc+'%"></i></div></div>';
-  h+='<div><div class="pb-meta"><span>میانگین پیشرفت نتایج فصل</span><b>'+fa(avgPct)+'٪</b></div><div class="pb ok"><i style="width:'+avgPct+'%"></i></div></div>';
-  h+='</div>';
 
   if(ED.qh){
     h+='<div class="edit-panel"><label>تمرکز اصلی فصل: این ۹۰ روز برای چیست؟ (یک جمله شفاف)'+fld('qh','theme','',Q.theme)+'</label>';
     h+='<label>سقف ظرفیت واقع‌بینانه: چند ساعت در هفته خارج از کار اصلی وقت آزاد داری؟<input class="f" type="number" step="0.5" data-n="1" data-k="qh" data-f="cap" value="'+cap+'"></label>';
     h+='<label>قانون حذف (پادشکنندگی): اگر شرایط غیرمنتظره پیش آمد، کدام خروجی اول کوچک یا حذف می‌شود؟'+fld('qh','drop','',Q.drop)+'</label></div>';
   }else{
-    h+='<div class="q-meta-grid">';
-    h+='<div class="q-box"><div class="q-lbl">'+ICONS.target+' <span>تمرکز اصلی فصل</span></div><div class="q-val">'+esc(Q.theme||'تعیین نشده')+'</div></div>';
-    h+='<div class="q-box"><div class="q-lbl">'+ICONS.scissors+' <span>قانون حذف در بحران</span></div><div class="q-val">'+esc(Q.drop||'تعیین نشده')+'</div></div>';
-    h+='<div class="q-box"><div><div class="q-lbl">'+ICONS.clock+' <span>تراز ظرفیت ('+fa(cap*wl)+' ساعت تا پایان فصل)</span></div><div class="q-val'+(sum>cap?' warn':'')+'">'+fa(sum)+' ساعت تخصیص‌یافته از '+fa(cap)+' ساعت آزاد'+(sum>cap?' (فراتر از ظرفیت!)':'')+'</div></div><div class="pb '+(sum>cap?'err':(sum===cap?'warn':'ok'))+'" style="height:6px;margin-top:8px"><i style="width:'+capPct+'%"></i></div></div>';
+    h+='<div style="font-size:14px;font-weight:700;color:var(--fg);margin-bottom:10px;display:flex;align-items:center;gap:6px"><span style="color:var(--pri)">'+ICONS.target+'</span><span>تمرکز فصل: '+esc(Q.theme||'تعیین نشده')+'</span></div>';
+    h+='<div class="pb-grid" style="margin-bottom:6px">';
+    h+='<div><div class="pb-meta"><span>زمان سپری‌شده ('+info+')</span><b>'+fa(pc)+'٪</b></div><div class="pb"><i style="width:'+pc+'%"></i></div></div>';
+    h+='<div><div class="pb-meta"><span>میانگین پیشرفت نتایج فصل</span><b>'+fa(avgPct)+'٪</b></div><div class="pb ok"><i style="width:'+avgPct+'%"></i></div></div>';
     h+='</div>';
+    h+='<details class="out-more"><summary>مشاهده تراز ظرفیت ('+fa(sum)+' از '+fa(cap)+' ساعت) و قانون حذف در بحران</summary>';
+    h+='<div class="q-meta-grid" style="margin-top:8px">';
+    h+='<div class="q-box"><div class="q-lbl">'+ICONS.clock+' <span>تراز ظرفیت ('+fa(cap*wl)+' ساعت تا پایان فصل)</span></div><div class="q-val'+(sum>cap?' warn':'')+'">'+fa(sum)+' ساعت تخصیص‌یافته از '+fa(cap)+' ساعت آزاد'+(sum>cap?' (فراتر از ظرفیت!)':'')+'</div><div class="pb '+(sum>cap?'err':(sum===cap?'warn':'ok'))+'" style="height:6px;margin-top:8px"><i style="width:'+capPct+'%"></i></div></div>';
+    h+='<div class="q-box"><div class="q-lbl">'+ICONS.scissors+' <span>قانون حذف در بحران</span></div><div class="q-val">'+esc(Q.drop||'تعیین نشده')+'</div></div>';
+    h+='</div></details>';
   }
   h+='</div>';
 
-  // CLEAN WEEKLY FLOOR TRACKER (Each card has its own independent week selection)
-  h+='<div class="cd"><div class="cd-head"><h3 class="cd-title">'+ICONS.shield+' <span>پایش هفتگی کف‌های ۴ ارزش پایدار</span></h3>';
-  h+='<span class="n">هر کارت هفته مستقل دارد · روی مستطیل‌های هر ماه یا دکمه‌ها کلیک کنید</span></div>';
+  // UNIFIED WEEK SELECTOR BAR
+  var curSeasonInfo = getCurSeasonWeek(Q);
+  if(selWk==null) selWk = curSeasonInfo.dotIdx;
+  var activeWk = Math.max(0, Math.min(11, selWk));
+  var isCurrentWk = (activeWk === curSeasonInfo.dotIdx);
+  var activeWkLabel = formatWeekLabel(activeWk, Q.s, isCurrentWk);
+
+  h+='<div class="wk-bar">';
+  h+='<div class="wk-bar-title">'+ICONS.calendar+'<span>هفته انتخابی برای ثبت وضعیت کف‌ها و نتایج:</span></div>';
+  h+='<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">';
+  h+='<div class="wk-selector" style="background:var(--card)"><button type="button" data-a="wknav" data-k="-1" title="هفته قبل">‹</button><span class="wk-cur-lbl">'+esc(activeWkLabel)+'</span><button type="button" data-a="wknav" data-k="1" title="هفته بعد">›</button></div>';
+  if(!isCurrentWk) h+='<button type="button" class="mini" data-a="wkcur" style="background:var(--card)">بازگشت به هفته جاری</button>';
+  h+='</div></div>';
+
+  // COMPACT WEEKLY FLOOR TRACKER
+  h+='<div class="cd"><div class="cd-head" style="margin-bottom:10px"><h3 class="cd-title">'+ICONS.shield+' <span>پایش هفتگی کف‌های ۴ ارزش پایدار</span></h3>';
+  h+='<span class="n">وضعیت «'+esc(activeWkLabel)+'» را مشخص کنید</span></div>';
 
   h+='<div class="floor-grid">';
-  var curSeasonInfo = getCurSeasonWeek(Q);
   S.vision.items.forEach(function(vi,idx){
     var fw=(Q.floorWeeks&&Q.floorWeeks[idx])||[0,0,0,0,0,0,0,0,0,0,0,0];
-    if(selFloorWk[idx]==null) selFloorWk[idx]=curSeasonInfo.dotIdx;
-    var fWk=selFloorWk[idx];
+    var fWk=activeWk;
     var curSt=fw[fWk]||0;
     var firstLine=(vi.text||'').split('\n')[0];
     var ps=PILLAR_STYLES[idx%4];
-    var isCurrentWk = (fWk === curSeasonInfo.dotIdx);
-    var fWkLabel = formatWeekLabel(fWk, Q.s, isCurrentWk);
 
-    h+='<div class="floor-card">';
+    h+='<div class="floor-card" style="padding:12px 14px;gap:8px">';
     h+='<div class="floor-head"><div class="floor-name"><span style="color:'+ps.col+'">'+ps.ic+'</span><span>'+esc(vi.name)+'</span></div>';
-    h+='<span class="pillar-badge" style="background:'+ps.bg+';color:'+ps.col+';border-color:'+ps.bdr+'">'+(vi.floor?'کف غیرقابل‌مذاکره':'ستون '+fa(idx))+'</span></div>';
-    h+='<div class="floor-desc">'+esc(firstLine)+'</div>';
-    h+='<div class="floor-controls">';
-    h+='<div class="wk-selector"><button type="button" data-a="fwknav" data-k="'+idx+'_-1" title="هفته قبل">‹</button><span class="wk-cur-lbl">'+esc(fWkLabel)+'</span><button type="button" data-a="fwknav" data-k="'+idx+'_1" title="هفته بعد">›</button></div>';
-    h+='<div class="st-group" role="group" aria-label="وضعیت '+esc(fWkLabel)+'">';
-    h+='<button type="button" class="st-btn'+(curSt===1?' on-ok':'')+'" data-a="fset" data-k="'+idx+'_'+fWk+'_1" title="رعایت شد">'+ICONS.check+' <span>رعایت شد</span></button>';
+    h+='<div class="st-group" role="group" aria-label="وضعیت '+esc(vi.name)+'">';
+    h+='<button type="button" class="st-btn'+(curSt===1?' on-ok':'')+'" data-a="fset" data-k="'+idx+'_'+fWk+'_1" title="رعایت شد">'+ICONS.check+' <span>رعایت</span></button>';
     h+='<button type="button" class="st-btn'+(curSt===2?' on-half':'')+'" data-a="fset" data-k="'+idx+'_'+fWk+'_2" title="مرزی">'+ICONS.half+' <span>مرزی</span></button>';
     h+='<button type="button" class="st-btn'+(curSt===3?' on-miss':'')+'" data-a="fset" data-k="'+idx+'_'+fWk+'_3" title="رد شد">'+ICONS.x+' <span>رد شد</span></button>';
     h+='</div></div>';
-    h+=renderMonthsStrip(fw, 'fdot_'+idx, fWk, Q.s);
+    h+='<div class="floor-desc" style="font-size:12px">'+esc(firstLine)+'</div>';
+    h+=renderMiniStrip(fw, 'fdot_'+idx, fWk, Q.s);
     h+='</div>';
   });
   h+='</div></div>';
 
-  // Quarterly Outcomes (1 to 3 items)
-  h+='<div style="display:flex;justify-content:space-between;align-items:center;margin:18px 0 10px;flex-wrap:wrap;gap:8px"><div><b style="font-size:15.5px">نتایج و آزمایش‌های این فصل (۱ تا ۳ خروجی مشخص)</b></div>'+(Q.items.length<4?btn('addo','',ICONS.plus+' <span>افزودن نتیجه</span>','pri mini'):'')+'</div>';
+  // Quarterly Outcomes (1 to 3 items, Compact with Collapsible Details)
+  h+='<div style="display:flex;justify-content:space-between;align-items:center;margin:16px 0 10px;flex-wrap:wrap;gap:8px"><div><b style="font-size:15.5px">نتایج و آزمایش‌های این فصل (۱ تا ۳ خروجی مشخص)</b></div>'+(Q.items.length<4?btn('addo','',ICONS.plus+' <span>افزودن نتیجه</span>','pri mini'):'')+'</div>';
 
   Q.items.forEach(function(it,i){
     var k='o'+i,ed=ED[k];
     var wArr=it.weeks||[0,0,0,0,0,0,0,0,0,0,0,0];
-    if(selOutWk[i]==null) selOutWk[i]=curSeasonInfo.dotIdx;
-    var oWk=selOutWk[i];
+    var oWk=activeWk;
     var curSt=wArr[oWk]||0;
-    var isCurrentOutWk = (oWk === curSeasonInfo.dotIdx);
-    var oWkLabel = formatWeekLabel(oWk, Q.s, isCurrentOutWk);
 
-    h+='<div class="cd"><div class="cd-head"><div style="display:flex;align-items:center;gap:8px;flex:1;min-width:200px"><span class="pillar-badge" style="background:var(--pri);color:var(--pri-fg);border-color:var(--pri)">نتیجه '+fa(i+1)+'</span>';
+    h+='<div class="cd" style="padding:16px 18px"><div class="cd-head" style="margin-bottom:8px"><div style="display:flex;align-items:center;gap:8px;flex:1;min-width:200px;flex-wrap:wrap"><span class="pillar-badge" style="background:var(--pri);color:var(--pri-fg);border-color:var(--pri)">نتیجه '+fa(i+1)+'</span>';
     if(!ed){
-      h+='<span style="font-size:14.5px;font-weight:700">'+esc(it.title||'بدون عنوان')+'</span></div><div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><span class="chip '+(it.mode==='build'?'build':'exp')+'">'+modeLbl(it.mode)+'</span>'+btn('ed',k,ICONS.edit+' <span>ویرایش</span>','mini')+'</div></div>';
+      h+='<span style="font-size:14.5px;font-weight:700">'+esc(it.title||'بدون عنوان')+'</span></div><div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><span class="chip '+(it.mode==='build'?'build':'exp')+'">'+modeLbl(it.mode)+'</span><span class="chip">'+ICONS.clock+' <span>'+(+it.hours?fa(+it.hours)+' ساعت':'داخل کار')+'</span></span>'+btn('ed',k,ICONS.edit+' <span>ویرایش</span>','mini')+'</div></div>';
     }else{
       h+='<span style="font-size:13.5px;color:var(--mut)">ویرایش نتیجه</span></div><div style="display:flex;gap:6px">'+btn('ok',k,ICONS.check+' <span>ذخیره</span>','pri mini')+btn('cned',k,'بستن','mini')+'</div></div>';
     }
@@ -2316,35 +2367,37 @@ function renderQuarter(){
       h+='<label>سیستم و ریتم هفتگی (چه روزی، چه ساعتی، چه گام‌هایی؟)'+fld(k,'rhythm','مثلاً: پنجشنبه صبح‌ها بلوک ۳ ساعته...',it.rhythm,2)+'</label>';
       h+='<div class="act">'+btn('delo',k,'حذف این نتیجه','del mini')+'</div></div>';
     }else{
-      h+='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">';
+      h+='<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;background:var(--card-alt);padding:8px 12px;border-radius:var(--r-md);border:1px solid var(--line)">';
+      h+='<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="n" style="font-size:12px">این هفته ('+esc(activeWkLabel)+'):</span>';
+      h+='<div class="st-group">';
+      h+='<button type="button" class="st-btn'+(curSt===1?' on-ok':'')+'" data-a="oset" data-k="'+i+'_'+oWk+'_1">'+ICONS.check+' <span>انجام شد</span></button>';
+      h+='<button type="button" class="st-btn'+(curSt===2?' on-half':'')+'" data-a="oset" data-k="'+i+'_'+oWk+'_2">'+ICONS.half+' <span>نصفه</span></button>';
+      h+='<button type="button" class="st-btn'+(curSt===3?' on-miss':'')+'" data-a="oset" data-k="'+i+'_'+oWk+'_3">'+ICONS.x+' <span>نشد</span></button>';
+      h+='</div></div>';
+      h+='<div style="display:flex;align-items:center;gap:8px;flex:1;min-width:170px;justify-content:flex-end"><span class="n" style="white-space:nowrap">پیشرفت کل: <b style="color:var(--fg)">'+fa(it.pct)+'٪</b></span><input type="range" class="f" style="width:110px;margin:0" data-k="'+k+'" data-f="pct" data-n="1" data-re="1" min="0" max="100" step="5" value="'+it.pct+'"></div>';
+      h+='</div>';
+
+      h+='<details class="out-more"><summary>جزئیات، معیار پایان، ریتم هفتگی و تقویم ۱۲ هفته</summary>';
+      h+='<div style="display:flex;gap:6px;flex-wrap:wrap;margin:8px 0">';
       if(it.pillar) h+='<span class="chip">'+ICONS.compass+' <span>'+esc(it.pillar)+'</span></span>';
       if(it.dir) h+='<span class="chip">جهت: '+esc(it.dir)+'</span>';
-      h+='<span class="chip">'+ICONS.clock+' <span>'+(+it.hours?fa(+it.hours)+' ساعت در هفته':'داخل ساعت کاری')+'</span></span>';
       h+='</div>';
-      h+='<div class="out-boxes">';
+      h+='<div class="out-boxes" style="margin-bottom:8px">';
       h+='<div class="out-box"><b>'+ICONS.flag+' <span>معیار پایان</span></b>'+esc(it.done||'—')+'</div>';
       h+='<div class="out-box"><b>'+ICONS.repeat+' <span>ریتم هفتگی</span></b>'+esc(it.rhythm||'—')+'</div>';
       h+='</div>';
+      h+=renderMonthsStrip(wArr, 'odot_'+i, oWk, Q.s);
+      h+='</details>';
     }
-
-    // Compact 3-Month Segmented Rhythm & Progress Bar (Independent per Outcome)
-    h+='<div class="out-rhythm-bar">';
-    h+='<div class="out-rhythm-top">';
-    h+='<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">';
-    h+='<div class="wk-selector"><button type="button" data-a="owknav" data-k="'+i+'_-1" title="هفته قبل">‹</button><span class="wk-cur-lbl">'+esc(oWkLabel)+'</span><button type="button" data-a="owknav" data-k="'+i+'_1" title="هفته بعد">›</button></div>';
-    h+='<div class="st-group">';
-    h+='<button type="button" class="st-btn'+(curSt===1?' on-ok':'')+'" data-a="oset" data-k="'+i+'_'+oWk+'_1">'+ICONS.check+' <span>انجام شد</span></button>';
-    h+='<button type="button" class="st-btn'+(curSt===2?' on-half':'')+'" data-a="oset" data-k="'+i+'_'+oWk+'_2">'+ICONS.half+' <span>نصفه</span></button>';
-    h+='<button type="button" class="st-btn'+(curSt===3?' on-miss':'')+'" data-a="oset" data-k="'+i+'_'+oWk+'_3">'+ICONS.x+' <span>نشد</span></button>';
-    h+='</div></div>';
-    h+='<div style="display:flex;align-items:center;gap:8px;flex:1;min-width:180px;justify-content:flex-end"><span class="n" style="white-space:nowrap">پیشرفت: <b style="color:var(--fg)">'+fa(it.pct)+'٪</b></span><input type="range" class="f" style="width:120px;margin:0" data-k="'+k+'" data-f="pct" data-n="1" data-re="1" min="0" max="100" step="5" value="'+it.pct+'"></div>';
     h+='</div>';
-    h+=renderMonthsStrip(wArr, 'odot_'+i, oWk, Q.s);
-    h+='</div></div>';
   });
 
-  // End of Quarter Review
-  h+='<div class="cd"><div class="cd-head"><h3 class="cd-title">'+ICONS.archive+' <span>بازبینی پایان فصل و تصمیم‌گیری دور بعد</span></h3>'+(ED.rv?'<div style="display:flex;gap:6px">'+btn('ok','rv',ICONS.check+' <span>ذخیره</span>','pri mini')+btn('cned','rv','بستن','mini')+'</div>':btn('ed','rv',ICONS.edit+' <span>ثبت بازبینی</span>','mini'))+'</div>';
+  // End of Quarter Review (Collapsible until needed)
+  var hasRv=Q.review&&(Q.review.a||Q.review.b||Q.review.c);
+  var rvOpen=(ED.rv || n>tot || hasRv)?' open':'';
+  h+='<details class="cd" style="margin-top:14px"'+rvOpen+'><summary style="cursor:pointer;font-weight:700;font-size:14.5px;display:flex;align-items:center;justify-content:space-between;gap:8px"><span style="display:inline-flex;align-items:center;gap:8px">'+ICONS.archive+' <span>بازبینی پایان فصل و بایگانی (ویژه پایان ۹۰ روز)</span></span><span class="chip" style="font-size:11px">'+(hasRv?'ثبت‌شده':'جمع‌شده')+'</span></summary>';
+  h+='<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--line)">';
+  h+='<div style="display:flex;justify-content:flex-end;margin-bottom:8px">'+(ED.rv?'<div style="display:flex;gap:6px">'+btn('ok','rv',ICONS.check+' <span>ذخیره</span>','pri mini')+btn('cned','rv','بستن','mini')+'</div>':btn('ed','rv',ICONS.edit+' <span>ثبت یا ویرایش بازبینی</span>','mini'))+'</div>';
   if(ED.rv){
     h+='<div class="edit-panel">';
     [['a','۱. چه چیزهایی و کدام ریتم‌ها در عمل جواب دادند؟'],['b','۲. چه چیزهایی جواب ندادند یا با عدم قطعیت برخورد کردند؟'],['c','۳. تصمیم برای فصل بعد (کدام فرضیه تبدیل به تعهد شود، کدام تغییر کند، و کدام کنار گذاشته شود؟)']].forEach(function(r){
@@ -2352,14 +2405,13 @@ function renderQuarter(){
     });
     h+='</div>';
   }else{
-    var hasRv=Q.review&&(Q.review.a||Q.review.b||Q.review.c);
     if(hasRv){
       h+=lv('۱. چه چیزهایی جواب داد',Q.review.a)+lv('۲. چه چیزهایی جواب نداد',Q.review.b)+lv('۳. تصمیم جهت‌ها برای فصل بعد',Q.review.c);
     }else{
       h+='<div class="n">در پایان این ۹۰ روز، نتیجه‌ی آزمایش‌ها را اینجا بنویسید و فصل را بایگانی کنید تا به تایم‌لاین اضافه شود.</div>';
     }
   }
-  h+='<div class="act" style="margin-top:12px"><button type="button" class="pri" data-a="end">'+ICONS.archive+' <span>پایان فصل و ثبت در تایم‌لاین</span></button></div></div>'+histHtml();
+  h+='<div class="act" style="margin-top:12px"><button type="button" class="pri" data-a="end">'+ICONS.archive+' <span>پایان فصل و ثبت در تایم‌لاین</span></button></div></div></details>'+histHtml();
   $('qv').innerHTML=h;
 }
 
@@ -2577,37 +2629,51 @@ function onA(e){
   var a=b.dataset.a,k=b.dataset.k||'',V=S.vision,Q=S.qtr,m;
   if(a==='ed')ED[k]=1;
   else if(a==='ok' || a==='cned')delete ED[k];
+  else if(a==='wknav'){
+    var curDot = getCurSeasonWeek(Q).dotIdx;
+    var wCur = selWk!=null ? selWk : curDot;
+    selWk = Math.max(0, Math.min(11, wCur + (+k)));
+    renderQuarter();
+    return;
+  }
+  else if(a==='wkcur'){
+    selWk = getCurSeasonWeek(Q).dotIdx;
+    renderQuarter();
+    return;
+  }
   else if(a==='fwknav'){
     m=k.split('_');var fp=+m[0],fd=+m[1];
-    var fCur=selFloorWk[fp]!=null?selFloorWk[fp]:0;
-    selFloorWk[fp]=Math.max(0,Math.min(11,fCur+fd));
+    var fCur=selWk!=null?selWk:(selFloorWk[fp]!=null?selFloorWk[fp]:0);
+    selWk=Math.max(0,Math.min(11,fCur+fd));
+    selFloorWk[fp]=selWk;
     renderQuarter();
     return;
   }
   else if(a==='owknav'){
     m=k.split('_');var op=+m[0],od=+m[1];
-    var oCur=selOutWk[op]!=null?selOutWk[op]:0;
-    selOutWk[op]=Math.max(0,Math.min(11,oCur+od));
+    var oCur=selWk!=null?selWk:(selOutWk[op]!=null?selOutWk[op]:0);
+    selWk=Math.max(0,Math.min(11,oCur+od));
+    selOutWk[op]=selWk;
     renderQuarter();
     return;
   }
   else if(a==='fset'){
     m=k.split('_');var pIdx=+m[0],wIdx=+m[1],val=+m[2];
-    selFloorWk[pIdx]=wIdx;
+    selWk=wIdx;selFloorWk[pIdx]=wIdx;
     if(!Q.floorWeeks)Q.floorWeeks={};
     if(!Q.floorWeeks[pIdx])Q.floorWeeks[pIdx]=[0,0,0,0,0,0,0,0,0,0,0,0];
     Q.floorWeeks[pIdx][wIdx]=(Q.floorWeeks[pIdx][wIdx]===val)?0:val;
   }
   else if(a.indexOf('fdot_')===0){
     var pIdx2=+a.slice(5),wIdx2=+k;
-    selFloorWk[pIdx2]=wIdx2;
+    selWk=wIdx2;selFloorWk[pIdx2]=wIdx2;
     if(!Q.floorWeeks)Q.floorWeeks={};
     if(!Q.floorWeeks[pIdx2])Q.floorWeeks[pIdx2]=[0,0,0,0,0,0,0,0,0,0,0,0];
     Q.floorWeeks[pIdx2][wIdx2]=((Q.floorWeeks[pIdx2][wIdx2]||0)+1)%4;
   }
   else if(a==='oset'){
     m=k.split('_');var oIdx=+m[0],wIdx3=+m[1],val2=+m[2];
-    selOutWk[oIdx]=wIdx3;
+    selWk=wIdx3;selOutWk[oIdx]=wIdx3;
     var itm=Q.items[oIdx];
     if(!itm.weeks||itm.weeks.length!==12)itm.weeks=[0,0,0,0,0,0,0,0,0,0,0,0];
     itm.weeks[wIdx3]=(itm.weeks[wIdx3]===val2)?0:val2;
@@ -2616,7 +2682,7 @@ function onA(e){
   }
   else if(a.indexOf('odot_')===0){
     var oIdx2=+a.slice(5),wIdx4=+k;
-    selOutWk[oIdx2]=wIdx4;
+    selWk=wIdx4;selOutWk[oIdx2]=wIdx4;
     var itm2=Q.items[oIdx2];
     if(!itm2.weeks||itm2.weeks.length!==12)itm2.weeks=[0,0,0,0,0,0,0,0,0,0,0,0];
     itm2.weeks[wIdx4]=((itm2.weeks[wIdx4]||0)+1)%4;
